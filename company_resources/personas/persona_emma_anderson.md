@@ -1,4 +1,3 @@
-Find what you need faster … Home is your new landing page and surfaces your most relevant files and folders
 ## Name:
     Emma Anderson
 
