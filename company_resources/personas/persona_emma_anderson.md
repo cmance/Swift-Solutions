@@ -9,7 +9,7 @@ Find what you need faster … Home is your new landing page and surfaces your mo
     Emma has been in the event management industry for over 5 years, organizing a wide range of events from corporate conferences to community gatherings. She is known for her attention to detail and creativity in bringing events to life. Emma is passionate about creating memorable experiences for attendees.
 
 ## Photo:
-    ![Picture of Emma Anderson](../personas/persona_images/emma_anderson.jfif)
+![Picture of Emma Anderson](../personas/persona_images/emma_anderson.jfif)
 
 ## Hometown:
     San Francisco, CA
