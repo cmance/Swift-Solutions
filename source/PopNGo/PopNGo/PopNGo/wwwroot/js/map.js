@@ -1,8 +1,12 @@
-function loadScript() {
+async function loadScript() {
+    // Fetch the API key from the server
+    const response = await fetch('/api/MapApi/GetApiKey');
+    const apiKey = await response.text();
+
     var script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyC58HwYVwxWpP12pGtE6-B7k3sFcsIyPwM&callback=initMap&libraries=maps,marker&v=beta';
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&callback=initMap&libraries=maps,marker&v=beta`;
     script.async = true;
-    document.head.appendChild(script);
+    document.body.appendChild(script); // Append the script to the body instead of the head
 }
 
 function initMap() {

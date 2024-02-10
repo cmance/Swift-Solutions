@@ -11,18 +11,21 @@ namespace PopNGo.Controllers;
 public class MapApiController : Controller
 {
     private readonly ILogger<MapApiController> _logger;
+    private readonly IConfiguration _configuration;
+    private string _googleApiKey;
     // private readonly "REPOSITORIES"
 
-    public MapApiController(ILogger<MapApiController> logger)
+    public MapApiController(ILogger<MapApiController> logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
+        _googleApiKey = _configuration["GoogleMapsApiKey"];
         // _repo = new "REPOSITORIES"
     }
 
-    // Was going to use to hide the API key, but it's not necessary???
-    // [HttpGet]
-    // public IActionResult Get()
-    // {
-    //     return Ok();
-    // }
+    [HttpGet("GetApiKey")]
+    public IActionResult GetApiKey()
+    {
+        return Ok(_googleApiKey);
+    }
 }
