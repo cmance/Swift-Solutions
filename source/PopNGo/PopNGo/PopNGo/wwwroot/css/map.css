@@ -1,4 +1,53 @@
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+
 #DEMO_MAP_ID {
-    height: 500px;
-    width: 100%;
-  }
+  width: 100vw;
+  height: 75vh;
+  padding: 0;
+  margin: 10px 10px 10px 10px;
+  border-radius: 15px;
+  /* Round edges */
+  transition: width 0.025s linear;
+
+}
+
+#EVENT_INFO {
+  padding: 0;
+  margin: 10px 10px 10px 10px;
+  border-radius: 15px;
+  /* Round edges */
+  border: 1px solid #ddd;
+  animation: fadeIn 0.25s linear;
+}
+
+#NAME {
+  text-align: center;
+  color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#DATE {
+  text-align: center;
+  color: white;
+  margin: 10px 10px 10px 10px;
+}
+
+#DESCRIPTION {
+  text-align: center;
+  font-size: 1rem;
+  color: white;
+  margin: 10px 10px 10px 10px;
+}
+
+#IMAGE {
+  width: 50%;
+  height: auto;
+  margin: 10px auto; /* Top and bottom margins are 10px, left and right margins are auto */
+  border-radius: 15px;
+  display: block; /* This allows the use of margin: auto for centering */
+}

@@ -1,5 +1,15 @@
-<div id="DEMO_MAP_ID"></div>
+<div id="container" style="display: flex;">
+    <div id="EVENT_INFO" style="display: none; width: 100vw;">
+        <h2 id="NAME"></h2>
+        <p id="DATE"></p>
+        <p id="DESCRIPTION"></p>
+        <img id="IMAGE" src="" alt="Event Image">
+    </div>
+    <div id="DEMO_MAP_ID" style="width: 100vw;">
+        <!-- Map goes here -->
+    </div>
+</div>
 
 @section Scripts {
-    <script src="~/js/map.js"></script>
+    <script type="module" src="~/js/map.js"></script>
 }

@@ -60,11 +60,13 @@ function displayEvents(events) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetchEvents().then(data => {
-        displayEvents(data.data); // Assuming the data structure includes an array in data.data
-    }).catch(e => {
-        console.error('Fetching events failed:', e);
-    });
+    if (document.getElementById('eventsContainer')) {
+        fetchEvents().then(data => {
+            displayEvents(data.data); // Assuming the data structure includes an array in data.data
+        }).catch(e => {
+            console.error('Fetching events failed:', e);
+        });
+    }
 });
 
 
