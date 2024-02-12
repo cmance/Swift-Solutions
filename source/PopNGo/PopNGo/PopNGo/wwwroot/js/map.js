@@ -29,8 +29,8 @@ window.initMap = function () {
             });
 
             marker.addListener('click', function () {
-                var mapDiv = document.getElementById('DEMO_MAP_ID');
-                var eventInfoDiv = document.getElementById('EVENT_INFO');
+                var mapDiv = document.getElementById('demo-map-id');
+                var eventInfoDiv = document.getElementById('event-info');
 
                 if (selectedEvent === event) {
                     // If the same event is clicked again, reset the map and event info divs to their initial sizes
@@ -43,10 +43,10 @@ window.initMap = function () {
                     mapDiv.style.width = '50vw';
                     eventInfoDiv.style.width = '50vw';
 
-                    var nameElement = document.getElementById('NAME');
-                    var descriptionElement = document.getElementById('DESCRIPTION');
-                    var dateElement = document.getElementById('DATE');
-                    var imageElement = document.getElementById('IMAGE');
+                    var nameElement = document.getElementById('name');
+                    var descriptionElement = document.getElementById('description');
+                    var dateElement = document.getElementById('date');
+                    var imageElement = document.getElementById('image');
 
                     nameElement.textContent = event.name;
                     descriptionElement.textContent = event.description;

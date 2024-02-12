@@ -4,7 +4,7 @@
 }
 
 
-#DEMO_MAP_ID {
+#demo-map-id {
   width: 100vw;
   height: 75vh;
   padding: 0;
@@ -15,7 +15,7 @@
 
 }
 
-#EVENT_INFO {
+#event-info {
   padding: 0;
   margin: 10px 10px 10px 10px;
   border-radius: 15px;
@@ -24,27 +24,27 @@
   animation: fadeIn 0.25s linear;
 }
 
-#NAME {
+#name {
   text-align: center;
   color: white;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-#DATE {
+#date {
   text-align: center;
   color: white;
   margin: 10px 10px 10px 10px;
 }
 
-#DESCRIPTION {
+#description {
   text-align: center;
   font-size: 1rem;
   color: white;
   margin: 10px 10px 10px 10px;
 }
 
-#IMAGE {
+#image {
   width: 50%;
   height: auto;
   margin: 10px auto; /* Top and bottom margins are 10px, left and right margins are auto */
