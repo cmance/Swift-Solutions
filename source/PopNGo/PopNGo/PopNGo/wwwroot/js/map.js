@@ -3,7 +3,7 @@ import { fetchEvents } from './eventsAPI.js';
 
 window.initMap = function () {
     var monmouth = { lat: 44.848, lng: -123.229 }; //Hardcoded Monmouth, Oregon coordinates for now
-    var map = new google.maps.Map(document.getElementById('DEMO_MAP_ID'), {
+    var map = new google.maps.Map(document.getElementById('demo-map-id'), {
         zoom: 15,
         center: monmouth
     });
@@ -80,7 +80,7 @@ async function loadMapScript() {
     // Fetch the API key from the server
     const response = await fetch('/api/MapApi/GetApiKey');
     const apiKey = await response.text();
-
+    console.log(apiKey);
     var script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&callback=initMap&libraries=maps,marker&v=beta`;
     script.async = true;
@@ -88,7 +88,7 @@ async function loadMapScript() {
 }
 
 window.onload = function () {
-    if (document.getElementById('DEMO_MAP_ID')) {
+    if (document.getElementById('demo-map-id')) {
         loadMapScript();
     }
 };
