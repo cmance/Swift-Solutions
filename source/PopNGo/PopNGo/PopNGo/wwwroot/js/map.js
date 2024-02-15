@@ -1,4 +1,4 @@
-import { fetchEvents } from './eventsAPI.js';
+import { fetchEventData } from './eventsAPI.js';
 
 
 window.initMap = function () {
@@ -10,7 +10,8 @@ window.initMap = function () {
 
     let selectedEvent = null;
 
-    fetchEvents().then(response => {
+    fetchEventData().then(response => {
+        console.log(response);
         // Access the data property of the response
         const events = response.data;
         // console.log(events);
@@ -80,7 +81,6 @@ async function loadMapScript() {
     // Fetch the API key from the server
     const response = await fetch('/api/MapApi/GetApiKey');
     const apiKey = await response.text();
-    console.log(apiKey);
     var script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&callback=initMap&libraries=maps,marker&v=beta`;
     script.async = true;
