@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using PopNGo.Areas.Identity.Data;
 using PopNGo.Data;
+using PopNGo.Models;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,12 +34,38 @@ public class Program
 
 
         // Add services to the container.
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString));
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection string 'IdentityConnection' not found.");
+        // var identityConnection = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("IdentityConnectionAzure"))
+        // {
+        //     Password = builder.Configuration["PopNGo:DBPassword"]
+        // };
+        // var identityConnectionString = identityConnection.ConnectionString;
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options
+            .UseSqlServer(identityConnectionString)
+            .UseLazyLoadingProxies());
+        
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection") ?? throw new InvalidOperationException("Connection string 'ServerConnection' not found.");
+        // var serverConnection = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("ServerConnectionAzure"))
+        // {
+        //     Password = builder.Configuration["PopNGo:DBPassword"]
+        // };
+        // var serverConnectionString = serverConnection.ConnectionString;
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        builder.Services.AddDbContext<PopNGoDB>(options => options
+            .UseSqlServer(serverConnectionString)
+            .UseLazyLoadingProxies());
+        
+        
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+        builder.Services.AddDefaultIdentity<PopNGoUser>(options =>
+        {
+            options.SignIn.RequireConfirmedAccount = false;
+            options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
+        })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
@@ -52,7 +82,8 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            app.UseMigrationsEndPoint();
+            // app.UseMigrationsEndPoint();
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
