@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { fetchEvents } from './eventsAPI.js';
+=======
+import { fetchEventData } from './eventsAPI.js';
+>>>>>>> 42040d94c040dfb6cae2b836d7cd1f19c1446a01
 
 
 window.initMap = function () {
@@ -8,24 +12,32 @@ window.initMap = function () {
         center: monmouth
     });
 
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'loading-overlay';
+
+    document.getElementById('demo-map-id').appendChild(loadingOverlay);
+
     let selectedEvent = null;
 
-    fetchEvents().then(response => {
+    fetchEventData("Events in Monmouth, Oregon").then(response => {
+        console.log(response);
         // Access the data property of the response
-        const events = response.data;
+        const events = response;
+
+        document.getElementById('demo-map-id').removeChild(loadingOverlay);
         // console.log(events);
         events.forEach(event => {
             console.log(event);
 
             // Add a marker on the map for the event
-            const lat = event.venue && event.venue.latitude ? event.venue.latitude : 44.848;
-            const lng = event.venue && event.venue.longitude ? event.venue.longitude : -123.229;
+            const lat = event.latitude ? event.latitude : 44.848;
+            const lng = event.longitude ? event.longitude : -123.229;
             // console.log(lat, lng);
             const position = { lat, lng };
             const marker = new google.maps.Marker({
                 position,
                 map,
-                title: event.name
+                title: event.eventName
             });
 
             marker.addListener('click', function () {
@@ -48,15 +60,21 @@ window.initMap = function () {
                     var dateElement = document.getElementById('date');
                     var imageElement = document.getElementById('image');
 
-                    nameElement.textContent = event.name;
-                    descriptionElement.textContent = event.description;
-                    dateElement.textContent = formatStartTime(event.start_time);
+                    nameElement.textContent = event.eventName;
+                    descriptionElement.textContent = event.eventDescription;
+                    dateElement.textContent = formatStartTime(event.eventStartTime);
 
-                    if (event.thumbnail) {
-                        imageElement.src = event.thumbnail;
-                    } else {
-                        imageElement.src = '../media/images/400X400_placeholder.png';
-                    }
+                    imageElement.src = '/media/images/gifs/loadingspinner.gif';
+
+                    // Add an onload event listener to the image element
+                    imageElement.onload = function() {
+                        // The image has loaded
+                        if (event.eventThumbnail) {
+                            imageElement.src = event.eventThumbnail;
+                        } else {
+                            imageElement.src = '../media/images/400X400_placeholder.png';
+                        }
+                    };
 
                     eventInfoDiv.style.display = 'block';
 
@@ -80,7 +98,6 @@ async function loadMapScript() {
     // Fetch the API key from the server
     const response = await fetch('/api/MapApi/GetApiKey');
     const apiKey = await response.text();
-    console.log(apiKey);
     var script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&callback=initMap&libraries=maps,marker&v=beta`;
     script.async = true;
