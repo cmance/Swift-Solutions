@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { fetchEvents } from './eventsAPI.js';
-=======
 import { fetchEventData } from './eventsAPI.js';
->>>>>>> 42040d94c040dfb6cae2b836d7cd1f19c1446a01
 
 
 window.initMap = function () {
