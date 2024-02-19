@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PopNGo.Services;
 using Microsoft.OpenApi.Models;
+using PopNGo.DAL.Abstract;
+using PopNGo.DAL.Concrete;
 
 namespace PopNGo;
 
@@ -57,17 +60,26 @@ public class Program
         builder.Services.AddDbContext<PopNGoDB>(options => options
             .UseSqlServer(serverConnectionString)
             .UseLazyLoadingProxies());
-        
-        
+        builder.Services.AddScoped<DbContext,PopNGoDB>();
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        builder.Services.AddScoped<IEventHistoryRepository, EventHistoryRepository>();
+        builder.Services.AddScoped<IPgUserRepository, PgUserRepository>();
+
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddDefaultIdentity<PopNGoUser>(options =>
         {
-            options.SignIn.RequireConfirmedAccount = false;
+            options.SignIn.RequireConfirmedAccount = true;
+            options.Tokens.ProviderMap.Add("CustomEmailConfirmation",
+                new TokenProviderDescriptor(
+                typeof(CustomEmailConfirmationTokenProvider<PopNGoUser>)));
+            options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
             options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
         })
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<PopNGoUser>>();
+        builder.Services.AddTransient<IEmailSender, EmailSender>();
 
         builder.Services.AddControllersWithViews();
 
