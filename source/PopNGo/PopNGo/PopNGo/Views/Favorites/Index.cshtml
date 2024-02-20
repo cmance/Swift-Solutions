@@ -1,1 +1,18 @@
 <h1>Favorite Events</h1>
+
+@*Create a card template for each event that is returned from the API in js*@
+<template id="event-card-template">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title"></h5>
+            <p class="card-text"></p>
+            <a href="#" class="btn btn-primary">Go to event</a>
+        </div>
+    </div>
+</template>
+
+<div id="favorite-events-container"></div>
+
+@section Scripts {
+    <script type="module" src="~/js/favorites.js"></script>
+}
