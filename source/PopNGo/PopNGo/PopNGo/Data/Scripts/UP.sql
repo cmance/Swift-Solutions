@@ -10,19 +10,19 @@ CREATE TABLE [PG_User] (
 CREATE TABLE [FavoriteEvents] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [UserID] INTEGER NOT NULL,
-  [EventID] NVARCHAR(255) NOT NULL  -- Change this to NVARCHAR(255)
+  [EventID] INTEGER NOT NULL  -- Change this to NVARCHAR(255)
 );
 
 CREATE TABLE [EventHistory] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [UserID] INTEGER NOT NULL,
-  [EventID] NVARCHAR(255) NOT NULL,  -- Change this to NVARCHAR(255)
+  [EventID] INTEGER NOT NULL,  -- Change this to NVARCHAR(255)
   [ViewedDate] DATETIME NOT NULL
 );
 
 CREATE TABLE [Event] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
-  [EventID] NVARCHAR(255) NOT NULL,
+  [ApiEventID] NVARCHAR(255) NOT NULL,
   [EventDate] DATETIME NOT NULL,
   [EventName] NVARCHAR(255) NOT NULL,
   [EventDescription] NVARCHAR(255) NOT NULL,
@@ -30,6 +30,6 @@ CREATE TABLE [Event] (
 );
 
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
-ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([EventID]);
-ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([EventID]);
+ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
+ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);

@@ -1,23 +1,27 @@
--- Insert a user into PG_User
-INSERT INTO [PG_User] (ASPNETUserID)
-VALUES ('user1');
+USE [PopNGoDB];
 
--- Get the ID of the user we just inserted
-DECLARE @UserID int;
-SET @UserID = SCOPE_IDENTITY();
+-- Insert into PG_User
+INSERT INTO [PG_User] ([ASPNETUserID]) VALUES ('user1');
+INSERT INTO [PG_User] ([ASPNETUserID]) VALUES ('user2');
 
--- Insert an event into Event
-INSERT INTO [Event] (EventID, EventDate, EventName, EventDescription, EventLocation)
-VALUES ('event1', '2022-01-01T00:00:00', 'New Year Party', 'A fun party to celebrate the new year', '123 Party Street');
+-- Get the IDs of the users we just inserted
+DECLARE @user1ID int = (SELECT [ID] FROM [PG_User] WHERE [ASPNETUserID] = 'user1');
+DECLARE @user2ID int = (SELECT [ID] FROM [PG_User] WHERE [ASPNETUserID] = 'user2');
 
--- Get the EventID of the event we just inserted
-DECLARE @EventID nvarchar(255);
-SET @EventID = 'event1';
+-- Insert into Event
+INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation]) 
+VALUES ('event1', '2022-01-01T00:00:00', 'Event 1', 'Description 1', 'Location 1');
+INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation]) 
+VALUES ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2');
 
--- Insert a record into FavoriteEvents for the user and event
-INSERT INTO [FavoriteEvents] (UserID, EventID)
-VALUES (@UserID, @EventID);
+-- Get the IDs of the events we just inserted
+DECLARE @event1ID int = (SELECT [ID] FROM [Event] WHERE [ApiEventID] = 'event1');
+DECLARE @event2ID int = (SELECT [ID] FROM [Event] WHERE [ApiEventID] = 'event2');
 
--- Insert a record into EventHistory for the user and event
-INSERT INTO [EventHistory] (UserID, EventID, ViewedDate)
-VALUES (@UserID, @EventID, '2022-01-01T00:00:00');
+-- Insert into FavoriteEvents
+INSERT INTO [FavoriteEvents] ([UserID], [EventID]) VALUES (@user1ID, @event1ID);
+INSERT INTO [FavoriteEvents] ([UserID], [EventID]) VALUES (@user2ID, @event2ID);
+
+-- Insert into EventHistory
+INSERT INTO [EventHistory] ([UserID], [EventID], [ViewedDate]) VALUES (@user1ID, @event1ID, '2022-01-01T00:00:00');
+INSERT INTO [EventHistory] ([UserID], [EventID], [ViewedDate]) VALUES (@user2ID, @event2ID, '2022-01-02T00:00:00');
