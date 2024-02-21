@@ -16,7 +16,7 @@ public partial class Event
     [Required]
     [Column("EventID")]
     [StringLength(255)]
-    public string EventId { get; set; }
+    public string EventID { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime EventDate { get; set; }

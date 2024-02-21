@@ -20,6 +20,10 @@ public partial class PopNGoDB : DbContext
     public virtual DbSet<EventHistory> EventHistories { get; set; }
 
     public virtual DbSet<PgUser> PgUsers { get; set; }
+    public virtual DbSet<FavoriteEvents> FavoriteEvents { get; set; }
+    public virtual DbSet<Event> Event { get; set; }
+
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ServerConnection");
