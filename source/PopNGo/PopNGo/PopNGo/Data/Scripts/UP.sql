@@ -31,4 +31,5 @@ CREATE TABLE [Event] (
 
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([EventID]);
+ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([EventID]);
 ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);

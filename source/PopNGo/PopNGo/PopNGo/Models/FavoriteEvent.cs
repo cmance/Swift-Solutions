@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,22 +6,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PopNGo.Models;
 
-
-[Table("FavoriteEvents")]
-public class FavoriteEvents
+public partial class FavoriteEvent
 {
     [Key]
     [Column("ID")]
-    public int ID { get; set; }
+    public int Id { get; set; }
+
     [Column("UserID")]
-    public int UserID { get; set; }
+    public int UserId { get; set; }
+
     [Column("EventID")]
-    public string EventID { get; set; }
+    public int EventId { get; set; }
 
-    // Navigation properties
-
-    [ForeignKey("UserID")] // 
-    public virtual PgUser User { get; set; }
-    [ForeignKey("EventID")] //
+    [ForeignKey("EventId")]
+    [InverseProperty("FavoriteEvents")]
     public virtual Event Event { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("FavoriteEvents")]
+    public virtual PgUser User { get; set; }
 }

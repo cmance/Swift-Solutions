@@ -10,18 +10,18 @@ namespace PopNGo.DAL.Concrete
         private readonly DbSet<Event> _event;
         public EventRepository(PopNGoDB context) : base(context)
         {
-            _event = context.Event;
+            _event = context.Events;
         }
 
         public void AddEvent(string EventId, DateTime EventDate, string EventName, string EventDescription, string EventLocation)
         {
-            var newEvent = new Event { EventID = EventId, EventDate = EventDate, EventName = EventName, EventDescription = EventDescription, EventLocation = EventLocation };
+            var newEvent = new Event { ApiEventId = EventId, EventDate = EventDate, EventName = EventName, EventDescription = EventDescription, EventLocation = EventLocation };
             AddOrUpdate(newEvent);
         }
 
-        public bool IsEvent(string eventId)
+        public bool IsEvent(string apiEventId) 
         {
-            return _event.Any(e => e.EventID == eventId);
+            return _event.Any(e => e.ApiEventId == apiEventId);
         }
     }
 }

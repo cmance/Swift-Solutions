@@ -4,32 +4,36 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PopNGo.DAL.Concrete
 {
-    public class FavoritesRepository : Repository<FavoriteEvents>, IFavoritesRepository
+    public class FavoritesRepository : Repository<FavoriteEvent>, IFavoritesRepository
     {
-        private readonly DbSet<FavoriteEvents> _favoriteEvents;
+        private readonly DbSet<FavoriteEvent> _favoriteEvents;
+        private readonly DbSet<Event> _events;
+        
         public FavoritesRepository(PopNGoDB context) : base(context)
         {
             _favoriteEvents = context.FavoriteEvents;
+            _events = context.Events;
         }
 
         public void AddFavorite(int userId, string eventId)
         {
-            var favoriteEvent = new FavoriteEvents { UserID = userId, EventID = eventId };
+            var eventPrimaryId = _events.FirstOrDefault(e => e.ApiEventId == eventId).Id;
+            var favoriteEvent = new FavoriteEvent { UserId = userId, EventId = eventPrimaryId };
             AddOrUpdate(favoriteEvent);
         }
 
-        public void RemoveFavorite(int userId, string eventId)
+        public void RemoveFavorite(int userId, string apiEventId)
         {
-            var favoriteEvent = _favoriteEvents.FirstOrDefault(fe => fe.UserID == userId && fe.EventID == eventId);
+            var favoriteEvent = _favoriteEvents.FirstOrDefault(fe => fe.UserId == userId && fe.Event.ApiEventId == apiEventId);
             if (favoriteEvent != null)
             {
                 Delete(favoriteEvent);
             }
         }
 
-        public bool IsFavorite(int userId, string eventId)
+        public bool IsFavorite(int userId, string apiEventId)
         {
-            return _favoriteEvents.Any(fe => fe.UserID == userId && fe.EventID == eventId);
+            return _favoriteEvents.Any(fe => fe.UserId == userId && fe.Event.ApiEventId == apiEventId);
         }
     }
 }
