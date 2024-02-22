@@ -1,4 +1,5 @@
 import { fetchEventData } from './eventsAPI.js';
+import { formatStartTime } from './Helper-Functions/formatStartTime.js';
 
 
 window.initMap = function () {
@@ -83,11 +84,6 @@ window.initMap = function () {
             });
         });
     });
-}
-
-function formatStartTime(dateString) {
-    const options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
 }
 
 async function loadMapScript() {

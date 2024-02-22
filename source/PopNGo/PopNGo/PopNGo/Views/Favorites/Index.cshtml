@@ -1,18 +1,16 @@
 <h1>Favorite Events</h1>
 
-@*Create a card template for each event that is returned from the API in js*@
-<template id="event-card-template">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title"></h5>
-            <p class="card-text"></p>
-            <a href="#" class="btn btn-primary">Go to event</a>
-        </div>
-    </div>
-</template>
+@*Favorite events go here*@
+<div id="favorite-events-container"></div>
 
-<div id="favorite-events-container">
+@*This section is hidden by default and only shown if the user is not logged in.*@
+<div id="login-prompt" style="display: none;">
+    <h1>Access Restricted</h1>
+    <p>You need to be logged in to access this feature. Please <a href="/Identity/Account/Login">log in</a> or <a href="/Identity/Account/Register">sign up</a>.</p>
+</div>
 
+<div id="no-favorites-message" style="display: none;">
+    <p>You have no favorite events. Go to <a href="/">explore</a> or <a href="">map</a> page to find some!</p>
 </div>
 
 @section Scripts {

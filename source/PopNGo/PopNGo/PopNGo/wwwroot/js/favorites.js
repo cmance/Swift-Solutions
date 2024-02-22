@@ -1,43 +1,64 @@
+import { formatStartTime } from './Helper-Functions/formatStartTime.js';
 
 
-// //Not implemented yet
+function fetchUserFavorites() {
+    fetch('/api/FavoritesApi/GetUserFavorites')
+        .then(response => {
+            if (response.status === 401) {
+                // Unauthorized, tell the user to log in or sign up
+                document.getElementById('login-prompt').style.display = 'block';
+                throw new Error('Unauthorized');
+            }
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length === 0) {
+                document.getElementById('no-favorites-message').style.display = 'block';
+                return;
+            }
+            data.forEach(event => {
+                const eventCard = constructEventCard(event);
+                document.getElementById('favorite-events-container').appendChild(eventCard);
+            });
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+}
 
-// //For each favorited event, clone a card and append it to the favorite-events-container section
+function constructEventCard(event) {
+    const eventCard = document.createElement('div');
+    eventCard.classList.add('event-card');
 
-// function fetchUserFavorites() {
-//     fetch("/api/FavoritesApi/GetUserFavorites").then(response => response.json())
-//         .then(data => console.log(data))
-//         .catch(error => console.error('Error fetching favorite data:', error));
-// }
+    // const eventImage = document.createElement('img');
+    // eventImage.src = event.eventThumbnail;
+    // eventImage.alt = event.eventName;
+    // eventImage.classList.add('event-image');
+    // eventCard.appendChild(eventImage);
 
-// function displayFavorites(favorites) {
-//     const container = document.getElementById('favorite-events-container');
-//     if (!container) {
-//         console.error('Container element #favorite-events-container not found.');
-//         return;
-//     }
+    const eventInfo = document.createElement('div');
+    eventInfo.classList.add('event-info');
+    eventCard.appendChild(eventInfo);
 
-//     // Clear the container
-//     container.innerHTML = '';
+    const eventName = document.createElement('h2');
+    eventName.textContent = event.eventName;
+    eventInfo.appendChild(eventName);
 
-//     // Append event cards to the container
-//     favorites.forEach(favorite => {
-//         const eventCard = constructEventCard(favorite);
-//         container.appendChild(eventCard);
-//     });
-// }
+    const eventDescription = document.createElement('p');
+    eventDescription.textContent = event.eventDescription;
+    eventInfo.appendChild(eventDescription);
 
-// function constructEventCard(event) {
-//     const template = document.getElementById('event-card-template');
-//     const eventCard = template.content.cloneNode(true);
-//     eventCard.querySelector('#event-name').textContent = event.eventName || 'Event Name Not Available';
-//     eventCard.querySelector('#event-description').textContent = event.eventDescription || 'No description available.';
-//     eventCard.querySelector('#event-datetime').textContent = event.eventDate || 'Event date not found';
-//     eventCard.querySelector('#event-location').textContent = event.eventLocation || 'Location information not available';
-//     return eventCard;
-// }
+    const eventDate = document.createElement('p');
+    eventDate.textContent = formatStartTime(event.eventDate);
+    eventInfo.appendChild(eventDate);
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     console.log("Favorites page loaded.")
-//     fetchUserFavorites();
-// });
+    return eventCard;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("Favorites page loaded.")
+    fetchUserFavorites();
+});
