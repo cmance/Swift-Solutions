@@ -8,7 +8,7 @@ namespace PopNGo.DAL.Concrete
     {
         private readonly DbSet<FavoriteEvent> _favoriteEvents;
         private readonly DbSet<Event> _events;
-        
+
         public FavoritesRepository(PopNGoDB context) : base(context)
         {
             _favoriteEvents = context.FavoriteEvents;
@@ -29,6 +29,25 @@ namespace PopNGo.DAL.Concrete
             {
                 Delete(favoriteEvent);
             }
+        }
+
+        public List<PopNGo.Models.DTO.Event> GetUserFavorites(int userId)
+        {
+            var userFavorites = _favoriteEvents
+                .Where(fe => fe.UserId == userId)
+                .Select(fe => fe.Event)
+                .Select(e => new PopNGo.Models.DTO.Event
+                {
+                    // Assuming PopNGo.Models.DTO.Event and PopNGo.Models.Event have similar properties
+                    ApiEventID = e.ApiEventId,
+                    EventDate = e.EventDate,
+                    EventName = e.EventName,
+                    EventDescription = e.EventDescription,
+                    EventLocation = e.EventLocation
+                })
+                .ToList();
+
+            return userFavorites;
         }
 
         public bool IsFavorite(int userId, string apiEventId)

@@ -10,49 +10,100 @@ function displayEvents(events) {
 
     events.forEach(event => {
         // Create elements for each event and append them to the container
-        const eventEl = document.createElement('div');
-        eventEl.classList.add('event');
+        const heart = new Image();
+        heart.alt = 'Favorite/Unfavorite Event';
+        heart.classList.add('heart');
+        events.forEach(event => {
+            // Create elements for each event and append them to the container
+            const heart = new Image();
+            heart.alt = 'Favorite/Unfavorite Event';
+            heart.classList.add('heart');
 
-        const name = document.createElement('h2');
-        name.textContent = event.eventName || 'Event Name Not Available';
+            let isFavorite;
 
-        const dateTime = document.createElement('p');
-        dateTime.textContent = `Start: ${event.eventStartTime || 'Unknown Start Time'}, End: ${event.eventEndTime || 'Unknown End Time'}`;
+            const updateFavoriteStatus = () => {
+                let eventInfo = {
+                    ApiEventID: event.eventID,
+                    EventDate: event.eventStartTime,
+                    EventName: event.eventName,
+                    EventDescription: event.eventDescription,
+                    EventLocation: event.full_Address
+                };
 
-        const location = document.createElement('p');
-        location.textContent = event.full_Address || 'Location information not available';
+                let url = isFavorite ? "/api/FavoritesApi/RemoveFavorite" : "/api/FavoritesApi/AddFavorite";
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(eventInfo)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.text().then(text => text ? JSON.parse(text) : {})
+                    })
+                    .then(() => {
+                        // Update the favorite status and the image source
+                        isFavorite = !isFavorite;
+                        heart.src = isFavorite ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg'; //THIS IS WHERE THE IMAGE PATHS ARE HARDCODED
+                    });
+            };
 
-        const description = document.createElement('p');
-        description.textContent = event.eventDescription || 'No description available.';
+            fetch(`/api/FavoritesApi/IsFavorite?eventId=${event.eventID}`)
+                .then(response => response.json())
+                .then(favoriteStatus => {
+                    isFavorite = favoriteStatus;
+                    heart.src = isFavorite ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg'; //THIS IS WHERE THE IMAGE PATHS ARE HARDCODED
+                    heart.addEventListener('click', updateFavoriteStatus);
+                });
 
-        const thumbnail = new Image();
-        thumbnail.src = event.eventThumbnail || 'https://yourdomain.com/path/to/default-thumbnail.png';
-        thumbnail.alt = event.eventName || 'Event Thumbnail';
+            const eventEl = document.createElement('div');
+            eventEl.classList.add('event');
 
-        const tags = document.createElement('div');
-        tags.classList.add('tags');
-        if (event.eventTags && event.eventTags.length > 0) {
-            event.eventTags.forEach(tag => {
+            const name = document.createElement('h2');
+            name.textContent = event.eventName || 'Event Name Not Available';
+
+            const dateTime = document.createElement('p');
+            dateTime.textContent = `Start: ${event.eventStartTime || 'Unknown Start Time'}, End: ${event.eventEndTime || 'Unknown End Time'}`;
+
+            const location = document.createElement('p');
+            location.textContent = event.full_Address || 'Location information not available';
+
+            const description = document.createElement('p');
+            description.textContent = event.eventDescription || 'No description available.';
+
+            const thumbnail = new Image();
+            thumbnail.src = event.eventThumbnail || 'https://yourdomain.com/path/to/default-thumbnail.png';
+            thumbnail.alt = event.eventName || 'Event Thumbnail';
+
+            const tags = document.createElement('div');
+            tags.classList.add('tags');
+            if (event.eventTags && event.eventTags.length > 0) {
+                event.eventTags.forEach(tag => {
+                    const tagEl = document.createElement('span');
+                    tagEl.classList.add('tag');
+                    tagEl.textContent = tag;
+                    tags.appendChild(tagEl);
+                });
+            } else {
                 const tagEl = document.createElement('span');
                 tagEl.classList.add('tag');
-                tagEl.textContent = tag;
+                tagEl.textContent = "No tags available";
                 tags.appendChild(tagEl);
-            });
-        } else {
-            const tagEl = document.createElement('span');
-            tagEl.classList.add('tag');
-            tagEl.textContent = "No tags available";
-            tags.appendChild(tagEl);
-        }
+            }
 
-        eventEl.appendChild(name);
-        eventEl.appendChild(dateTime);
-        eventEl.appendChild(location);
-        eventEl.appendChild(description);
-        eventEl.appendChild(thumbnail);
-        eventEl.appendChild(tags);
+            eventEl.appendChild(name);
+            eventEl.appendChild(dateTime);
+            eventEl.appendChild(location);
+            eventEl.appendChild(description);
+            eventEl.appendChild(thumbnail);
+            eventEl.appendChild(tags);
+            eventEl.appendChild(heart);
 
-        container.appendChild(eventEl);
+            container.appendChild(eventEl);
+        });
     });
 }
 

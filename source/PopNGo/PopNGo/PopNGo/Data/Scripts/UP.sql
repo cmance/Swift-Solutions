@@ -25,7 +25,7 @@ CREATE TABLE [Event] (
   [ApiEventID] NVARCHAR(255) NOT NULL,
   [EventDate] DATETIME NOT NULL,
   [EventName] NVARCHAR(255) NOT NULL,
-  [EventDescription] NVARCHAR(255) NOT NULL,
+  [EventDescription] NVARCHAR(1000) NOT NULL,
   [EventLocation] NVARCHAR(255) NOT NULL
 );
 
