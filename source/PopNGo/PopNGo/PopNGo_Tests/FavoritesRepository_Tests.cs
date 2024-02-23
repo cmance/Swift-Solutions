@@ -191,7 +191,7 @@ public class FavoritesRepositoryTests
     {
         // Arrange
         var userId = 1;
-        string apiEventId = null;
+        string? apiEventId = null;
 
         // Assuming _favoritesRepository is created like this:
         _favoritesRepository = new FavoritesRepository(_mockContext.Object);
