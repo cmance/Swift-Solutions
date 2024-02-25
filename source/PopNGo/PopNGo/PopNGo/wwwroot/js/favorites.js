@@ -8,6 +8,10 @@ function fetchUserFavorites() {
                 // Unauthorized, tell the user to log in or sign up
                 document.getElementById('login-prompt').style.display = 'block';
                 throw new Error('Unauthorized');
+            } else if (response.status === 404) {
+                // Resource not found, tell the user they have no favorites
+                document.getElementById('no-favorites-message').style.display = 'block';
+                throw new Error('No favorites found');
             }
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -15,10 +19,6 @@ function fetchUserFavorites() {
             return response.json();
         })
         .then(data => {
-            if (data.length === 0) {
-                document.getElementById('no-favorites-message').style.display = 'block';
-                return;
-            }
             data.forEach(event => {
                 const eventCard = constructEventCard(event);
                 document.getElementById('favorite-events-container').appendChild(eventCard);
