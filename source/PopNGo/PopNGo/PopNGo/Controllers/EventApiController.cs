@@ -18,14 +18,23 @@ public class EventApiController : Controller
     private readonly IEventHistoryRepository _eventHistoryRepository;
     private readonly IPgUserRepository _pgUserRepository;
     private readonly UserManager<PopNGoUser> _userManager;
+    private readonly ITagRepository _tagRepository;
 
-    public EventApiController(IEventHistoryRepository eventHistoryRepository, IPgUserRepository pgUserRepository, UserManager<PopNGoUser> userManager, ILogger<EventApiController> logger, IConfiguration configuration)
+    public EventApiController(
+        IEventHistoryRepository eventHistoryRepository,
+        IPgUserRepository pgUserRepository,
+        UserManager<PopNGoUser> userManager,
+        ILogger<EventApiController> logger,
+        IConfiguration configuration,
+        ITagRepository tagRepository
+    )
     {
         _logger = logger;
         _configuration = configuration;
         _eventHistoryRepository = eventHistoryRepository;
         _pgUserRepository = pgUserRepository;
         _userManager = userManager;
+        _tagRepository = tagRepository;
 
     }
 
@@ -55,5 +64,31 @@ public class EventApiController : Controller
         }
 
         return events;
+    }
+
+    [HttpGet("tags/name={tag}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(int))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<int>> TagExists(string tag)
+    {
+        Console.WriteLine("TagExists: " + tag);
+        Tag foundTag = await _tagRepository.FindByName(tag);
+        foundTag ??= (await _tagRepository.CreateNew(tag));
+
+        return foundTag.Id;
+    }
+
+    [HttpPost("tags/create")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<bool>> CreateTags([FromBody] string[] tags)
+    {
+        foreach (string tag in tags)
+        {
+            Tag foundTag = await _tagRepository.FindByName(tag);
+            foundTag ??= (await _tagRepository.CreateNew(tag));
+        }
+
+        return true;
     }
 }

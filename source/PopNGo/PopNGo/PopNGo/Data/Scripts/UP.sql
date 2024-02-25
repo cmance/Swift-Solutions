@@ -29,6 +29,11 @@ CREATE TABLE [Event] (
   [EventLocation] NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE [Tag] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [Name] NVARCHAR(255) NOT NULL
+);
+
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);

@@ -8,6 +8,7 @@ ALTER TABLE [FavoriteEvents] DROP CONSTRAINT FK_FavoriteEvents_EventID;
 
 -- Drop the tables
 DROP TABLE [PG_User];
+DROP TABLE [TAG];
 DROP TABLE [FavoriteEvents];
 DROP TABLE [EventHistory];
 DROP TABLE [Event];
