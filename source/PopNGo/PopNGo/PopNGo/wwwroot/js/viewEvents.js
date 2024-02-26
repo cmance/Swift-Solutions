@@ -1,9 +1,19 @@
-﻿import { searchForEvents } from './eventsAPI.js';
+﻿import { searchForEvents, createTags, fetchTagId } from './eventsAPI.js';
 import { showLoginSignupModal } from './Helper-Functions/showUnauthorizedLoginModal.js';
 
+async function processArray(array, asyncFunction) {
+    // map array to promises
+    const promises = array.map(asyncFunction);
+    // wait until all promises resolve
+    await Promise.all(promises);
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 // Function to display events
-function displayEvents(events) {
+async function displayEvents(events) {
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
     const container = document.getElementById('eventsContainer');
@@ -18,7 +28,16 @@ function displayEvents(events) {
         return;
     }
 
-    events.forEach(event => {
+    let tagList = new Set();
+    events?.forEach(event => {
+        event.eventTags?.forEach(tag => {
+            tag = capitalize(tag).replace(/-|_/g, ' ');
+            tagList.add(tag);
+        });
+    });
+    await createTags(Array.from(tagList));
+
+    processArray(events, async event => {
         // Create elements for each event and append them to the container
         const heart = new Image();
         heart.alt = 'Favorite/Unfavorite Event';
@@ -44,7 +63,7 @@ function displayEvents(events) {
                 },
                 body: JSON.stringify(eventInfo)
             })
-                .then(response => {
+                .then(async response => {
                     if (response.status === 401) {
                         // Unauthorized, show the login/signup modal
                         showLoginSignupModal();
@@ -53,7 +72,8 @@ function displayEvents(events) {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
-                    return response.text().then(text => text ? JSON.parse(text) : {})
+                    const text = await response.text();
+                    return text ? JSON.parse(text) : {};
                 })
                 .then(() => {
                     // Update the favorite status and the image source
@@ -111,12 +131,29 @@ function displayEvents(events) {
 
         const tags = document.createElement('div');
         tags.classList.add('tags');
+
         if (event.eventTags && event.eventTags.length > 0) {
-            event.eventTags.forEach(tag => {
+            processArray(event.eventTags, async (tag) => {
+                tag = capitalize(tag).replace(/-|_/g, ' ');
+
                 const tagEl = document.createElement('span');
                 tagEl.classList.add('tag');
+
+                let tagIndex = await fetchTagId(tag) || null;
+                if(tagIndex !== null)
+                    tagEl.classList.add(`tag-${tagIndex}`);
+
                 tagEl.textContent = tag;
                 tags.appendChild(tagEl);
+            }).then(() => {
+                // Grab the children we just made
+                let children = Array.prototype.slice.call(tags.children);
+
+                // Sort the children elements
+                children.sort((a, b) => a.textContent.localeCompare(b.textContent));
+
+                // Append each child back to tags
+                children.forEach(child => tags.appendChild(child));
             });
         } else {
             const tagEl = document.createElement('span');
