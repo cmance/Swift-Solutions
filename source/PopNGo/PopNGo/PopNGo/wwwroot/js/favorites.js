@@ -11,6 +11,7 @@ function fetchUserFavorites() {
                 throw new Error('Unauthorized');
             } else if (response.status === 404) {
                 // Resource not found, tell the user they have no favorites
+                document.getElementById('favorite-events-title').style.display = 'none';
                 document.getElementById('no-favorites-message').style.display = 'block';
                 throw new Error('No favorites found');
             }

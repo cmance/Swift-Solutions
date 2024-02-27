@@ -30,6 +30,14 @@ body {
   margin-bottom: 20px;
 }
 
+#no-favorites-message p a { /* Link color */
+  color: white;
+}
+
+#login-prompt p a { /* Link color */
+  color: white;
+}
+
 /* Explore Page */
 .event {
   position: relative;
