@@ -14,7 +14,7 @@ function displayEvents(events) {
         // Create elements for each event and append them to the container
         const heart = new Image();
         heart.alt = 'Favorite/Unfavorite Event';
-        heart.classList.add('heart');
+        heart.classList.add('heart', 'heart-position');
         heart.style.cursor = 'pointer'; //might want to add this to css if possible, but i dont think its necessary
 
         let isFavorite;

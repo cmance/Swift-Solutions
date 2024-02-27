@@ -6,6 +6,7 @@ function fetchUserFavorites() {
         .then(response => {
             if (response.status === 401) {
                 // Unauthorized, tell the user to log in or sign up
+                document.getElementById('favorite-events-title').style.display = 'none'; // Hide the title if the user is not logged in
                 document.getElementById('login-prompt').style.display = 'block';
                 throw new Error('Unauthorized');
             } else if (response.status === 404) {
@@ -32,12 +33,6 @@ function fetchUserFavorites() {
 function constructEventCard(event) {
     const eventCard = document.createElement('div');
     eventCard.classList.add('event-card');
-
-    // const eventImage = document.createElement('img');
-    // eventImage.src = event.eventThumbnail;
-    // eventImage.alt = event.eventName;
-    // eventImage.classList.add('event-image');
-    // eventCard.appendChild(eventImage);
 
     const eventInfo = document.createElement('div');
     eventInfo.classList.add('event-info');
