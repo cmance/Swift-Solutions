@@ -51,6 +51,46 @@ function constructEventCard(event) {
     eventDate.textContent = formatStartTime(event.eventDate);
     eventInfo.appendChild(eventDate);
 
+    const heart = new Image();
+    heart.alt = 'Unfavorite Event';
+    heart.classList.add('heart', 'heart-position');
+    heart.src = '/media/images/heart-filled.svg'; // Path to the filled heart image
+    heart.style.cursor = 'pointer';
+
+    heart.addEventListener('click', () => {
+        fetch(`/api/FavoritesApi/RemoveFavorite`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ApiEventID: event.apiEventID || "No ID available",
+                EventDate: event.eventDate || "No date available",
+                EventName: event.eventName || "No name available",
+                EventDescription: event.eventDescription || "No description available",
+                EventLocation: event.full_Address || "No location available",
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // Remove the event card from the DOM
+                eventCard.remove();
+                if (document.getElementById('favorite-events-container').childElementCount === 0) { // If there are no more favorite events, show the no-favorites-message
+                    document.getElementById('favorite-events-title').style.display = 'none';
+                    document.getElementById('no-favorites-message').style.display = 'block';
+                }
+                
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    });
+
+    eventCard.appendChild(heart);
+
+
     return eventCard;
 }
 

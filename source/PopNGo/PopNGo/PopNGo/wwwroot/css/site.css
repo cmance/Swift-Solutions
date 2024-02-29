@@ -38,6 +38,11 @@ body {
   color: white;
 }
 
+.event-card {
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 /* Explore Page */
 .event {
   position: relative;
