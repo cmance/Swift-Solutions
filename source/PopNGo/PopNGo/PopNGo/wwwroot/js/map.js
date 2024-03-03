@@ -2,6 +2,7 @@ import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
 import { searchForEvents } from './eventsAPI.js';
 import { formatStartTime } from './util/formatStartTime.js';
+import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 
 // Function to create the map and display events
 window.initMap = async function (events) {
@@ -107,12 +108,16 @@ async function onClickFavorite(favoriteIcon, eventInfo) {
 
     // If the event is already favorited, unfavorite it
     if (favorited) {
-        favoriteIcon.src = '/media/images/heart-outline.svg';
-        await removeEventFromFavorites(eventInfo);
+        removeEventFromFavorites(eventInfo).then(() => {
+            favoriteIcon.src = '/media/images/heart-outline.svg';
+        })
     } else {
-        favoriteIcon.src = '/media/images/heart-filled.svg';
-
-        await addEventToFavorites(eventInfo);
+        addEventToFavorites(eventInfo).then(() => {
+            favoriteIcon.src = '/media/images/heart-filled.svg';
+        }).catch((error) => {
+            // TODO: Should only happen if the error is 401
+            showLoginSignupModal();
+        });
     }
 }
 
