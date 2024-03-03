@@ -1,5 +1,7 @@
+import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
+import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
 import { searchForEvents } from './eventsAPI.js';
-import { formatStartTime } from './Helper-Functions/formatStartTime.js';
+import { formatStartTime } from './util/formatStartTime.js';
 
 // Function to create the map and display events
 window.initMap = async function (events) {
@@ -25,9 +27,7 @@ window.initMap = async function (events) {
     let selectedEvent = null;
 
     document.getElementById('demo-map-id').removeChild(loadingOverlay);
-    events.forEach(event => {
-        //console.log(event);
-
+    events.forEach(async event => {
         // Add a marker on the map for the event
         const lat = event.latitude ? event.latitude : 44.848;
         const lng = event.longitude ? event.longitude : -123.229;
@@ -38,6 +38,8 @@ window.initMap = async function (events) {
             map,
             title: event.eventName
         });
+
+        let favorited = await getEventIsFavorited(event.eventID);
 
         marker.addListener('click', function () {
             var mapDiv = document.getElementById('demo-map-id');
@@ -58,6 +60,19 @@ window.initMap = async function (events) {
                 var descriptionElement = document.getElementById('description');
                 var dateElement = document.getElementById('date');
                 var imageElement = document.getElementById('image');
+                let heartIcon = document.getElementById('heart-icon');
+
+                let eventInfo = {
+                    ApiEventID: event.eventID,
+                    EventDate: event.eventStartTime || "No date available",
+                    EventName: event.eventName || "No name available",
+                    EventDescription: event.eventDescription || "No description available",
+                    EventLocation: event.full_Address || "No location available",
+                };
+
+                heartIcon.src = favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
+                console.log(favorited, event.eventID)
+                heartIcon.addEventListener('click', () => onClickFavorite(heartIcon, eventInfo));
 
                 nameElement.textContent = event.eventName;
                 descriptionElement.textContent = event.eventDescription;
@@ -87,6 +102,20 @@ window.initMap = async function (events) {
     });
 }
 
+async function onClickFavorite(favoriteIcon, eventInfo) {
+    let favorited = await getEventIsFavorited(eventInfo.ApiEventID);
+
+    // If the event is already favorited, unfavorite it
+    if (favorited) {
+        favoriteIcon.src = '/media/images/heart-outline.svg';
+        await removeEventFromFavorites(eventInfo);
+    } else {
+        favoriteIcon.src = '/media/images/heart-filled.svg';
+
+        await addEventToFavorites(eventInfo);
+    }
+}
+
 async function loadMapScript() {
     // Fetch the API key from the server
     const response = await fetch('/api/MapApi/GetApiKey');
@@ -113,3 +142,8 @@ window.onload = function () {
             searchForEvents(null, initMap);
     });
 };
+
+async function getEventIsFavorited(apiEventId) {
+    let res = await fetch(`/api/FavoritesApi/IsFavorite?eventId=${apiEventId}`)
+    return await res.json();
+}

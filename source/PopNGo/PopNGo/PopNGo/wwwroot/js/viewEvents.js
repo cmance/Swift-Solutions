@@ -1,5 +1,5 @@
 ﻿import { searchForEvents, createTags, fetchTagId } from './eventsAPI.js';
-import { showLoginSignupModal } from './Helper-Functions/showUnauthorizedLoginModal.js';
+import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 
 async function processArray(array, asyncFunction) {
     // map array to promises

@@ -40,9 +40,21 @@
   transform: translate(-50%, -50%);
 }
 
+#favorite-button {
+}
+
+#heart-icon {
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+    z-index: 1;
+    width: 35px;
+    height: 35px;
+}
+
 #date {
-  text-align: left;
-  display: table;
+    text-align: left;
+    display: table;
 }
 
 #description {
