@@ -32,7 +32,6 @@ window.initMap = async function (events) {
         // Add a marker on the map for the event
         const lat = event.latitude ? event.latitude : 44.848;
         const lng = event.longitude ? event.longitude : -123.229;
-        // console.log(lat, lng);
         const position = { lat, lng };
         const marker = new google.maps.Marker({
             position,
@@ -72,7 +71,6 @@ window.initMap = async function (events) {
                 };
 
                 heartIcon.src = favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
-                console.log(favorited, event.eventID)
                 heartIcon.addEventListener('click', () => onClickFavorite(heartIcon, eventInfo));
 
                 nameElement.textContent = event.eventName;
