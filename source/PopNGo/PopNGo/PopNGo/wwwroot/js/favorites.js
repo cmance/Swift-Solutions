@@ -1,5 +1,16 @@
 import { formatStartTime } from './Helper-Functions/formatStartTime.js';
 
+function formatDateWithWeekday(startTime) {
+    const date = new Date(startTime);
+    return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function formatHourMinute(startTime) {
+    const date = new Date(startTime);
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+}
+
+let favoriteCount = 0; // Initialize the favorite events count to 0
 
 function fetchUserFavorites() {
     fetch('/api/FavoritesApi/GetUserFavorites')
@@ -21,9 +32,11 @@ function fetchUserFavorites() {
             return response.json();
         })
         .then(data => {
+            console.log(data);
             data.forEach(event => {
                 const eventCard = constructEventCard(event);
                 document.getElementById('favorite-events-container').appendChild(eventCard);
+                favoriteCount++;
             });
         })
         .catch(error => {
@@ -32,32 +45,28 @@ function fetchUserFavorites() {
 }
 
 function constructEventCard(event) {
-    const eventCard = document.createElement('div');
-    eventCard.classList.add('event-card');
 
-    const eventInfo = document.createElement('div');
-    eventInfo.classList.add('event-info');
-    eventCard.appendChild(eventInfo);
+    const template = document.getElementById('event-card-template');
+    const card = template.content.cloneNode(true);
 
-    const eventName = document.createElement('h2');
-    eventName.textContent = event.eventName;
-    eventInfo.appendChild(eventName);
+    const titleElement = card.querySelector('.card-title');
+    const dateElement = card.querySelector('.card-text:first-of-type small');
+    const timeElement = card.querySelector('.card-text:nth-of-type(2) small');
+    const descriptionElement = card.querySelector('.card-text:nth-of-type(3)');
+    const imgElement = card.querySelector('img');
+    const oldHeartButton = card.querySelector('.heart-button');
+    const heartButton = oldHeartButton.cloneNode(true); // Clone the heart button to remove all existing event listeners
+    oldHeartButton.parentNode.replaceChild(heartButton, oldHeartButton); // Replace the old heart button with the new one
 
-    const eventDescription = document.createElement('p');
-    eventDescription.textContent = event.eventDescription;
-    eventInfo.appendChild(eventDescription);
 
-    const eventDate = document.createElement('p');
-    eventDate.textContent = formatStartTime(event.eventDate);
-    eventInfo.appendChild(eventDate);
 
-    const heart = new Image();
-    heart.alt = 'Unfavorite Event';
-    heart.classList.add('heart', 'heart-position');
-    heart.src = '/media/images/heart-filled.svg'; // Path to the filled heart image
-    heart.style.cursor = 'pointer';
+    titleElement.textContent = event.eventName;
+    dateElement.textContent = formatDateWithWeekday(event.eventDate);
+    timeElement.textContent = formatHourMinute(event.eventDate);
+    descriptionElement.textContent = event.eventDescription;
+    // imgElement.src = event.eventImage || 'https://via.placeholder.com/1000'; 
 
-    heart.addEventListener('click', () => {
+    heartButton.addEventListener('click', () => {
         fetch(`/api/FavoritesApi/RemoveFavorite`, {
             method: 'POST',
             headers: {
@@ -76,22 +85,20 @@ function constructEventCard(event) {
                     throw new Error('Network response was not ok');
                 }
                 // Remove the event card from the DOM
-                eventCard.remove();
-                if (document.getElementById('favorite-events-container').childElementCount === 0) { // If there are no more favorite events, show the no-favorites-message
+                const cardElement = heartButton.closest('.card'); // Find the ancestor card element
+                cardElement.remove();
+                favoriteCount--;
+                if (favoriteCount === 0) { // If there are no more favorite events, show the no-favorites-message
                     document.getElementById('favorite-events-title').style.display = 'none';
                     document.getElementById('no-favorites-message').style.display = 'block';
                 }
-                
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
             });
     });
 
-    eventCard.appendChild(heart);
-
-
-    return eventCard;
+    return card;
 }
 
 document.addEventListener('DOMContentLoaded', function () {

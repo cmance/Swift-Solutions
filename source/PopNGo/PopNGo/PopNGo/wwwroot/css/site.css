@@ -24,18 +24,60 @@ body {
 }
 
 /* Favorites Page */
-.favorite-events-title {
+#no-favorites-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  color: white;
+  background-color: #1E1E1E;
+  border-radius: 5px;
   text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: auto;
+  margin-top: 5vh;
+  width: 80vw; /* or any desired width */
 }
+
+#no-favorites-message {
+  font-size: 1.2em;
+}
+
+#no-favorites-message a {
+  color: #FEAF48;
+}
+
 
 #no-favorites-message p a { /* Link color */
+  color: #FEAF48;
+}
+
+#login-prompt {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #1E1E1E;
+  border-radius: 5px;
+  text-align: center;
+  margin: auto;
+  margin-top: 5vh;
+  width: 80vw; /* or any desired width */
+}
+
+#login-prompt h1 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
   color: white;
 }
 
-#login-prompt p a { /* Link color */
+#login-prompt h3 {
+  font-size: 1.2em;
   color: white;
+}
+
+#login-prompt a {
+  color: #FEAF48;
+  text-decoration: none;
 }
 
 .event-card {
@@ -54,6 +96,13 @@ body {
   right: 10px;
   width: 20px; /* Adjust as needed */
   height: 20px; /* Adjust as needed */
+  filter: invert(1);
+}
+
+.heart-icon {
+  margin: 0;
+  padding: 0;
+  filter: invert(1);
 }
 
 /* Modal */
@@ -141,8 +190,8 @@ body {
   right: 20px;
   top: 20px;
   max-height: fit-content; /* Set a maximum width for the toast */
-  background-color: #444;
-  color: #fff;
+  background-color: #1E1E1E;
+  color: #FFFFFF;
   padding: 10px 20px;
   border-radius: 5px;
   opacity: 0;
@@ -175,3 +224,33 @@ body {
   visibility: visible;
 }
 
+/* Cards */
+
+/*Event Card Styles*/
+.postcard-bar {
+    width: 60px;
+    height: 5px;
+    margin: 10px 0;
+    border-radius: 5px;
+    background-color: white;
+    transition: width 0.2s ease;
+}
+
+#event-card:hover .postcard-bar {
+    width: 100px;
+}
+
+#event-card {
+    width: 50vw;
+    background-color: #1E1E1E;
+    border-radius: 20px;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 0 20px 20px 0;
+}
+
+#event-img {
+    border-radius: 20px;
+}

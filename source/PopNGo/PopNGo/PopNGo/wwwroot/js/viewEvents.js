@@ -12,6 +12,7 @@ function displayEvents(events) {
 
     events.forEach(event => {
         // Create elements for each event and append them to the container
+        console.log(event);
         const heart = new Image();
         heart.alt = 'Favorite/Unfavorite Event';
         heart.classList.add('heart', 'heart-position');
