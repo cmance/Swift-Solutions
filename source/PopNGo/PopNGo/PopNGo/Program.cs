@@ -13,6 +13,7 @@ using PopNGo.Services;
 using Microsoft.OpenApi.Models;
 using PopNGo.DAL.Abstract;
 using PopNGo.DAL.Concrete;
+using Microsoft.Extensions.Hosting;
 
 namespace PopNGo;
 
@@ -43,8 +44,8 @@ public class Program
         //     Password = builder.Configuration["PopNGo:DBPassword"]
         // };
         // var identityConnectionString = identityConnection.ConnectionString;
-        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
         builder.Services.AddDbContext<ApplicationDbContext>(options => options
             .UseSqlServer(identityConnectionString)
             .UseLazyLoadingProxies());
@@ -55,8 +56,8 @@ public class Program
         //     Password = builder.Configuration["PopNGo:DBPassword"]
         // };
         // var serverConnectionString = serverConnection.ConnectionString;
-        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
         builder.Services.AddDbContext<PopNGoDB>(options => options
             .UseSqlServer(serverConnectionString)
             .UseLazyLoadingProxies());
@@ -83,6 +84,7 @@ public class Program
 
         builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<PopNGoUser>>();
         builder.Services.AddTransient<IEmailSender, EmailSender>();
+        builder.Services.AddHostedService<TimedEmailService>();
 
         builder.Services.AddControllersWithViews();
 
