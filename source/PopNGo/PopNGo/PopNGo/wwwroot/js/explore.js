@@ -1,5 +1,29 @@
 ﻿import { searchForEvents, createTags, processArray, formatTags } from './eventsAPI.js';
+import { formatStartTime } from './util/formatStartTime.js';
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
+import { addEventToHistory } from './api/history/addEventToHistory.js';
+
+
+async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
+    const modal = document.getElementById('event-details-modal');
+    document.getElementById('modal-title').innerHTML = eventName;
+    document.getElementById('modal-description').innerHTML = eventDescription;
+    document.getElementById('modal-address').innerHTML = eventAddress;
+    document.getElementById('modal-date').innerHTML = eventStartTime;
+    const tagsContainer = document.getElementById('modal-tags-container');
+    tagsContainer.innerHTML = '';
+
+    console.log(eventTags)
+
+    if (eventTags && eventTags.length > 0) {
+        await formatTags(eventTags, tagsContainer);
+    } else {
+        const tagEl = document.createElement('span');
+        tagEl.classList.add('tag');
+        tagEl.textContent = "No tags available";
+        tagsContainer.appendChild(tagEl);
+    }
+}
 
 // Function to display events
 async function displayEvents(events) {
@@ -28,17 +52,16 @@ async function displayEvents(events) {
 
         let isFavorite;
 
-        const updateFavoriteStatus = () => {
-            let eventInfo = {
-                ApiEventID: event.eventID || "No ID available",
-                EventDate: event.eventStartTime || "No date available",
-                EventName: event.eventName || "No name available",
-                EventDescription: event.eventDescription || "No description available",
-                EventLocation: event.full_Address || "No location available",
-            };
+        let eventInfo = {
+            ApiEventID: event.eventID || "No ID available",
+            EventDate: event.eventStartTime || "No date available",
+            EventName: event.eventName || "No name available",
+            EventDescription: event.eventDescription || "No description available",
+            EventLocation: event.full_Address || "No location available",
+        };
 
-            let url = isFavorite ? "/api/FavoritesApi/RemoveFavorite" : "/api/FavoritesApi/AddFavorite";
-            fetch(url, {
+        const updateFavoriteStatus = () => {
+            fetch(isFavorite ? "/api/FavoritesApi/RemoveFavorite" : "/api/FavoritesApi/AddFavorite", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -115,7 +138,7 @@ async function displayEvents(events) {
         tags.classList.add('tags');
 
         if (event.eventTags && event.eventTags.length > 0) {
-            await formatTags(event, tags);
+            await formatTags(event.eventTags, tags);
         } else {
             const tagEl = document.createElement('span');
             tagEl.classList.add('tag');
@@ -130,6 +153,13 @@ async function displayEvents(events) {
         eventEl.appendChild(thumbnail);
         eventEl.appendChild(tags);
         eventEl.appendChild(heart);
+
+        eventEl.onclick = () => {
+            setModalContent(event.eventName, event.eventDescription, formatStartTime(event.eventStartTime), event.full_Address, event.eventTags);
+            const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
+            modal.show();
+            addEventToHistory(eventInfo);
+        }
 
         container.appendChild(eventEl);
     });

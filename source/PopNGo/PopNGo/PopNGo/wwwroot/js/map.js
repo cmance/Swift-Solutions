@@ -67,7 +67,7 @@ window.initMap = async function (events) {
 
                 // Populate the event info div with the tags
                 if (event.eventTags && event.eventTags.length > 0) {
-                    await formatTags(event, tagsElement);
+                    await formatTags(event.eventTags, tagsElement);
                 } else {
                     const tagEl = document.createElement('span');
                     tagEl.classList.add('tag');

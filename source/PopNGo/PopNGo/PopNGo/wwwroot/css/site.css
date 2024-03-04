@@ -44,6 +44,10 @@ body {
   width: 80%; 
 }
 
+.modal-backdrop {
+    z-index: -1;
+}
+
 .close {
   color: #aaa;
   float: right;
