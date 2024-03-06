@@ -20,6 +20,7 @@ public class EventApiController : Controller
     private readonly IEventHistoryRepository _eventHistoryRepository;
     private readonly IPgUserRepository _pgUserRepository;
     private readonly UserManager<PopNGoUser> _userManager;
+<<<<<<< HEAD
     private readonly ITagRepository _tagRepository;
 
     public EventApiController(
@@ -30,12 +31,17 @@ public class EventApiController : Controller
         IConfiguration configuration,
         ITagRepository tagRepository
     )
+=======
+
+    public EventApiController(IEventHistoryRepository eventHistoryRepository, IPgUserRepository pgUserRepository, UserManager<PopNGoUser> userManager, ILogger<EventApiController> logger, IConfiguration configuration)
+>>>>>>> main
     {
         _logger = logger;
         _configuration = configuration;
         _eventHistoryRepository = eventHistoryRepository;
         _pgUserRepository = pgUserRepository;
         _userManager = userManager;
+<<<<<<< HEAD
         _tagRepository = tagRepository;
 
     }
@@ -71,5 +77,36 @@ public class EventApiController : Controller
         }
 
         return true;
+=======
+
+    }
+
+    // GET: api/eventHistory
+    [HttpGet("eventHistory")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Models.DTO.EventHistory>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public ActionResult<IEnumerable<Models.DTO.EventHistory>> GetUserEventHistory()
+    {
+        PopNGoUser user = _userManager.GetUserAsync(User).Result;
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+
+        PgUser pgUser = _pgUserRepository.GetPgUserFromIdentityId(user.Id);
+        if (pgUser == null)
+        {
+            return Unauthorized();
+        }
+
+        List<Models.DTO.EventHistory> events = _eventHistoryRepository.GetEventHistory(pgUser.Id);
+        if (events == null || events.Count == 0)
+        {
+            return NotFound();
+        }
+
+        return events;
+>>>>>>> main
     }
 }
