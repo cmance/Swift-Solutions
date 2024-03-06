@@ -10,6 +10,7 @@ namespace PopNGo.Models
 {
     public class EventDetail
     {
+        public string EventID { get; set; }
         public string EventName { get; set; }
         public string EventLink { get; set; }
         public string EventDescription { get; set; }
@@ -22,6 +23,10 @@ namespace PopNGo.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public string Phone_Number { get; set; }
+<<<<<<< HEAD
+        public List<string> EventTags { get; set; } = [];
+=======
+>>>>>>> main
     }
 }
 

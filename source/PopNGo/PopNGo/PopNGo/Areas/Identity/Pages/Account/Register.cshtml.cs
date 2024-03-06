@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using PopNGo.Areas.Identity.Data;
+using PopNGo.Data;
 using PopNGo.Models;
 
 namespace PopNGo.Areas.Identity.Pages.Account
@@ -145,6 +146,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
 
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
+                user.NotificationEmail = Input.Email;
 
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
