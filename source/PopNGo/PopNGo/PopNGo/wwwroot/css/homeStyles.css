@@ -1,0 +1,180 @@
+/*Styles for the welcome page*/
+
+/* Styles for the position */
+.vertical-center {
+    min-height: 70vh;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.text-light {
+    color: #ffffff;
+}
+
+.text-find {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.text-swipe {
+    font-weight: bold;
+    color: #d35400;
+}
+
+/*Styles for the button*/ 
+.button-container {
+    display: flex;
+    justify-content: start; 
+}
+
+.event-button {
+    background-color: #d35400;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto; 
+}
+
+/* Media query for xxl screens */
+@media (min-width: 1400px) {
+    .text-xxl-start {
+        text-align: start;
+    }
+}
+
+.push-left {
+    margin-left: -200px; 
+    margin-top: -110px;
+}
+
+
+.text-light {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.text-find {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.text-swipe {
+    font-weight: bold;
+    color: #d35400;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.event-button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .event-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+.event-button {
+    background-color: #d35400; 
+    color: white; 
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative; 
+    overflow: hidden; 
+    transition: color 0.3s ease; 
+
+    z-index: 1;
+}
+
+    .event-button::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white; 
+        z-index: -1;
+        transform: translateX(-100%); 
+        transition: transform 0.3s ease; 
+    }
+
+    .event-button:hover::after {
+        transform: translateX(0); 
+    }
+
+    .event-button:hover {
+        color: #d35400; 
+    }
+
+.event {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+    .event img {
+        max-width: 100px;
+        height: auto;
+    }
+
+.tags {
+    margin-top: 10px;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #eee;
+    padding: 2px 5px;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus
+/* input:-internal-autofill,
+input:-internal-autofill-selected,
+input:-webkit-autofill,
+input:-webkit-autofill-selected { */
+{
+    background-color: #ff9b58 !important;
+    color: #d35400 !important;
+    border-color: #ffab74;
+    border-radius: 10px;
+}
+
+#register-submit,
+#login-submit,
+#forgot-password-submit,
+#resend-email-submit,
+#change-email-button,
+#update-profile-button,
+#change-password-button,
+#download-personal-data-button {
+    color: #ff9b58;
+    background-color: #d35400;
+    border-color: #ffab74;
+    border-radius: 10px;
+}
+
+#delete-personal-data-button {
+    border-radius: 10px;
+}
+
+.nav-link.active.text-swipe {
+    background-color: #d35400;
+    font-weight: normal;
+}
