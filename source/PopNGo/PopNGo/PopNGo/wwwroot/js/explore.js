@@ -2,7 +2,7 @@
 import { formatStartTime } from './util/formatStartTime.js';
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
-
+import { showToast } from './util/toast.js';
 
 async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
     const modal = document.getElementById('event-details-modal');
