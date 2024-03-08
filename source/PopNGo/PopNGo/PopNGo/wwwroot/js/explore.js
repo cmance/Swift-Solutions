@@ -84,27 +84,10 @@ async function displayEvents(events) {
                     // Update the favorite status and the image source
                     isFavorite = !isFavorite;
                     heart.src = isFavorite ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
-
-                    // Create a toast to show the user that the favorite status has been updated
-                    const toast = document.createElement('div');
-                    toast.classList.add('toast');
-                    toast.textContent = isFavorite ? 'Event favorited!' : 'Event unfavorited!';
-
-                    // Append the toast to the toast container div
-                    const toastContainer = document.getElementById('toastContainer');
-                    toastContainer.appendChild(toast);
-
-                    // Show the toast
-                    toast.classList.add('show');
-
-                    // Remove the toast after 3 seconds
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                        setTimeout(() => {
-                            toastContainer.removeChild(toast);
-                        }, 500); // Wait for the transition to finish before removing the toast
-                    }, 3000);
-                });
+                
+                    // Show a toast notification
+                    showToast(isFavorite ? 'Event favorited!' : 'Event unfavorited!');
+                })
         };
 
         fetch(`/api/FavoritesApi/IsFavorite?eventId=${event.eventID}`)
