@@ -30,6 +30,10 @@ a.navbar-brand {
   padding: 0; /* Remove the padding */
 }
 
+.nav-item {
+  list-style-type: none;
+}
+
 .onhover svg:hover {
   filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
   transform: scale(1.2); /* Adjust scale as needed */
