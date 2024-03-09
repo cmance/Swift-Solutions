@@ -65,13 +65,16 @@ export async function createTags(events) {
     // Create a set of unique tags across the events
     let tagList = new Set();
     events?.forEach(event => {
-        event.eventTags?.forEach(tag => {
-            tag = capitalize(tag).replace(/-|_/g, ' ');
-            tagList.add(tag);
-        });
+        // Check if event is not null before accessing its properties
+        if (event) {
+            event.eventTags?.forEach(tag => {
+                tag = capitalize(tag).replace(/-|_/g, ' ');
+                tagList.add(tag);
+            });
+        }
     });
 
-    if(tagList.length === 0) return;
+    if(tagList.size === 0) return;
 
     // Create the tags
     try {

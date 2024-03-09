@@ -13,6 +13,7 @@ public class MapApiController : Controller
     private readonly ILogger<MapApiController> _logger;
     private readonly IConfiguration _configuration;
     private string _googleApiKey;
+    private string _googleGeolocationApiKey;
     // private readonly "REPOSITORIES"
 
     public MapApiController(ILogger<MapApiController> logger, IConfiguration configuration)
@@ -20,6 +21,7 @@ public class MapApiController : Controller
         _logger = logger;
         _configuration = configuration;
         _googleApiKey = _configuration["GoogleMapsApiKey"];
+        _googleGeolocationApiKey = _configuration["GoogleGeolocationApiKey"];
         // _repo = new "REPOSITORIES"
     }
 
@@ -27,5 +29,11 @@ public class MapApiController : Controller
     public IActionResult GetApiKey()
     {
         return Ok(_googleApiKey);
+    }
+
+    [HttpGet("GetGeolocationApiKey")]
+    public IActionResult GetGeolocationApiKey()
+    {
+        return Ok(_googleGeolocationApiKey);
     }
 }
