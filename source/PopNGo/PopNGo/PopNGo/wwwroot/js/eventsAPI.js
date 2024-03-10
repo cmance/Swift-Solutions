@@ -1,8 +1,8 @@
 ﻿//Uses plain JavasScript's fetch to get the REST API.
 //Only fetches data and does not manipulate DOM to view data
 
-import { getEvents } from "./api/events/getEvents";
-import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter";
+import { getEvents } from "./api/events/getEvents.js";
+import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter.js";
 
 //Data return example:
 //Array(10)[{… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }]
