@@ -1,6 +1,9 @@
 ﻿//Uses plain JavasScript's fetch to get the REST API.
 //Only fetches data and does not manipulate DOM to view data
 
+import { getEvents } from "./api/events/getEvents";
+import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter";
+
 //Data return example:
 //Array(10)[{… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }]
 //0: Object { eventName: "Deerhoof", eventDescription: "DEERHOOF \\*MIRACLE-LEVEL TOUR\\*\n\nAFTER 28 YEARS, DEERHOOF RECORDS THEIR STUDIO DEBUT AND IT’S ALL IN JAPANESE", eventStartTime: "2024-02-15T21:45:00", … }
@@ -17,19 +20,6 @@
 //longitude: 12.538744
 //phone_Number: "+393515211938"
 
-export async function fetchEventData(query) {
-    try {
-        const response = await fetch(`/api/search/events?q=${query}`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        throw error;
-    }
-}
 
 export async function searchForEvents(query, callback) {
     const searchQuery = query ?? document.getElementById('search-event-input').value;
@@ -37,7 +27,7 @@ export async function searchForEvents(query, callback) {
     document.getElementById('searching-events-section')?.classList.toggle('hidden', false); // Show the searching events section
 
     if (searchQuery) {
-        fetchEventData(searchQuery).then(data => {
+        getEvents(searchQuery).then(data => {
             callback(data); // Assuming the data structure includes an array in data.data
         }).catch(e => {
             console.error('Fetching events failed:', e);
@@ -68,7 +58,7 @@ export async function createTags(events) {
         // Check if event is not null before accessing its properties
         if (event) {
             event.eventTags?.forEach(tag => {
-                tag = capitalize(tag).replace(/-|_/g, ' ');
+                tag = capitalizeFirstLetter(tag).replace(/-|_/g, ' ');
                 tagList.add(tag);
             });
         }
@@ -96,7 +86,7 @@ export async function createTags(events) {
 
 export async function formatTags(tags, tagsParent) {
     processArray(tags, async (tag) => {
-        tag = capitalize(tag).replace(/-|_/g, ' ');
+        tag = capitalizeFirstLetter(tag).replace(/-|_/g, ' ');
 
         const tagEl = document.createElement('span');
         tagEl.classList.add('tag');
@@ -126,8 +116,4 @@ export async function processArray(array, asyncFunction) {
     const promises = array.map(asyncFunction);
     // wait until all promises resolve
     await Promise.all(promises);
-}
-
-export function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
 }
