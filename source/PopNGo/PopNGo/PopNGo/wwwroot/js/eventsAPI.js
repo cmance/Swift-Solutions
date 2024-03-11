@@ -1,39 +1,5 @@
-﻿//Uses plain JavasScript's fetch to get the REST API.
-//Only fetches data and does not manipulate DOM to view data
+﻿import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter.js";
 
-import { getEvents } from "./api/events/getEvents.js";
-import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter.js";
-
-//Data return example:
-//Array(10)[{… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }, {… }]
-//0: Object { eventName: "Deerhoof", eventDescription: "DEERHOOF \\*MIRACLE-LEVEL TOUR\\*\n\nAFTER 28 YEARS, DEERHOOF RECORDS THEIR STUDIO DEBUT AND IT’S ALL IN JAPANESE", eventStartTime: "2024-02-15T21:45:00", … }
-//eventDescription: "DEERHOOF \\*MIRACLE-LEVEL TOUR\\*\n\nAFTER 28 YEARS, DEERHOOF RECORDS THEIR STUDIO DEBUT AND IT’S ALL IN JAPANESE"
-//eventEndTime: "2024-02-16T03:45:00"
-//eventIsVirtual: true
-//eventLanguage: "en"
-//eventLink: null
-//eventName: "Deerhoof"
-//eventStartTime: "2024-02-15T21:45:00"
-//eventThumbnail: "https://dice-media.imgix.net/attachments/2023-06-05/1ae87a1a-92dd-45e5-bd62-afe41ffad83a.jpg?rect=0%2C0%2C3000%2C3000"
-//full_Address: null
-//latitude: 41.903908
-//longitude: 12.538744
-//phone_Number: "+393515211938"
-
-
-export async function searchForEvents(query, callback) {
-    const searchQuery = query ?? document.getElementById('search-event-input').value;
-    document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
-    document.getElementById('searching-events-section')?.classList.toggle('hidden', false); // Show the searching events section
-
-    if (searchQuery) {
-        getEvents(searchQuery).then(data => {
-            callback(data); // Assuming the data structure includes an array in data.data
-        }).catch(e => {
-            console.error('Fetching events failed:', e);
-        });
-    }
-}
 
 export async function fetchTagColor(tag) {
     try {

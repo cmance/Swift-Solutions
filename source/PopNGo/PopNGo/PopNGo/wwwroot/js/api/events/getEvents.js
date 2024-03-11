@@ -39,3 +39,4 @@ export async function getEvents(query) {
         throw error;
     }
 }
+

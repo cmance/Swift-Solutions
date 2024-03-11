@@ -1,8 +1,10 @@
-﻿import { searchForEvents, createTags, processArray, formatTags } from './eventsAPI.js';
+﻿import { createTags, processArray, formatTags } from './eventsAPI.js';
 import { formatStartTime } from './util/formatStartTime.js';
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
 import { showToast } from './util/toast.js';
+import { buildEventCard } from './ui/buildEventCard.js';
+import { getEvents } from './api/events/getEvents.js';
 
 async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
     const modal = document.getElementById('event-details-modal');
@@ -25,8 +27,44 @@ async function setModalContent(eventName, eventDescription, eventStartTime, even
     }
 }
 
-// Function to display events
+/**
+ * Display events.
+ * Events is an array of event objects returned from the API
+ * @param {any} events
+ */
 async function displayEvents(events) {
+    let eventsContainer = document.getElementById('events-container')
+    eventsContainer.innerHTML = ''; // Clear the container
+    let eventCardTemplate = document.getElementById('event-card-template')
+
+    for (let event of events) {
+        console.log(event)
+        // Clone eventCardTemplate
+        if (!events || events.length === 0) {
+            document.getElementById('no-events-section')?.classList.toggle('hidden', false); // Show the no events section
+            return;
+        }
+
+        let newEventCard = eventCardTemplate.content.cloneNode(true);
+
+        let eventCardProps = {
+            img: event.eventThumbnail,
+            title: event.eventName,
+            date: new Date(event.eventStartTime),
+            city: event.full_Address.split(',')[1],
+            state: event.full_Address.split(',')[2],
+            tags: [],
+            favorited: true,
+        }
+        buildEventCard(newEventCard, eventCardProps)
+        eventsContainer.appendChild(newEventCard)
+    }
+}
+
+
+// Function to display events
+async function displayEvents5(events) {
+    console.log(events)
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
     const container = document.getElementById('eventsContainer');
@@ -154,14 +192,15 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
-    if (document.getElementById('eventsContainer')) {
-        searchForEvents("Events in Monmouth, Oregon", displayEvents);
+    if (document.getElementById('events-container')) {
+        getEvents("Events in Monmouth, Oregon").then(displayEvents)
     }
 
-    document.getElementById('search-event-button').addEventListener('click', searchForEvents(null, displayEvents));
+    document.getElementById('search-event-button').addEventListener('click', getEvents("").then(displayEvents));
 
     document.getElementById('search-event-input').addEventListener('keyup', function (event) {
-        if (event.key === 'Enter')
-            searchForEvents(null, displayEvents);
+        if (event.key === 'Enter') {
+            getEvents("").then(displayEvents)
+        }
     });
 });
