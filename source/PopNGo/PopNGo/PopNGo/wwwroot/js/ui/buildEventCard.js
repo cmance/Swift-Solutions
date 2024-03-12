@@ -20,6 +20,7 @@
      state: String,
      tags: Array[Tag],
      favorited: Boolean
+     onPressFavorite: Function
  }
 
  Tag: {
@@ -61,7 +62,7 @@ export const buildEventCard = (eventCardElement, props) => {
         // Update the favorite status and the image source
         props.favorited = !props.favorited;
         bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
-        onPressFavorite(favorited);
+        props.onPressFavorite();
     });
 
     // Set the tags:
@@ -76,8 +77,4 @@ export const buildEventCard = (eventCardElement, props) => {
         tagEl.style.backgroundColor = tag.tagBackgroundColor;
         tagsElement.appendChild(tagEl);
     });
-}
-
-function onPressFavorite(favorited) {
-    console.log('Favorite pressed', favorited);
 }

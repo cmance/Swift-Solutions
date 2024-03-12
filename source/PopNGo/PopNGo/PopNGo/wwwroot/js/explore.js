@@ -1,4 +1,4 @@
-﻿import { createTags, formatTags } from './eventsAPI.js';
+﻿import { createTags, formatTags } from './util/tags.js';
 import { formatStartTime } from './util/formatStartTime.js';
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
@@ -6,6 +6,8 @@ import { showToast } from './util/toast.js';
 import { buildEventCard } from './ui/buildEventCard.js';
 import { getEvents } from './api/events/getEvents.js';
 import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
+import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
+import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
 
 async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
     const modal = document.getElementById('event-details-modal');
@@ -60,10 +62,28 @@ async function displayEvents(events) {
             state: eventInfo.full_Address.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
             favorited: await getEventIsFavorited(eventInfo.eventID),
+            onPressFavorite: () => onPressFavorite(eventInfo, eventCardProps.favorited)
         }
 
-        buildEventCard(newEventCard, eventCardProps)
-        eventsContainer.appendChild(newEventCard)
+        buildEventCard(newEventCard, eventCardProps);
+        eventsContainer.appendChild(newEventCard);
+    }
+}
+
+/**
+ * Takes in an apiEventId, and a favorite status, and updates the favorite status of the event via http
+ * 
+ * @async
+ * @function onPressFavorite
+ * @param {object} eventInfo
+ * @param {any} favorited
+ * @returns {Promise<void>}
+ */
+async function onPressFavorite(eventInfo, favorited) {
+    if (favorited) {
+        removeEventFromFavorites(eventInfo);
+    } else {
+        addEventToFavorites(eventInfo);
     }
 }
 

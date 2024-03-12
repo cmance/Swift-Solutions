@@ -1,5 +1,5 @@
 import { onClickFavorite } from './api/favorites/onClickFavorite.js';
-import { searchForEvents, createTags, formatTags } from './eventsAPI.js';
+import { searchForEvents, createTags, formatTags } from './util/tags.js';
 import { formatStartTime } from './util/formatStartTime.js';
 import { getNearestCityAndState } from './util/getNearestCityAndState.js';
 import { loadMapScript } from './util/loadMapScript.js';

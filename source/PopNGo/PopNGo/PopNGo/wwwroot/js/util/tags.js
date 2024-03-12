@@ -1,4 +1,4 @@
-﻿import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter.js";
+﻿import { capitalizeFirstLetter } from "./capitalizeFirstLetter.js";
 
 
 /**
