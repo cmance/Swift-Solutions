@@ -124,17 +124,23 @@ namespace PopNGo.Services
                 };
 
                 AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
-                IList<EventDetail> eventDetails = new List<EventDetail>();
-                int count = allEventDetail.data.Count;
-
-                // Fetch each event's individual details
-                allEventDetail.data.ForEach(async data => eventDetails.Add(await SearchEventInfoAsync(data.event_id)));
-                
-                // Forcibly wait till all the events have had their details fetched
-                while (eventDetails.Count < count)
+                IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
                 {
-                    Thread.Sleep(50);
-                }
+                    EventID = data.event_id,
+                    EventName = data.name,
+                    EventLink = data.link,
+                    EventDescription = data.description,
+                    EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue,
+                    EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue,
+                    EventIsVirtual = data.is_virtual,
+                    EventThumbnail = data.thumbnail,
+                    EventLanguage = data.language,
+                    Full_Address = data.venue?.full_address ?? "",
+                    Longitude = data.venue?.longitude ?? 0,
+                    Latitude = data.venue?.latitude ?? 0,
+                    Phone_Number = data.venue?.phone_number,
+                    EventTags = data.tags
+                }).ToList();
                 
                 return eventDetails;
             }
