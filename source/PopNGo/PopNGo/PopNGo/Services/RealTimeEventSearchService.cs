@@ -154,8 +154,6 @@ namespace PopNGo.Services
         {
             string endpoint = $"event-details?event_id={eventId}";
 
-            // Sleep for 250ms to avoid rate limiting
-            Thread.Sleep(250);
             _logger.LogInformation($"Calling Real Time Search Event API at {endpoint}");
 
             try

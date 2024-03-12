@@ -18,14 +18,23 @@
      date: DateTime,
      city: String,
      state: String,
+     tags: Array[Tag],
      favorited: Boolean
-     tags: Array[String],
  }
+
+ Tag: {
+    tagName: String,
+    tagTextColor: String,
+    tagBackgroundColor: String,
+ }
+
+ * @function buildEventCard
  * @param {HTMLElement} eventCardElement 
  * @param {Object} props 
  */
 
 export const buildEventCard = (eventCardElement, props) => {
+    console.log(props)
     // Set the image
     if (props.img === null || props.img === undefined) {
         eventCardElement.querySelector('#event-card-image').src = '/media/images/placeholder_event_card_image.png';
@@ -53,14 +62,17 @@ export const buildEventCard = (eventCardElement, props) => {
         heart.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
     });
 
-    // TODO: Set the tags
-/*    const tagsContainer = eventCardElement.querySelector('#eventCardTags');
-    tagsContainer.innerHTML = '';
+    // Set the tags:
+    const tagsElement = eventCardElement.querySelector('#event-card-tags-container');
+    tagsElement.innerHTML = '';
     props.tags.forEach(tag => {
         const tagEl = document.createElement('span');
-        tagEl.classList.add('tag');
-        tagEl.textContent = tag;
-        tagsContainer.appendChild(tagEl);
-    });*/
+        tagEl.classList.add('event-tag');
+        tagEl.classList.add('rounded-pill');
+        tagEl.textContent = tag.tagName;
+        tagEl.style.color = tag.tagTextColor;
+        tagEl.style.backgroundColor = tag.tagBackgroundColor;
+        tagsElement.appendChild(tagEl);
+    });
  
 }

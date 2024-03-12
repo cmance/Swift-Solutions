@@ -1,4 +1,4 @@
-﻿import { createTags, processArray, formatTags } from './eventsAPI.js';
+﻿import { createTags, formatTags } from './eventsAPI.js';
 import { formatStartTime } from './util/formatStartTime.js';
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
@@ -37,25 +37,29 @@ async function displayEvents(events) {
     eventsContainer.innerHTML = ''; // Clear the container
     let eventCardTemplate = document.getElementById('event-card-template')
 
-    for (let event of events) {
-        console.log(event)
-        // Clone eventCardTemplate
-        if (!events || events.length === 0) {
-            document.getElementById('no-events-section')?.classList.toggle('hidden', false); // Show the no events section
-            return;
-        }
+    if (!events || events.length === 0) {
+        document.getElementById('no-events-section')?.classList.toggle('hidden', false); // Show the no events section
+        return;
+    } else {
+        document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
+    }
 
+    const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
+    await createTags(eventTags);
+
+    for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
 
         let eventCardProps = {
-            img: event.eventThumbnail,
-            title: event.eventName,
-            date: new Date(event.eventStartTime),
-            city: event.full_Address.split(',')[1],
-            state: event.full_Address.split(',')[2],
-            tags: [],
+            img: eventInfo.eventThumbnail,
+            title: eventInfo.eventName,
+            date: new Date(eventInfo.eventStartTime),
+            city: eventInfo.full_Address.split(',')[1],
+            state: eventInfo.full_Address.split(',')[2],
+            tags: await formatTags(eventInfo.eventTags),
             favorited: true,
         }
+
         buildEventCard(newEventCard, eventCardProps)
         eventsContainer.appendChild(newEventCard)
     }

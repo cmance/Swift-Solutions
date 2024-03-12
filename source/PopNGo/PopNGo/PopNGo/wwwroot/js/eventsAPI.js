@@ -1,7 +1,101 @@
 ﻿import { capitalizeFirstLetter } from "./util/capitalizeFirstLetter.js";
 
 
-export async function fetchTagColor(tag) {
+/**
+ * Takes in a list of string tags and returns a list of objects with the tag name and colors:
+ * [{
+ *    tagName: String,
+ *    tagTextColor: String,
+ *    tagBackgroundColor: String,
+ * }, {...}, ...]
+ * @async
+ * @function formatTags
+ * @param {String[]} tag - The string tag name
+ * @returns {Promise<Object[]>} formattedTags
+ */
+export async function formatTags(tags) {
+    if (tags == null || tags.length === 0) return [];
+    return await Promise.all(tags.map(formatTag));
+}
+
+/**
+ * Takes in list of tags strings and creates the tags in the database, if they don't already exist
+ * @param {String} tagNames - The list of tag names
+ * @returns
+ */
+export async function createTags(tagNames) {
+    if (tagNames == null || tagNames == undefined || tagNames.length === 0) return;
+
+    const formattedTagNames = tagNames.map((tagName) => {
+        return formatTagName(tagName)
+    })
+
+    // Create the tags
+    try {
+        const response = await fetch(`/api/tags/create`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(Array.from(formattedTagNames))
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        throw error;
+    }
+}
+
+/**
+ * Takes in a string tag and returns the tag name formatted for display
+ * 
+ * Example:
+ * sports_and_stuff -> Sports and stuff
+ * @param {String} tag - The string tag name
+ * @returns {String} The formatted tag name
+ */
+function formatTagName(tag) {
+    return capitalizeFirstLetter(tag).replace(/-|_/g, ' ');
+}
+
+/**
+ * Takes in a string tag and returns an object with the tag name and colors:
+ * {
+ *    tagName: String,
+ *    tagTextColor: String,
+ *    tagBackgroundColor: String,
+ * }
+ * @async
+ * @function formatTag
+ * @param {String} tag - The string tag name
+ * @returns {Promise<Object>} formattedTags
+ */
+async function formatTag(tag) {
+    const tagName = formatTagName(tag);
+    const tagColor = await fetchTagColor(tag);
+    
+    return {
+        tagName: tagName,
+        tagTextColor: tagColor.textColor,
+        tagBackgroundColor: tagColor.backgroundColor
+    };
+
+}
+
+/**
+ * Takes in a string tag and makes an api request, returns the tag color object
+ * { 
+ *      backgroundColor;
+        textColor;
+ * }
+ * @async
+ * @function fetchTagColor
+ * @param {String} tag
+ * @returns {Promise<object>}
+ */
+async function fetchTagColor(tag) {
     try {
         const response = await fetch(`/api/tags/name=${tag}`);
         if (!response.ok) {
@@ -13,73 +107,4 @@ export async function fetchTagColor(tag) {
         console.error('There was a problem with the fetch operation:', error);
         throw error;
     }
-}
-
-export async function createTags(events) {
-    if(events.length === 0) return;
-
-    // Create a set of unique tags across the events
-    let tagList = new Set();
-    events?.forEach(event => {
-        // Check if event is not null before accessing its properties
-        if (event) {
-            event.eventTags?.forEach(tag => {
-                tag = capitalizeFirstLetter(tag).replace(/-|_/g, ' ');
-                tagList.add(tag);
-            });
-        }
-    });
-
-    if(tagList.size === 0) return;
-
-    // Create the tags
-    try {
-        const response = await fetch(`/api/tags/create`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(Array.from(tagList))
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        throw error;
-    }
-}
-
-export async function formatTags(tags, tagsParent) {
-    processArray(tags, async (tag) => {
-        tag = capitalizeFirstLetter(tag).replace(/-|_/g, ' ');
-
-        const tagEl = document.createElement('span');
-        tagEl.classList.add('tag');
-
-        let tagStyle = await fetchTagColor(tag) || null;
-        if(tagStyle !== null) {
-            tagEl.style.backgroundColor = tagStyle.backgroundColor;
-            tagEl.style.color = tagStyle.textColor;
-        }
-
-        tagEl.textContent = tag;
-        tagsParent.appendChild(tagEl);
-    }).then(() => {
-        // Grab the children we just made
-        let children = Array.prototype.slice.call(tagsParent.children);
-
-        // Sort the children elements
-        children.sort((a, b) => a.textContent.localeCompare(b.textContent));
-
-        // Append each child back to tags
-        children.forEach(child => tagsParent.appendChild(child));
-    });
-}
-
-export async function processArray(array, asyncFunction) {
-    // map array to promises
-    const promises = array.map(asyncFunction);
-    // wait until all promises resolve
-    await Promise.all(promises);
 }
