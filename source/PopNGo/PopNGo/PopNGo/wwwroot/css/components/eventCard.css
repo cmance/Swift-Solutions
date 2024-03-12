@@ -67,8 +67,20 @@
     margin-right: 5px
 }
 
-#bookmark-container {
+#event-card-bookmark-container {
     height: 15%;
     aspect-ratio: 1;
     border-radius: 50%;
+    -ms-align-content: inherit;
+    -webkit-align-content: inherit;
+    align-content: inherit;
+    display: flex;
+    justify-content: center;
+}
+
+#event-card-bookmark-icon {
+    width: 100%;
+    height: 100%;
+    padding: 15%;
+    object-fit: cover;
 }

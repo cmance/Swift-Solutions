@@ -5,6 +5,7 @@ import { addEventToHistory } from './api/history/addEventToHistory.js';
 import { showToast } from './util/toast.js';
 import { buildEventCard } from './ui/buildEventCard.js';
 import { getEvents } from './api/events/getEvents.js';
+import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
 
 async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
     const modal = document.getElementById('event-details-modal');
@@ -50,6 +51,7 @@ async function displayEvents(events) {
     for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
 
+        // TODO: add validation
         let eventCardProps = {
             img: eventInfo.eventThumbnail,
             title: eventInfo.eventName,
@@ -57,7 +59,7 @@ async function displayEvents(events) {
             city: eventInfo.full_Address.split(',')[1],
             state: eventInfo.full_Address.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
-            favorited: true,
+            favorited: await getEventIsFavorited(eventInfo.eventID),
         }
 
         buildEventCard(newEventCard, eventCardProps)

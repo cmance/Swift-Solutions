@@ -53,13 +53,15 @@ export const buildEventCard = (eventCardElement, props) => {
     eventCardElement.querySelector('#event-card-location').textContent = `${props.city}, ${props.state}`;
 
     // Set the favorite status
-    const heart = eventCardElement.querySelector('#bookmark-container');
-    heart.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
+    const bookmarkContainer = eventCardElement.querySelector('#event-card-bookmark-container');
+    const bookmarkImage = eventCardElement.querySelector('#event-card-bookmark-icon');
+    bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
 
-    heart.addEventListener('click', () => {
+    bookmarkContainer.addEventListener('click', () => {
         // Update the favorite status and the image source
         props.favorited = !props.favorited;
-        heart.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
+        bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
+        onPressFavorite(favorited);
     });
 
     // Set the tags:
@@ -74,5 +76,8 @@ export const buildEventCard = (eventCardElement, props) => {
         tagEl.style.backgroundColor = tag.tagBackgroundColor;
         tagsElement.appendChild(tagEl);
     });
- 
+}
+
+function onPressFavorite(favorited) {
+    console.log('Favorite pressed', favorited);
 }
