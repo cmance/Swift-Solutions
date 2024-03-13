@@ -163,8 +163,7 @@ window.initMap = async function (events) {
         var longitude = center.lng();
         getNearestCityAndState(latitude, longitude).then(location => {
             if (location) {
-                const newEvents = getEvents(`Events in ${location.city}, ${location.state}`, page * pageSize);
-                initMap(newEvents);
+                getEvents(`Events in ${location.city}, ${location.state}`, page * pageSize).then((newEvents) => initMap(newEvents));
             } else {
                 console.log('Could not find city and state for the provided latitude and longitude');
             }
