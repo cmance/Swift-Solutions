@@ -98,9 +98,9 @@ namespace PopNGo.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<EventDetail>> SearchEventAsync(string query)
+        public async Task<IEnumerable<EventDetail>> SearchEventAsync(string query, int start)
         {
-            string endpoint = $"search-events?query={query}&start=0";
+            string endpoint = $"search-events?query={query}&start={start}";
             _logger.LogInformation($"Calling Real Time Search Event API at {endpoint}");
 
             try

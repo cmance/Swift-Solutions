@@ -9,6 +9,9 @@ import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
 import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
 
+let page = 0;
+const pageSize = 10;
+
 async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
     const modal = document.getElementById('event-details-modal');
     document.getElementById('modal-title').innerHTML = eventName;
@@ -119,16 +122,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
     if (document.getElementById('events-container')) {
-        getEvents("Events in Monmouth, Oregon").then(displayEvents)
+        getEvents("Events in Monmouth, Oregon", page * pageSize).then(displayEvents)
     }
 
     document.getElementById('search-event-button').addEventListener('click', () => {
-        getEvents(document.getElementById('search-event-input').value).then(displayEvents)
+        getEvents(document.getElementById('search-event-input').value, page * pageSize).then(displayEvents)
     });
 
     document.getElementById('search-event-input').addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
-            getEvents(document.getElementById('search-event-input').value).then(displayEvents)
+            getEvents(document.getElementById('search-event-input').value, page * pageSize).then(displayEvents)
         }
     });
 });
