@@ -13,3 +13,23 @@
     /* Round edges */
     transition: width 0.025s linear;
 }
+
+.pagination-buttons {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 15px;
+}
+
+#back-page {
+    background-color: #1e1e1e;
+    color: white;
+
+}
+
+.page-number {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 15px 50px 15px 50px;
+    margin-left: 5px;
+    margin-right: 5px;
+}

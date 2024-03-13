@@ -42,6 +42,13 @@
     </div>
 </div>
 
+@* back/next page buttons, and page number *@
+<div class="pagination justify-content-center m-5">
+    <button disabled id="previous-page-button" class="btn rounded-pill pagination-buttons">Back</button>
+    <div id="page-number" class="rounded-pill page-number">1</div>
+    <button id="next-page-button" class="btn rounded-pill pagination-buttons">Next</button>
+</div>
+
 <div class="container px-5 text-light" id="events-container"></div> 
 
 @* This is to load the unauthorized modal that can be found in Shared/_LoginUnauthorizedModal.cshtml*@

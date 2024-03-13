@@ -34,6 +34,44 @@ async function setModalContent(eventName, eventDescription, eventStartTime, even
 }
 
 /**
+ * Get the next page of events and display them
+ * @async
+ * @function nextPage
+ * @returns {Promise<void>}
+ */
+async function nextPage() {
+    window.scrollTo(0, 0);
+    page++;
+    const events = await getEvents("Events in Monmouth, Oregon", page * pageSize);
+    displayEvents(events);
+    initMap(events);
+    document.getElementById('page-number').innerHTML = page + 1
+
+    document.getElementById('previous-page-button').disabled = false
+}
+
+/**
+ * Get the previous page of events and display them
+ * @async
+ * @function previousPage
+ * @returns {Promise<void>}
+ */
+async function previousPage() {
+    if (page > 0) {
+        window.scrollTo(0, 0);
+        page--;
+        const events = await getEvents("Events in Monmouth, Oregon", page * pageSize);
+        displayEvents(events);
+        initMap(events);
+        // set page number
+        document.getElementById('page-number').innerHTML = page + 1;
+        if (page === 0) {
+            document.getElementById('previous-page-button').disabled = true;
+        }
+    }
+}
+
+/**
  * Display events.
  * Events is an array of event objects returned from the API
  * @param {any} events
@@ -120,6 +158,9 @@ async function onPressFavorite(eventInfo, favorited) {
 document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
+
+    document.getElementById('next-page-button').addEventListener('click', nextPage);
+    document.getElementById('previous-page-button').addEventListener('click', previousPage);
 
     if (document.getElementById('events-container')) {
         const events = await getEvents("Events in Monmouth, Oregon", page * pageSize);
