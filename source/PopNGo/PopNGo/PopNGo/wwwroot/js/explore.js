@@ -53,6 +53,14 @@ async function displayEvents(events) {
     for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
 
+        let eventApiBody = {
+            ApiEventID: eventInfo.eventID || "No ID available",
+            EventDate: eventInfo.eventStartTime || "No date available",
+            EventName: eventInfo.eventName || "No name available",
+            EventDescription: eventInfo.eventDescription || "No description available",
+            EventLocation: eventInfo.full_Address || "No location available",
+        };
+
         // TODO: add validation
         let eventCardProps = {
             img: eventInfo.eventThumbnail,
@@ -62,7 +70,7 @@ async function displayEvents(events) {
             state: eventInfo.full_Address.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
             favorited: await getEventIsFavorited(eventInfo.eventID),
-            onPressFavorite: () => onPressFavorite(eventInfo, eventCardProps.favorited)
+            onPressFavorite: () => onPressFavorite(eventApiBody, eventCardProps.favorited)
         }
 
         buildEventCard(newEventCard, eventCardProps);
@@ -73,17 +81,35 @@ async function displayEvents(events) {
 /**
  * Takes in an apiEventId, and a favorite status, and updates the favorite status of the event via http
  * 
+ * eventApiBody: {
+        ApiEventID: eventInfo.eventID || "No ID available",
+        EventDate: eventInfo.eventStartTime || "No date available",
+        EventName: eventInfo.eventName || "No name available",
+        EventDescription: eventInfo.eventDescription || "No description available",
+        EventLocation: eventInfo.full_Address || "No location available",
+    };
+ * 
  * @async
  * @function onPressFavorite
- * @param {object} eventInfo
+ * @param {object} eventApiBody
  * @param {any} favorited
  * @returns {Promise<void>}
  */
 async function onPressFavorite(eventInfo, favorited) {
     if (favorited) {
-        removeEventFromFavorites(eventInfo);
+        removeEventFromFavorites(eventInfo).catch((error) => {
+            // TODO: check that it is an unauthorized error
+            // Unauthorized, show the login/signup modal
+            showLoginSignupModal();
+        })
+        showToast('Event unfavorited!');
     } else {
-        addEventToFavorites(eventInfo);
+        addEventToFavorites(eventInfo).catch((error) => {
+            // TODO: check that it is an unauthorized error
+            // Unauthorized, show the login/signup modal
+            showLoginSignupModal();
+        })
+        showToast('Event favorited!');
     }
 }
 

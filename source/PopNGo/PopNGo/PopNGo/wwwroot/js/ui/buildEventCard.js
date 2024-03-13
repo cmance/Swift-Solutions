@@ -60,9 +60,9 @@ export const buildEventCard = (eventCardElement, props) => {
 
     bookmarkContainer.addEventListener('click', () => {
         // Update the favorite status and the image source
+        props.onPressFavorite();
         props.favorited = !props.favorited;
         bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
-        props.onPressFavorite();
     });
 
     // Set the tags:
