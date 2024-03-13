@@ -35,7 +35,7 @@ export async function searchForEvents(query, callback) {
     const searchQuery = query ?? document.getElementById('search-event-input').value;
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', false); // Show the searching events section
-
+    // console.log("This function ran.")
     if (searchQuery) {
         fetchEventData(searchQuery).then(data => {
             callback(data); // Assuming the data structure includes an array in data.data
