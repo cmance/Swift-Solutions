@@ -35,7 +35,6 @@
  */
 
 export const buildEventCard = (eventCardElement, props) => {
-    console.log(props)
     // Set the image
     if (props.img === null || props.img === undefined) {
         eventCardElement.querySelector('#event-card-image').src = '/media/images/placeholder_event_card_image.png';

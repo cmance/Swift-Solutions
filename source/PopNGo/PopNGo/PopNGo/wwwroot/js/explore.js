@@ -8,6 +8,8 @@ import { getEvents } from './api/events/getEvents.js';
 import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
 import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
+import { loadMapScript } from './util/loadMapScript.js';
+import { getNearestCityAndState } from './util/getNearestCityAndState.js';
 
 let page = 0;
 const pageSize = 10;
@@ -20,8 +22,6 @@ async function setModalContent(eventName, eventDescription, eventStartTime, even
     document.getElementById('modal-date').innerHTML = eventStartTime;
     const tagsContainer = document.getElementById('modal-tags-container');
     tagsContainer.innerHTML = '';
-
-    console.log(eventTags)
 
     if (eventTags && eventTags.length > 0) {
         await formatTags(eventTags, tagsContainer);
@@ -117,21 +117,84 @@ async function onPressFavorite(eventInfo, favorited) {
 }
 
 // Fetch event data and display it
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
     if (document.getElementById('events-container')) {
-        getEvents("Events in Monmouth, Oregon", page * pageSize).then(displayEvents)
+        const events = await getEvents("Events in Monmouth, Oregon", page * pageSize);
+        displayEvents(events);
     }
 
-    document.getElementById('search-event-button').addEventListener('click', () => {
-        getEvents(document.getElementById('search-event-input').value, page * pageSize).then(displayEvents)
+    document.getElementById('search-event-button').addEventListener('click', async () => {
+        const events = await getEvents(document.getElementById('search-event-input').value, page * pageSize);
+        displayEvents(events);
+        initMap(events);
     });
 
-    document.getElementById('search-event-input').addEventListener('keyup', function (event) {
+    document.getElementById('search-event-input').addEventListener('keyup', async function (event) {
         if (event.key === 'Enter') {
-            getEvents(document.getElementById('search-event-input').value, page * pageSize).then(displayEvents)
+            const events = await getEvents(document.getElementById('search-event-input').value, page * pageSize);
+            displayEvents(events);
+            initMap(events);
         }
     });
 });
+
+var map;
+// Function to create the map and display events
+window.initMap = async function (events) {
+    var monmouth = { lat: 44.848, lng: -123.229 }; //Hardcoded Monmouth, Oregon coordinates for now
+
+    // Check if the map already exists
+    if (!map) {
+        // If it doesn't, create a new one
+        map = new google.maps.Map(document.getElementById('demo-map-id'), {
+            center: monmouth,
+            zoom: 10,
+            minZoom: 10,
+            maxZoom: 15
+        });
+    }
+
+    await google.maps.event.addListener(map, 'dragend', function () {
+        var center = map.getCenter();
+        var latitude = center.lat();
+        var longitude = center.lng();
+        getNearestCityAndState(latitude, longitude).then(location => {
+            if (location) {
+                const newEvents = getEvents(`Events in ${location.city}, ${location.state}`, page * pageSize);
+                initMap(newEvents);
+            } else {
+                console.log('Could not find city and state for the provided latitude and longitude');
+            }
+        });
+    });
+
+    events.forEach(async eventInfo => {
+        // Add a marker on the map for the event
+        if (eventInfo) {
+            const lat = eventInfo.latitude ? eventInfo.latitude : 44.848; //Hardcoded Monmouth, Oregon coordinates for now
+            const lng = eventInfo.longitude ? eventInfo.longitude : -123.229; //Hardcoded Monmouth, Oregon coordinates for now
+            const position = { lat, lng };
+            const marker = new google.maps.Marker({
+                position,
+                map,
+                title: eventInfo.eventName
+            });
+
+            marker.addListener('click', async function () {
+                // TODO: open the modal
+            });
+        }
+    });
+}
+
+window.onload = async function () {
+    if (document.getElementById('demo-map-id')) {
+        loadMapScript();
+        const events = await getEvents("Events in Monmouth, Oregon", page * pageSize);
+        displayEvents(events);
+        initMap(events);
+    }
+}
