@@ -47,7 +47,9 @@ async function nextPage() {
     initMap(events);
     document.getElementById('page-number').innerHTML = page + 1
 
-    document.getElementById('previous-page-button').disabled = false
+    document.getElementById('previous-page-button').innerHTML = page;
+    document.getElementById('next-page-button').innerHTML = page + 2;
+    document.getElementById('previous-page-button').disabled = false;
 }
 
 /**
@@ -65,6 +67,8 @@ async function previousPage() {
         initMap(events);
         // set page number
         document.getElementById('page-number').innerHTML = page + 1;
+        document.getElementById('previous-page-button').innerHTML = page;
+        document.getElementById('next-page-button').innerHTML = page + 2;
         if (page === 0) {
             document.getElementById('previous-page-button').disabled = true;
         }
