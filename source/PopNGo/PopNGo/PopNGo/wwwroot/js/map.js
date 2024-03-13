@@ -1,13 +1,15 @@
 import { onClickFavorite } from './api/favorites/onClickFavorite.js';
-import { searchForEvents, createTags, formatTags } from './eventsAPI.js';
+import { createTags, formatTags } from './eventsAPI.js';
+import { getEvents } from './api/events/getEvents.js';
 import { formatStartTime } from './util/formatStartTime.js';
-import { getNearestCityAndState } from './util/getNearestCityAndState.js';
 import { loadMapScript } from './util/loadMapScript.js';
 import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
+import { debounceUpdateLocationAndFetch } from './util/mapFetching.js';
+
 
 let map;
-let lastLocation = null; // The last location that was searched for
-let isWaiting = false; // A flag to prevent the updateLocationAndFetch function from being called too frequently
+// let lastLocation = null; // The last location that was searched for
+// let isWaiting = false; // A flag to prevent the updateLocationAndFetch function from being called too frequently
 
 // Function to create the map and display events
 window.initMap = async function (events) {
@@ -30,37 +32,10 @@ window.initMap = async function (events) {
             minZoom: 10,
             maxZoom: 15
         });
+
+        google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
     }
 
-    function updateLocationAndFetch() {
-        if (isWaiting) return;
-        isWaiting = true;
-    
-        console.log("Last Location: ", lastLocation);
-        var center = map.getCenter();
-        var latitude = center.lat();
-        var longitude = center.lng();
-        getNearestCityAndState(latitude, longitude).then(location => {
-            console.log(location);
-            if (location && (!lastLocation || location.city !== lastLocation.city || location.state !== lastLocation.state)) { // If the location has changed
-                searchForEvents(`Events in ${location.city}, ${location.state}`, initMap);
-                lastLocation = location;
-            } else if (!location) {
-                console.log('Could not find city and state for the provided latitude and longitude');
-            }
-            isWaiting = false;
-        });
-    }
-
-    let debounceTimeout = null;
-
-    function debounceUpdateLocationAndFetch() { // Debounce the updateLocationAndFetch function to prevent it from being called too frequently
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(updateLocationAndFetch, 500);
-    }
-
-
-    google.maps.event.addListener(map, 'idle', debounceUpdateLocationAndFetch);
 
     const loadingOverlay = document.createElement('div');
     loadingOverlay.id = 'loading-overlay';
@@ -165,14 +140,16 @@ window.onload = async function () {
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
     if (document.getElementById('demo-map-id')) {
-        loadMapScript();
-        searchForEvents("Events in Monmouth, Oregon", initMap);
+        await loadMapScript();
+        // searchForEvents("Events in Monmouth, Oregon", initMap);
+        let events = await getEvents("Events in Monmouth, Oregon");
+        initMap(events);
     }
 
-    document.getElementById('search-event-button').addEventListener('click', searchForEvents(null, initMap));
+    document.getElementById('search-event-button').addEventListener('click', () => getEvents("Events in Monmouth, Oregon"));
 
     document.getElementById('search-event-input').addEventListener('keyup', function (event) {
         if (event.key === 'Enter')
-            searchForEvents(null, initMap);
+            getEvents("Events in Monmouth, Oregon");
     });
 };
