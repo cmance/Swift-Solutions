@@ -48,6 +48,8 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     bookmarkContainer.addEventListener('click', () => {
         props.onPressFavorite();
+        props.favorited = !props.favorited;
+        bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
     });
 
     // Set the tags

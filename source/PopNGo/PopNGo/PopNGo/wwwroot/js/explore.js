@@ -21,21 +21,6 @@ const pageSize = 10;
  * @param {any} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
-    const eventDetailsModalProps = {
-        img: eventInfo.eventThumbnail,
-        title: eventInfo.eventName,
-        date: new Date(eventInfo.eventStartTime),
-        fullAddress: eventInfo.full_Address,
-        tags: await formatTags(eventInfo.eventTags),
-        favorited: await getEventIsFavorited(eventInfo.eventID),
-        onPressFavorite: () => onPressFavorite(eventInfo, eventDetailsModalProps.favorited) // TODO: not working
-    }
-
-    buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps)
-
-    const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
-    modal.show();
-
     let eventApiBody = {
         ApiEventID: eventInfo.eventID || "No ID available",
         EventDate: eventInfo.eventStartTime || "No date available",
@@ -43,6 +28,22 @@ async function onClickDetailsAsync(eventInfo) {
         EventDescription: eventInfo.eventDescription || "No description available",
         EventLocation: eventInfo.full_Address || "No location available",
     };
+
+    const eventDetailsModalProps = {
+        img: eventInfo.eventThumbnail,
+        title: eventInfo.eventName,
+        description: (eventInfo.eventDescription ?? 'No description') + '...',
+        date: new Date(eventInfo.eventStartTime),
+        fullAddress: eventInfo.full_Address,
+        tags: await formatTags(eventInfo.eventTags),
+        favorited: await getEventIsFavorited(eventInfo.eventID),
+        onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
+    }
+
+    buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps)
+
+    const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
+    modal.show();
 
     addEventToHistory(eventApiBody);
 }
