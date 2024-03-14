@@ -21,6 +21,7 @@
      tags: Array[Tag],
      favorited: Boolean
      onPressFavorite: Function
+     onPressEvent: Function
  }
 
  Tag: {
@@ -35,6 +36,11 @@
  */
 
 export const buildEventCard = (eventCardElement, props) => {
+    // Set the event card click event
+    eventCardElement.querySelector('#event-card-container').addEventListener('click', () => {
+        props.onPressEvent();
+    });
+
     // Set the image
     if (props.img === null || props.img === undefined) {
         eventCardElement.querySelector('#event-card-image').src = '/media/images/placeholder_event_card_image.png';

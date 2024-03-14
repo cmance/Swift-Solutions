@@ -130,7 +130,8 @@ async function displayEvents(events) {
             state: eventInfo.full_Address.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
             favorited: await getEventIsFavorited(eventInfo.eventID),
-            onPressFavorite: () => onPressFavorite(eventApiBody, eventCardProps.favorited)
+            onPressFavorite: () => onPressFavorite(eventApiBody, eventCardProps.favorited),
+            onPressEvent: () => onClickDetailsAsync(eventInfo),
         }
 
         buildEventCard(newEventCard, eventCardProps);
