@@ -1,9 +1,9 @@
 ﻿import { createTags, formatTags } from './util/tags.js';
-import { formatStartTime } from './util/formatStartTime.js';
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
 import { showToast } from './util/toast.js';
 import { buildEventCard } from './ui/buildEventCard.js';
+import { buildEventDetailsModal } from './ui/buildEventDetailsModal.js';
 import { getEvents } from './api/events/getEvents.js';
 import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
@@ -14,23 +14,28 @@ import { getNearestCityAndState } from './util/getNearestCityAndState.js';
 let page = 0;
 const pageSize = 10;
 
-async function setModalContent(eventName, eventDescription, eventStartTime, eventAddress, eventTags) {
-    const modal = document.getElementById('event-details-modal');
-    document.getElementById('modal-title').innerHTML = eventName;
-    document.getElementById('modal-description').innerHTML = eventDescription;
-    document.getElementById('modal-address').innerHTML = eventAddress;
-    document.getElementById('modal-date').innerHTML = eventStartTime;
-    const tagsContainer = document.getElementById('modal-tags-container');
-    tagsContainer.innerHTML = '';
-
-    if (eventTags && eventTags.length > 0) {
-        await formatTags(eventTags, tagsContainer);
-    } else {
-        const tagEl = document.createElement('span');
-        tagEl.classList.add('tag');
-        tagEl.textContent = "No tags available";
-        tagsContainer.appendChild(tagEl);
+/**
+ * Takes in an event info object and adds it to the history via http and opens the event details modal
+ * @async
+ * @function onClickDetailsAsync
+ * @param {any} eventInfo
+ */
+async function onClickDetailsAsync(eventInfo) {
+    const eventDetailsModalProps = {
+        img: eventInfo.eventThumbnail,
+        title: eventInfo.eventName,
+        date: new Date(eventInfo.eventStartTime),
+        fullAddress: eventInfo.full_Address,
+        tags: await formatTags(eventInfo.eventTags),
+        favorited: await getEventIsFavorited(eventInfo.eventID),
+        onPressFavorite: () => onPressFavorite(eventInfo, eventDetailsModalProps.favorited) // TODO: not working
     }
+
+    buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps)
+
+    const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
+    modal.show();
+    // TODO: addEventToHistory(eventInfo);
 }
 
 /**
@@ -160,8 +165,6 @@ async function onPressFavorite(eventInfo, favorited) {
 
 // Fetch event data and display it
 document.addEventListener('DOMContentLoaded', async function () {
-    const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
-    modal.show();
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
@@ -230,7 +233,7 @@ window.initMap = async function (events) {
             });
 
             marker.addListener('click', async function () {
-                // TODO: open the modal
+                onClickDetailsAsync(eventInfo);
             });
         }
     });
