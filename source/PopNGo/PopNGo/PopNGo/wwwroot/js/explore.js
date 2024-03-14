@@ -35,7 +35,16 @@ async function onClickDetailsAsync(eventInfo) {
 
     const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
     modal.show();
-    // TODO: addEventToHistory(eventInfo);
+
+    let eventApiBody = {
+        ApiEventID: eventInfo.eventID || "No ID available",
+        EventDate: eventInfo.eventStartTime || "No date available",
+        EventName: eventInfo.eventName || "No name available",
+        EventDescription: eventInfo.eventDescription || "No description available",
+        EventLocation: eventInfo.full_Address || "No location available",
+    };
+
+    addEventToHistory(eventApiBody);
 }
 
 /**
