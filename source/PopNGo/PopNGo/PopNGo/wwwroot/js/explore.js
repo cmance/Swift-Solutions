@@ -160,6 +160,8 @@ async function onPressFavorite(eventInfo, favorited) {
 
 // Fetch event data and display it
 document.addEventListener('DOMContentLoaded', async function () {
+    const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
+    modal.show();
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', true); // Hide the searching events section
 
