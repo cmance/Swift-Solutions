@@ -1,5 +1,7 @@
 
 export async function getLocationCoords(country, state, city) {
+    if(!country || !state || !city) return null;
+    
     const getApiKeyResponse = await fetch('/api/MapApi/GetGeolocationApiKey');
     const apiKey = await getApiKeyResponse.text();
     if(!apiKey) return;
