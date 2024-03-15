@@ -4,6 +4,8 @@ import { getEvents } from './api/events/getEvents.js';
 import { formatStartTime } from './util/formatStartTime.js';
 import { loadMapScript } from './util/loadMapScript.js';
 import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
+import { getCountries, getStates, getCities } from './util/getSearchLocationOptions.js';
+import { getLocationCoords } from './util/getSearchLocationCoords.js';
 import { debounceUpdateLocationAndFetch } from './util/mapFetching.js';
 
 
@@ -22,18 +24,26 @@ window.initMap = async function (events) {
         document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Show the no events section
 
     var monmouth = { lat: 44.848, lng: -123.229 }; //Hardcoded Monmouth, Oregon coordinates for now
+    const country = document.getElementById('search-event-country').value;
+    const state = document.getElementById('search-event-state').value;
+    const city = document.getElementById('search-event-city').value;
+    let mapCoords = await getLocationCoords(country, state, city);
+    console.debug("Coords: ", mapCoords);
 
     // Check if the map already exists
     if (!map) {
         // If it doesn't, create a new one
         map = new google.maps.Map(document.getElementById('demo-map-id'), {
-            center: monmouth,
+            center: mapCoords ?? monmouth,
             zoom: 10,
             minZoom: 10,
             maxZoom: 15
         });
-
+      
         google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
+    } else {
+        // If it does, move the map to the new coordinates
+        map.setCenter(mapCoords ?? monmouth);
     }
 
 
@@ -146,7 +156,49 @@ window.onload = async function () {
         initMap(events);
     }
 
-    document.getElementById('search-event-button').addEventListener('click', () => getEvents("Events in Monmouth, Oregon"));
+    // Load up the countries, states, and cities for the search input
+    const countries = await getCountries();
+    const countrySelect = document.getElementById('search-event-country');
+    const stateSelect = document.getElementById('search-event-state');
+    const citySelect = document.getElementById('search-event-city');
+
+    // Populate the country select
+    countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country;
+        option.textContent = country;
+        countrySelect.appendChild(option);
+    });
+
+    // Whenever the country changes, repopulate the states
+    countrySelect.addEventListener('change', async function () {
+        const states = await getStates(countrySelect.value);
+        stateSelect.innerHTML = '';
+        states.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+
+        stateSelect.dispatchEvent(new Event('change'));
+    });
+
+    // Whenever the state changes, repopulate the cities
+    stateSelect.addEventListener('change', async function () {
+        const cities = await getCities(countrySelect.value, stateSelect.value);
+        citySelect.innerHTML = '';
+        cities.forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+        });
+    });
+
+    countrySelect.dispatchEvent(new Event('change'));
+
+    document.getElementById('search-event-button').addEventListener('click', function () { searchForEvents(null, initMap) });
 
     document.getElementById('search-event-input').addEventListener('keyup', function (event) {
         if (event.key === 'Enter')
