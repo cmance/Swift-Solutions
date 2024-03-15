@@ -32,11 +32,26 @@ export async function fetchEventData(query) {
 }
 
 export async function searchForEvents(query, callback) {
-    const searchQuery = query ?? document.getElementById('search-event-input').value;
+    let searchQuery = query;
+    
+    if(!searchQuery) {
+        const input = document.getElementById('search-event-input')?.value ?? '';
+        const city = document.getElementById('search-event-city').value;
+        const state = document.getElementById('search-event-state').value;
+        const country = document.getElementById('search-event-country').value;
+
+        searchQuery = `${input} in ${city}, ${state}, ${country}`;
+    }
+
     document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
     document.getElementById('searching-events-section')?.classList.toggle('hidden', false); // Show the searching events section
+    // console.log("This function ran.")
 
     if (searchQuery) {
+        console.debug('Searching for events:', searchQuery);
+        document.getElementById('no-events-section')?.classList.toggle('hidden', true); // Hide the no events section
+        document.getElementById('searching-events-section')?.classList.toggle('hidden', false); // Show the searching events section
+
         fetchEventData(searchQuery).then(data => {
             callback(data); // Assuming the data structure includes an array in data.data
         }).catch(e => {
