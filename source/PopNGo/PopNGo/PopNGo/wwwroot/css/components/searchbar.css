@@ -22,7 +22,9 @@
     input:active,
     select:active,
     input:focus,
-    select:focus {
+    select:focus,
+    button:active,
+    button:focus {
         outline: none !important;
         box-shadow: none !important;
         border-color: #d38100 !important;
