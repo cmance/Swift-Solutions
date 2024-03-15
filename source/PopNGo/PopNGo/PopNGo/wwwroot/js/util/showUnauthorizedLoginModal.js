@@ -1,6 +1,6 @@
 
 
-function showLoginSignupModal() {
+export function showLoginSignupModal() {
     const modal = document.getElementById('unauthorized-login-modal');
     if (!modal) {
         console.error('Modal element #unauthorized-login-modal not found.');
@@ -22,5 +22,3 @@ function showLoginSignupModal() {
         }
     }
 }
-
-export { showLoginSignupModal };

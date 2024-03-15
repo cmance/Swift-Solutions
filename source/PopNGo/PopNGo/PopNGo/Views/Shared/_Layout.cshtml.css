@@ -7,6 +7,52 @@ a.navbar-brand {
   word-break: break-all;
 }
 
+.custom-navbar {
+  background-color: #1E1E1E;
+  /* Replace with your desired color */
+}
+
+.custom-bottom-navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #1E1E1E;
+  margin: 20px;
+  padding: 15px 0;
+  width: 50vw;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.custom-nav-item {
+  padding: 0; /* Remove the padding */
+}
+
+.nav-item {
+  list-style-type: none;
+}
+
+.onhover svg:hover {
+  filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
+  transform: scale(1.2); /* Adjust scale as needed */
+  transition: transform 0.3s ease-in-out; /* Optional: smooth transition */
+}
+
+.onhover svg:active {
+  filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
+}
+
+.onhover svg.clicked {
+  filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
+}
+
+.nav-link:hover {
+  transform: scale(1.5);
+}
+
+
 a {
   color: #0077cc;
 }
@@ -17,7 +63,8 @@ a {
   border-color: #1861ac;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
@@ -26,6 +73,7 @@ a {
 .border-top {
   border-top: 1px solid #e5e5e5;
 }
+
 .border-bottom {
   border-bottom: 1px solid #e5e5e5;
 }
