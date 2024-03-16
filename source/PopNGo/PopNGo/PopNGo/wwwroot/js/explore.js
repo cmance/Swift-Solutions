@@ -2,8 +2,8 @@
 import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
 import { showToast } from './util/toast.js';
-import { buildEventCard } from './ui/buildEventCard.js';
-import { buildEventDetailsModal } from './ui/buildEventDetailsModal.js';
+import { buildEventCard, validateBuildEventCardProps } from './ui/buildEventCard.js';
+import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './ui/buildEventDetailsModal.js';
 import { getEvents } from './api/events/getEvents.js';
 import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
@@ -69,12 +69,13 @@ async function onClickDetailsAsync(eventInfo) {
         onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
     }
 
-    buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps)
+    if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
+        buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
+        const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
+        modal.show();
 
-    const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
-    modal.show();
-
-    addEventToHistory(eventApiBody);
+        addEventToHistory(eventApiBody);
+    };
 }
 
 /**
@@ -156,9 +157,10 @@ export async function displayEvents(events) {
             onPressFavorite: () => onPressFavorite(eventApiBody, eventCardProps.favorited),
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         }
-
-        buildEventCard(newEventCard, eventCardProps);
-        eventsContainer.appendChild(newEventCard);
+        if (validateBuildEventCardProps(eventCardProps)) {
+            buildEventCard(newEventCard, eventCardProps);
+            eventsContainer.appendChild(newEventCard);
+        }
     }
 }
 
