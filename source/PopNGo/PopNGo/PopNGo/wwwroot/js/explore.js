@@ -266,6 +266,8 @@ window.initMap = async function (events) {
             marker.addListener('click', async function () {
                 onClickDetailsAsync(eventInfo);
             });
+
+            google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
         }
     });
 }

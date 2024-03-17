@@ -6,22 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchAndDisplayEvents();
 });
 
-/*
-constructEventCard creates a html element based on the event object passed to it into this template:
-<template id="event-card-template">
-    <div class="row text-dark mb-3">
-        <div class="col-12">
-            <div class="card border-0">
-                <div class="card-body" id="event-card-body">
-                    <h5 class="card-title" id="event-name">Event Name</h5>
-                    <p class="card-text" id="event-description">Event Description</p>
-                    <p class="card-text" id="event-datetime">Event Date and time</p>
-                    <p class="card-text" id="event-location">Event Location</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>*/
+
 function constructEventCard(event) {
     const template = document.getElementById('event-card-template');
     const eventCard = template.content.cloneNode(true);
@@ -52,7 +37,31 @@ function displayEvents(events) {
 
 // Fetch event data and display it
 async function fetchAndDisplayEvents() {
-    fetch("/api/EventHistoryApi/EventHistory").then(response => response.json())
-        .then(data => displayEvents(data))
-        .catch(error => console.error('Error fetching event data:', error));
+    fetch("/api/EventHistoryApi/EventHistory")
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    document.getElementById("login-prompt").style.display = "block";
+                    throw new Error('Unauthorized');
+                } else if
+                    (response.status === 404) {
+                    document.getElementById("no-history-message").style.display = "block";
+                    throw new Error('No history found');
+                }
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayEvents(data);
+            document.getElementById("history-container").style.display = "block";
+        })
+        .catch(error => {
+            if (error.message === 'Unauthorized') {
+                // Handle 401 error here
+                console.error('Unauthorized: ', error);
+            } else {
+                console.error('Error fetching event data:', error);
+            }
+        });
 }
