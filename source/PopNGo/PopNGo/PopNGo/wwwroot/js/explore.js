@@ -157,6 +157,7 @@ export async function displayEvents(events) {
             favorited: await getEventIsFavorited(eventInfo.eventID),
             onPressFavorite: () => onPressFavorite(eventApiBody, eventCardProps.favorited),
             onPressEvent: () => onClickDetailsAsync(eventInfo),
+            
         }
         if (validateBuildEventCardProps(eventCardProps)) {
             buildEventCard(newEventCard, eventCardProps);
