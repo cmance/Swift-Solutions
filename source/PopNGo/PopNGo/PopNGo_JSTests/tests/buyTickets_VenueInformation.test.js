@@ -9,10 +9,13 @@ describe('Event Details Modal', () => {
 
     test('should display "View Venue" and "Buy Tickets" buttons when an event is clicked', () => {
         // Arrange
-        // TODO: Set up your test
+        // Using selenium
+        // Find the event element
 
         // Act
         // TODO: Execute the behavior you're testing
+        // Click on an event
+        // Check if buttons are displayed
 
         // Assert
         expect(1).toBe(2);
@@ -21,16 +24,18 @@ describe('Event Details Modal', () => {
     describe('View Venue', () => {
         test('should reveal hidden information when "View Venue" button is clicked', () => {
             // Arrange
-            // TODO: Set up your test
+            // Using selenium
+            // Find the "View Venue" button
 
             // Act
-            // TODO: Execute the behavior you're testing
+            // Click on the "View Venue" button
 
             // Assert
+            // Check if the div is visible
             expect(1).toBe(2);
         });
 
-        test('should display venue’s location, contact information, and review rating', async () => {
+        test('should display venue location, contact information, and review rating', async () => {
             // Arrange
             const mockVenueDetails = {
                 location: 'Test Location',
@@ -40,9 +45,10 @@ describe('Event Details Modal', () => {
             fetchVenueDetails.mockResolvedValueOnce(mockVenueDetails);
 
             // Act
-            // TODO: Execute the behavior you're testing
+            // Click on the "View Venue" button
 
             // Assert
+            // Check if the mockVenueDetails are displayed
             expect(1).toBe(2);
         });
 
@@ -51,9 +57,10 @@ describe('Event Details Modal', () => {
             fetchVenueDetails.mockResolvedValueOnce(null);
 
             // Act
-            // TODO: Execute the behavior you're testing
+            // Click on the "View Venue" button
 
             // Assert
+            // Check if the fallback message is displayed
             expect(1).toBe(2);
         });
     });
@@ -65,9 +72,10 @@ describe('Event Details Modal', () => {
             fetchTicketLinks.mockResolvedValueOnce(mockTicketLinks);
 
             // Act
-            // TODO: Execute the behavior you're testing
+            // Click on an event
 
             // Assert
+            // Check if 2 links are displayed
             expect(1).toBe(2);
         });
 
@@ -77,9 +85,10 @@ describe('Event Details Modal', () => {
             fetchTicketLinks.mockResolvedValueOnce(mockTicketLinks);
 
             // Act
-            // TODO: Execute the behavior you're testing
+            // Click on an event
 
             // Assert
+            // Check if 3 links are displayed
             expect(1).toBe(2);
         });
 
@@ -88,9 +97,10 @@ describe('Event Details Modal', () => {
             fetchTicketLinks.mockResolvedValueOnce([]);
 
             // Act
-            // TODO: Execute the behavior you're testing
+            // Click on an event
 
             // Assert
+            // Check if the fallback message is displayed for no ticket links
             expect(1).toBe(2);
         });
     });
