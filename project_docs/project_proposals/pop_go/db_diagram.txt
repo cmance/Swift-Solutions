@@ -1,21 +1,34 @@
-// For use with dbdiagram.io
-
-Table User {
-  ID int [pk, increment]
-  ASPNETUserID int
+Table "Event" {
+  "ID" int [pk, increment]
+  "ApiEventID" nvarchar(255) [not null]
+  "EventDate" datetime [not null]
+  "EventName" nvarchar(255) [not null]
+  "EventDescription" nvarchar(1000) [not null]
+  "EventLocation" nvarchar(255) [not null]
+  "EventImage" nvarchar(255)
 }
 
-Table Event {
-  ID int [pk, increment]
-  EventApiId int [not null]
-  Title nvarChar(128) [not null]
-  Description Text
-  EventDateTime DateTime [not null]
-  Tags Text
+Table "FavoriteEvents" {
+  "ID" int [pk, increment]
+  "UserID" int [not null]
+  "EventID" int [not null]
 }
 
-Table SavedEvents {
-  ID int [pk, increment]
-  EventId int [not null]
-  UserId int [not null]
+Table "EventHistory" {
+  "ID" int [pk, increment]
+  "UserID" int [not null]
+  "EventID" int [not null]
+  "ViewedDate" datetime [not null]
+}
+
+Table "PG_User" {
+  "ID" int [pk, increment]
+  "ASPNETUserID" nvarchar(255) [not null]
+}
+
+Table "Tag" {
+  "ID" int [pk, increment]
+  "Name" nvarchar(255) [not null]
+  "BackgroundColor" nvarchar(255) [not null]
+  "TextColor" nvarchar(255) [not null]
 }

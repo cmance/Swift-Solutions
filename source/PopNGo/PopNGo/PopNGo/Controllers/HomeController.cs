@@ -18,16 +18,12 @@ public class HomeController : Controller
         return View();
     }
 
-    public IActionResult WelcomePage()
-    {
-        return View();
-    }
-    public IActionResult ExplorePage()
+    public IActionResult Explore()
     {
         return View();
     }
     
-    public IActionResult HistoryPage()
+    public IActionResult History()
     {
         return View();
     }

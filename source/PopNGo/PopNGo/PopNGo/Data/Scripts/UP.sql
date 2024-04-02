@@ -26,7 +26,15 @@ CREATE TABLE [Event] (
   [EventDate] DATETIME NOT NULL,
   [EventName] NVARCHAR(255) NOT NULL,
   [EventDescription] NVARCHAR(1000) NOT NULL,
-  [EventLocation] NVARCHAR(255) NOT NULL
+  [EventLocation] NVARCHAR(255) NOT NULL,
+  [EventImage] NVARCHAR(255)
+);
+
+CREATE TABLE [Tag] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [Name] NVARCHAR(255) NOT NULL,
+  [BackgroundColor] NVARCHAR(255) NOT NULL,
+  [TextColor] NVARCHAR(255) NOT NULL
 );
 
 CREATE TABLE [Tag] (
