@@ -10,13 +10,13 @@ CREATE TABLE [PG_User] (
 CREATE TABLE [FavoriteEvents] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [UserID] INTEGER NOT NULL,
-  [EventID] INTEGER NOT NULL  -- Change this to NVARCHAR(255)
+  [EventID] INTEGER NOT NULL
 );
 
 CREATE TABLE [EventHistory] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [UserID] INTEGER NOT NULL,
-  [EventID] INTEGER NOT NULL,  -- Change this to NVARCHAR(255)
+  [EventID] INTEGER NOT NULL,
   [ViewedDate] DATETIME NOT NULL
 );
 
@@ -39,5 +39,6 @@ CREATE TABLE [Tag] (
 
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
+
 ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);

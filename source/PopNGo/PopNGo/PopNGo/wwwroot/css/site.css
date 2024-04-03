@@ -110,6 +110,9 @@ body {
   }
 }
 
+#no-favorites-message {
+  font-size: 1.2em;
+}
 
 /* Form Styles */
 .modal {

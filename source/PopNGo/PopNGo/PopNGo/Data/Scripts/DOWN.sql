@@ -3,6 +3,7 @@ USE [PopNGoDB];
 -- Drop the foreign key constraints
 ALTER TABLE [EventHistory] DROP CONSTRAINT FK_EventHistory_UserID;
 ALTER TABLE [EventHistory] DROP CONSTRAINT FK_EventHistory_EventID;
+
 ALTER TABLE [FavoriteEvents] DROP CONSTRAINT FK_FavoriteEvents_UserID;
 ALTER TABLE [FavoriteEvents] DROP CONSTRAINT FK_FavoriteEvents_EventID;
 
