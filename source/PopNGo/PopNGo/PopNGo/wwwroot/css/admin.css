@@ -34,7 +34,8 @@ table tr:nth-child(even) {
     border-bottom-color: #d38100;
 }
 
-#admin-user-details-modal {
+#admin-user-details-modal,
+#admin-schedule-details-modal {
     div.modal-content {
         background-color: #313030;
         color: #d9d9d9;
@@ -61,6 +62,7 @@ table tr:nth-child(even) {
     
     input:not([type="checkbox"]),
     input:not([type="checkbox"]):focus,
+    select,
     button,
     > div > label {
         background-color: #313030 !important;
