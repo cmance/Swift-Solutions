@@ -37,6 +37,26 @@
     display: none;
 }
 
+/* Buttons Container */
+
+#buttons-container {
+    display: flex;
+    padding-top: 15px;
+    justify-content: space-between;
+}
+
+
+#right-buttons {
+    display: flex;
+}
+
+/* Add a right margin to the buy-tickets-btn */
+#buy-tickets-btn {
+    margin-right: 10px; 
+}
+
+/* /////////////////////////////////////////// */
+
 #event-modal-img {
     border-radius: 15px;
     max-width: 500px;

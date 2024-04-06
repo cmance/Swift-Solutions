@@ -73,6 +73,31 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     } else {
         console.error("Button already exists in the container.");
     }
+
+    //Additional buttons for the modal can go here
+
+    // Buy Tickets Btn
+    const buyTicketsButtonContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
+    buyTicketsButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
+
+    const buyTicketsButton = document.createElement('button');
+    buyTicketsButton.textContent = 'Buy Tickets';
+    buyTicketsButton.className = 'btn btn-warning'; // Add Bootstrap classes
+
+    buyTicketsButtonContainer.appendChild(buyTicketsButton);
+    /////
+
+    // View Venue Btn
+    const viewVenueButtonContainer = eventDetailsModalElement.querySelector('#view-venue-btn');
+    viewVenueButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
+
+    const viewVenueButton = document.createElement('button');
+    viewVenueButton.textContent = 'View Venue';
+    viewVenueButton.className = 'btn btn-warning'; // Add Bootstrap classes
+
+    viewVenueButtonContainer.appendChild(viewVenueButton);
+    /////
+    
 }
 
 /**
