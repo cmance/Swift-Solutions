@@ -128,14 +128,14 @@ body {
   background-color: rgba(0, 0, 0, 0.4); 
 }
 
+/* This is the unauthorized modal */
 .modal-content {
   background-color: #fefefe;
   margin: 10% auto;   
   padding: 20px;
   border: 1px solid #888;
-  width: 80%; 
+  width: 500px;
   border-radius: 10px; 
-  width: 400px; 
 }
 
 .modal-backdrop {
