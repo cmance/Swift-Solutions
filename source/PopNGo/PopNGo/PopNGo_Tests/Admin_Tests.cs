@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PopNGo.DAL.Concrete;
 
 namespace PopNGo_Tests;
 
@@ -47,12 +48,12 @@ public class Admin_Tests
         int newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
 
         // Assert
-        var addedScheduledNotification = await _context.ScheduledNotifications.FindByIdAsync(newEventId);
+        var addedScheduledNotification = await _context.ScheduledNotifications.FindAsync(newEventId);
         Assert.That(addedScheduledNotification, Is.Not.Null);
 
-        Assert.That(addedScheduledNotification.ScheduledNotificationTime, Is.EqualTo(scheduledNotificationTime));
-        Assert.That(addedScheduledNotification.ScheduledNotificationType, Is.EqualTo(scheduledNotificationType));
-        Assert.That(addedScheduledNotification.ScheduledNotificationUserId, Is.EqualTo(scheduledNotificationUserId));
+        Assert.That(addedScheduledNotification.Time, Is.EqualTo(scheduledNotificationTime));
+        Assert.That(addedScheduledNotification.Type, Is.EqualTo(scheduledNotificationType));
+        Assert.That(addedScheduledNotification.UserId, Is.EqualTo(scheduledNotificationUserId));
     }
 
     [Test]
@@ -67,7 +68,7 @@ public class Admin_Tests
         int newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
 
         // Assert
-        var addedScheduledNotification = await _context.ScheduledNotifications.FindByIdAsync(newEventId);
+        var addedScheduledNotification = await _context.ScheduledNotifications.FindAsync(newEventId);
         Assert.That(addedScheduledNotification, Is.Not.Null);
 
         // Act
@@ -90,7 +91,7 @@ public class Admin_Tests
         int newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
 
         // Assert
-        var addedScheduledNotification = await _context.ScheduledNotifications.FindByIdAsync(newEventId);
+        var addedScheduledNotification = await _context.ScheduledNotifications.FindAsync(newEventId);
         Assert.That(addedScheduledNotification, Is.Not.Null);
 
         // Act
@@ -113,7 +114,7 @@ public class Admin_Tests
         int newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
 
         // Assert
-        var addedScheduledNotification = await _context.ScheduledNotifications.FindByIdAsync(newEventId);
+        var addedScheduledNotification = await _context.ScheduledNotifications.FindAsync(newEventId);
         Assert.That(addedScheduledNotification, Is.Not.Null);
 
         // Act
@@ -133,15 +134,15 @@ public class Admin_Tests
         int newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
 
         // Act
-        var addedScheduledNotification = await _context.ScheduledNotifications.FindByIdAsync(newEventId);
+        var addedScheduledNotification = await _context.ScheduledNotifications.FindAsync(newEventId);
         Assert.That(addedScheduledNotification, Is.Not.Null);
 
         var result = await _scheduledNotificationRepository.DeleteScheduledNotification(newEventId);
         Assert.That(result, Is.True);
 
         // Assert
-        var newEventId2 = await _scheduledNotificationRepository.FindByUserIdAsync(scheduledNotificationUserId);
-        var addedScheduledNotification2 = await _context.ScheduledNotifications.FindByIdAsync(newEventId2);
+        var newEventId2 = await _scheduledNotificationRepository.FindByUserIdAsync(scheduledNotificationUserId, scheduledNotificationType);
+        var addedScheduledNotification2 = await _context.ScheduledNotifications.FindAsync(newEventId2);
 
         Assert.That(addedScheduledNotification2, Is.Not.Null);
         Assert.That(newEventId2, Is.Not.EqualTo(newEventId));
@@ -151,16 +152,18 @@ public class Admin_Tests
     public async Task FindByUserIdAsync_ShouldReturnScheduledNotification()
     {
         // Arrange
-        var scheduledNotificationUserId = 1;
+        var scheduledNotificationUserId = 4;
         var scheduledNotificationTime = DateTime.Now;
         var scheduledNotificationType = "Upcoming Events";
         int newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
 
         // Act
-        var addedScheduledNotification = await _context.ScheduledNotifications.FindByIdAsync(newEventId);
+        var addedScheduledNotification = await _context.ScheduledNotifications.FindAsync(newEventId);
         Assert.That(addedScheduledNotification, Is.Not.Null);
 
-        var result = await _scheduledNotificationRepository.FindByUserIdAsync(scheduledNotificationUserId);
+        await _scheduledNotificationRepository.CleanUpScheduledNotifications(scheduledNotificationTime);
+
+        var result = await _scheduledNotificationRepository.FindByUserIdAsync(scheduledNotificationUserId, scheduledNotificationType);
 
         // Assert
         Assert.That(result, Is.EqualTo(newEventId));
@@ -173,14 +176,14 @@ public class Admin_Tests
         var scheduledNotificationUserId = -1;
 
         // Act
-        var result = await _scheduledNotificationRepository.FindByUserIdAsync(scheduledNotificationUserId);
+        var result = await _scheduledNotificationRepository.FindByUserIdAsync(scheduledNotificationUserId, "Upcoming Events");
 
         // Assert
-        Assert.That(result, Is.EqualTo(0));
+        Assert.That(result, Is.LessThan(0));
     }
 
     [Test]
-    public void ScheduledNotifications_AddScheduledNotification_ShouldFailIfExistsAlready()
+    public async Task ScheduledNotifications_AddScheduledNotification_ShouldFailIfExistsAlready()
     {
         // Arrange
         var scheduledNotificationUserId = 1;
@@ -189,12 +192,12 @@ public class Admin_Tests
         var scheduledNotificationTime2 = DateTime.Now.AddDays(1);
 
         // Act
-        var newEventId = _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
-        var newEventId2 = _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime2, scheduledNotificationType);
+        var newEventId = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime, scheduledNotificationType);
+        var newEventId2 = await _scheduledNotificationRepository.AddScheduledNotification(scheduledNotificationUserId, scheduledNotificationTime2, scheduledNotificationType);
 
         // Assert
         Assert.That(newEventId, Is.Not.EqualTo(newEventId2));
-        Assert.That(newEventId2, Is.EqualTo(-1));
+        Assert.That(newEventId2, Is.LessThan(0));
     }
 
     [Test]

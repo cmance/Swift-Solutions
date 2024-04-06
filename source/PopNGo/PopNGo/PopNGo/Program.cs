@@ -68,6 +68,7 @@ public class Program
         builder.Services.AddScoped<ITagRepository, TagRepository>();
         builder.Services.AddScoped<IFavoritesRepository, FavoritesRepository>();
         builder.Services.AddScoped<IEventRepository, EventRepository>();
+        builder.Services.AddScoped<IScheduledNotificationRepository, ScheduledNotificationRepository>();
 
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -82,12 +83,11 @@ public class Program
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
-
         
         builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<PopNGoUser>>();
         builder.Services.AddTransient<IEmailSender, EmailSender>();
+        builder.Services.AddTransient<EmailBuilder>();
         builder.Services.AddHostedService<TimedEmailService>();
-
         builder.Services.AddControllersWithViews();
 
         // Add Swagger
@@ -97,6 +97,7 @@ public class Program
         });
 
         var app = builder.Build();
+        ScheduleTasking.SetServiceScopeFactory(app.Services.GetRequiredService<IServiceScopeFactory>());
 
         SeedData(app).Wait();
 

@@ -1,0 +1,62 @@
+<div id="admin-schedule-details-modal" class="modal" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Scheduled Notification Details</h3>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <h3 class="col-12">User Information</h3>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="schedule-details-first-name">First Name</label>
+                            <input type="text" class="form-control" id="schedule-details-first-name" readonly aria-readonly="true">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="schedule-details-last-name">Last Name</label>
+                            <input type="text" class="form-control" id="schedule-details-last-name" readonly aria-readonly="true">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="schedule-details-username">Username</label>
+                            <input type="text" class="form-control" id="schedule-details-username" readonly aria-readonly="true">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <h3 class="col-12">Notification Information</h3>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="schedule-details-notification-email">Notification Email</label>
+                            <input type="text" class="form-control" id="schedule-details-notification-email" readonly aria-readonly="true">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="schedule-details-time">Notification Time</label>
+                            <input type="datetime-local" class="form-control" id="schedule-details-time">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label for="schedule-details-type">Notification Type</label>
+                            <select class="form-control" id="schedule-details-type">
+                                <option value="Upcoming Events">Upcoming Events</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="row offset-md-4 col-md-4 mt-3">
+                    <button class="btn btn-primary" id="schedule-details-save" data-bs-dismiss="modal" type="submit">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
