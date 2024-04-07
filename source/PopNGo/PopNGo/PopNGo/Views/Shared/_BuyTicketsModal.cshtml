@@ -1,16 +1,34 @@
 <!-- Buy Tickets Modal -->
-<div class="modal fade" id="buyTicketsModal" tabindex="-1" role="dialog" aria-labelledby="buyTicketsModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="buyTicketsModalLabel">Buy Tickets</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- Insert ticket buying information here -->
-      </div>
+<div id="buy-tickets-modal" class="pop-in" role="dialog">
+    <!-- Modal content -->
+    <div class="modal-dialog-2 modal-extra-lg" role="document">
+        <div class="modal-content-2">
+            <h2 id="modal-title" class="modal-headers">Buy Tickets</h2>
+            <div id="modal-description" class="modal-description-text">
+                Please select the number of tickets you want to purchase and proceed to checkout.
+            </div>
+
+            <h5 class="modal-headers">Number of Tickets</h5>
+            <div id="modal-ticket-selection" class="modal-description-text">
+                <select id="ticket-quantity">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+
+            <h5 class="modal-headers">Total Price</h5>
+            <div id="modal-total-price" class="modal-description-text">
+                <!-- Total price will be calculated and displayed here -->
+            </div>
+
+            <div id="buttons-container">
+                <div id="proceed-to-checkout-btn" title="Proceed to checkout">
+                    <button class="btn btn-primary">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

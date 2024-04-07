@@ -74,8 +74,6 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
         console.error("Button already exists in the container.");
     }
 
-    //Additional buttons for the modal can go here
-
     // Buy Tickets Btn
     const buyTicketsButtonContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
     buyTicketsButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
@@ -85,7 +83,16 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     buyTicketsButton.className = 'btn btn-warning'; // Add Bootstrap classes
 
     buyTicketsButtonContainer.appendChild(buyTicketsButton);
-    /////
+
+    buyTicketsButton.addEventListener('click', () => {
+        const buyTicketsModal = document.getElementById('buy-tickets-modal');
+        buyTicketsModal.style.display = 'block';
+    
+        // Add an event listener to the modal that hides it when it's clicked
+        buyTicketsModal.addEventListener('click', () => {
+            buyTicketsModal.style.display = 'none';
+        });
+    });
 
     // View Venue Btn
     const viewVenueButtonContainer = eventDetailsModalElement.querySelector('#view-venue-btn');
@@ -96,8 +103,17 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     viewVenueButton.className = 'btn btn-warning'; // Add Bootstrap classes
 
     viewVenueButtonContainer.appendChild(viewVenueButton);
-    /////
+
+    viewVenueButton.addEventListener('click', () => {
+        const viewVenueModal = document.getElementById('view-venue-modal');
+        viewVenueModal.style.display = 'block';
     
+        // Add an event listener to the modal that hides it when it's clicked
+        viewVenueModal.addEventListener('click', () => {
+            viewVenueModal.style.display = 'none';
+        });
+    });
+
 }
 
 /**
