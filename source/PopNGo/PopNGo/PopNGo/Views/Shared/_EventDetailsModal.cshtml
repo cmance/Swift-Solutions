@@ -30,7 +30,15 @@
             <div id="buttons-container">
                 <div id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
                 <div id="right-buttons">
-                    <div id="buy-tickets-btn" title="Buy tickets for this event"></div>
+                    <div id="buy-tickets-btn" title="Buy tickets for this event">
+                        <button id="buyTicketsBtn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Buy Tickets
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="buyTicketsBtn">
+                            <!-- Dropdown items will be added here by JavaScript -->
+                        </div>
+                    </div>
                     <div id="view-venue-btn" title="View information about the venue"></div>
                 </div>
             </div>

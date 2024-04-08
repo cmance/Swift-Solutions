@@ -74,25 +74,9 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
         console.error("Button already exists in the container.");
     }
 
-    // Buy Tickets Btn
-    const buyTicketsButtonContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
-    buyTicketsButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
-
-    const buyTicketsButton = document.createElement('button');
-    buyTicketsButton.textContent = 'Buy Tickets';
-    buyTicketsButton.className = 'btn btn-warning'; // Add Bootstrap classes
-
-    buyTicketsButtonContainer.appendChild(buyTicketsButton);
-
-    buyTicketsButton.addEventListener('click', () => {
-        const buyTicketsModal = document.getElementById('buy-tickets-modal');
-        buyTicketsModal.style.display = 'block';
-    
-        // Add an event listener to the modal that hides it when it's clicked
-        buyTicketsModal.addEventListener('click', () => {
-            buyTicketsModal.style.display = 'none';
-        });
-    });
+    // Buy Tickets Dropdown
+    const buyTicketsDropdownContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
+    createBuyTicketsDropdown(buyTicketsDropdownContainer, props);
 
     // View Venue Btn
     const viewVenueButtonContainer = eventDetailsModalElement.querySelector('#view-venue-btn');
@@ -107,7 +91,9 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     viewVenueButton.addEventListener('click', () => {
         const viewVenueModal = document.getElementById('view-venue-modal');
         viewVenueModal.style.display = 'block';
-    
+
+        // Add a function to populate the modal with venue details
+
         // Add an event listener to the modal that hides it when it's clicked
         viewVenueModal.addEventListener('click', () => {
             viewVenueModal.style.display = 'none';
@@ -138,4 +124,35 @@ export function validateBuildEventDetailsModalProps(data) {
     }
 
     return validateObject(data, schema).length === 0;
+}
+
+/**
+ * Creates a buy tickets dropdown button for the event details modal
+ * @param {any} buyTicketsDropdownContainer
+ * @param {any} props
+ * @returns {void}
+ */
+export function createBuyTicketsDropdown(buyTicketsDropdownContainer, props) {
+    const buyTicketsButton = buyTicketsDropdownContainer.querySelector('#buyTicketsBtn');
+    const dropdownMenu = buyTicketsDropdownContainer.querySelector('.dropdown-menu');
+
+    // Clear any existing dropdown items
+    dropdownMenu.innerHTML = '';
+
+    if (!props.ticketLinks) {
+        buyTicketsButton.classList.add('disabled'); // Disable the button
+        buyTicketsDropdownContainer.title = "No ticket links available for this event.";
+    } else {
+        buyTicketsButton.classList.remove('disabled'); // Enable the button
+        buyTicketsDropdownContainer.title = "Click to view ticket options for this event.";
+        props.ticketLinks.forEach(ticketLink => {
+            const ticketLinkElement = document.createElement('a');
+            ticketLinkElement.textContent = ticketLink.source;
+            ticketLinkElement.href = ticketLink.link;
+            ticketLinkElement.target = '_blank';
+            ticketLinkElement.className = 'dropdown-item';
+
+            dropdownMenu.appendChild(ticketLinkElement);
+        });
+    }
 }

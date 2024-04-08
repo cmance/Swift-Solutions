@@ -25,7 +25,7 @@ export function updateLocationAndFetch(map, start = 0) {
                 .then(events => {
                     initMap(events);
                     lastLocation = location;
-                    console.log(lastLocation, latitude, longitude)
+                    // console.log(lastLocation, latitude, longitude)
 
                 })
                 .catch(error => console.error('Error fetching events:', error));

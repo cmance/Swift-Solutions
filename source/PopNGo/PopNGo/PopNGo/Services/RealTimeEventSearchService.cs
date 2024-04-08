@@ -16,7 +16,7 @@ namespace PopNGo.Services
         public int start { get; set; }
     }
 
-    class TicketLink
+    public class TicketLink
     {
         public string source { get; set; }
         public string link { get; set; }
@@ -28,7 +28,7 @@ namespace PopNGo.Services
         public string link { get; set; }
     }
 
-    class Venue
+    public class Venue
     {
         public string google_id { get; set; }
         public string name { get; set; }
@@ -139,7 +139,9 @@ namespace PopNGo.Services
                     Longitude = data.venue?.longitude ?? 0,
                     Latitude = data.venue?.latitude ?? 0,
                     Phone_Number = data.venue?.phone_number,
-                    EventTags = data.tags
+                    EventTags = data.tags,
+                    Venue = data.venue,
+                    TicketLinks = data.ticket_links
                 }).ToList();
                 
                 return eventDetails;
@@ -194,7 +196,9 @@ namespace PopNGo.Services
                     Longitude = newEvent.data.venue?.longitude ?? 0,
                     Latitude = newEvent.data.venue?.latitude ?? 0,
                     Phone_Number = newEvent.data.venue?.phone_number,
-                    EventTags = newEvent.data.tags
+                    EventTags = newEvent.data.tags,
+                    Venue = newEvent.data.venue,
+                    TicketLinks = newEvent.data.ticket_links
                 };
             }
             catch (Exception ex)

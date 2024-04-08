@@ -52,3 +52,28 @@
     max-width: 50vw;
     width: auto;
 }
+
+#ticket-links-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.dropdown-menu {
+    /* Add styles for the dropdown menu here */
+    background-color: #f8f9fa;
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-item {
+    /* Add styles for the dropdown items here */
+    color: #212529;
+    padding: 0.25rem 1.5rem;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #ff9800;
+}

@@ -89,6 +89,7 @@ async function onClickDetailsAsync(eventInfo) {
         fullAddress: eventInfo.full_Address,
         tags: await formatTags(eventInfo.eventTags),
         favorited: await getEventIsFavorited(eventInfo.eventID),
+        ticketLinks : eventInfo.ticketLinks,
         onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
     }
 
@@ -231,7 +232,7 @@ async function onPressFavorite(eventInfo, favorited) {
  * @returns {Promise<void>}
  */
 async function searchForEvents() {
-    console.log("search")
+    // console.log("search")
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
     toggleSearching();
