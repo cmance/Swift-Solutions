@@ -30,7 +30,7 @@ namespace PopNGo_BDD_Tests.PageObjects
         // Go to the previously set page name (convenience method for using derived classes)
         public void GoTo()
         {
-            if(_pageName != null)
+            if (_pageName != null)
             {
                 GoTo(_pageName);
             }
