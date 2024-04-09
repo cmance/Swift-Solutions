@@ -52,7 +52,7 @@
 
 /* Add a right margin to the buy-tickets-btn */
 #buy-tickets-btn {
-    margin-right: 10px; 
+    margin-right: 10px;
 }
 
 /* /////////////////////////////////////////// */
@@ -107,4 +107,21 @@
     background-color: lightcoral;
     padding: 0px 2% 0px 2%;
     margin-right: 5px
+}
+
+.stars {
+    margin-left: 10px;
+}
+
+.star {
+    font-size: 25px;
+    color: #ddd;
+}
+
+.star[data-value="1"],
+.star[data-value="2"],
+.star[data-value="3"],
+.star[data-value="4"],
+.star[data-value="5"] {
+    color: #ffc107;
 }
