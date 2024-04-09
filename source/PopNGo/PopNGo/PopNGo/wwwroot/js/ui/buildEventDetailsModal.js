@@ -138,9 +138,11 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
         // Add a function to populate the modal with venue details
 
-        // Add an event listener to the modal that hides it when it's clicked
-        viewVenueModal.addEventListener('click', () => {
-            viewVenueModal.style.display = 'none';
+        // Add an event listener to the modal that hides the modal when the user clicks outside of it
+        viewVenueModal.addEventListener('click', (event) => {
+            if (event.target === viewVenueModal) {
+                viewVenueModal.style.display = 'none';
+            }
         });
     });
 
