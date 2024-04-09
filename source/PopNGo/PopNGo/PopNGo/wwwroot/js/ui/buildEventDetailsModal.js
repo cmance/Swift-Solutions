@@ -88,6 +88,50 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     viewVenueButtonContainer.appendChild(viewVenueButton);
 
+    const venue = props.venue;
+
+    document.getElementById('venue-modal-title').textContent = venue.name || 'No Venue Name Provided';
+    document.getElementById('venue-modal-full-address').textContent = venue.full_address || 'No Venue Address Provided';
+    document.getElementById('venue-modal-phone').textContent = venue.phone_number || 'No Venue Phone Provided';
+    if (venue.website) {
+        document.querySelector('#venue-modal-website').style.display = 'block';
+        document.querySelector('#venue-modal-website .venue-website-link').href = venue.website;
+    } else {
+        document.querySelector('#venue-modal-website').style.display = 'none';
+    }
+    const rating = Math.floor(venue.rating);
+
+    // Get the rating container
+    const ratingContainer = document.getElementById('venue-modal-rating');
+    
+    // Clear the rating container
+    ratingContainer.innerHTML = '';
+    
+    // Create a new span element for the rating string
+    const ratingString = document.createElement('span');
+    
+    // Set the text content of the rating string to the venue rating
+    ratingString.textContent = `(${venue.rating})`;
+    
+    // Append the rating string to the rating container
+    if (rating) {
+        ratingContainer.appendChild(ratingString);
+    }
+
+    
+    // Loop as many times as the rating
+    for (let i = 0; i < rating; i++) {
+        // Create a new span element for the star
+        const star = document.createElement('span');
+    
+        // Set the HTML content of the star to the given HTML string
+        star.innerHTML = `<span class="star" data-value="${i + 1}">&#9733;</span>`;
+    
+        // Append the star to the rating container
+        ratingContainer.appendChild(star);
+    }
+
+
     viewVenueButton.addEventListener('click', () => {
         const viewVenueModal = document.getElementById('view-venue-modal');
         viewVenueModal.style.display = 'block';

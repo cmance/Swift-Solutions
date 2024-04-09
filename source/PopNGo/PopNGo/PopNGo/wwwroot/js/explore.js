@@ -90,8 +90,10 @@ async function onClickDetailsAsync(eventInfo) {
         tags: await formatTags(eventInfo.eventTags),
         favorited: await getEventIsFavorited(eventInfo.eventID),
         ticketLinks : eventInfo.ticketLinks,
+        venue: eventInfo.venue,
         onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
     }
+    
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
