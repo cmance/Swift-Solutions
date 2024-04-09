@@ -21,6 +21,7 @@ namespace PopNGo_BDD_Tests.Shared
         {
             { "Home" , "/" },
             { "Login", "/Identity/Account/Login" },
+            { "Explore", "/Home/Explore"},
             { "SelectGroup", "/MyAccount/SelectGroup" },
             { "AdminQuestions", "/Admin/Questions" },
             { "AdminQuestionsCreate", "/Admin/Questions/Create" }
