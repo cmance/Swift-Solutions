@@ -35,21 +35,17 @@ namespace PopNGo_BDD_Tests.Drivers
         /// <returns></returns>
         private IWebDriver CreateWebDriver()
         {
-            //Chrome browser
-            //ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
-            //ChromeOptions chromeOptions = new ChromeOptions();
-            //ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
-
             // Firefox (never trusts the self-signed cert when running locally, so must bypass)
             FirefoxOptions firefoxOptions = new FirefoxOptions();
             firefoxOptions.AcceptInsecureCertificates = true;
+
+            // Enable location services
+            firefoxOptions.SetPreference("geo.enabled", true);
+            firefoxOptions.SetPreference("geo.provider.use_corelocation", true);
+            firefoxOptions.SetPreference("geo.prompt.testing", true);
+            firefoxOptions.SetPreference("geo.prompt.testing.allow", true);
+
             FirefoxDriver driver = new FirefoxDriver(firefoxOptions);
-
-            // Edge browser
-            // EdgeDriverService edgeDriverService = EdgeDriverService.CreateDefaultService();
-            // EdgeOptions edgeOptions = new EdgeOptions();
-            // EdgeDriver driver = new EdgeDriver(edgeDriverService, edgeOptions);
-
 
             return driver;
         }
