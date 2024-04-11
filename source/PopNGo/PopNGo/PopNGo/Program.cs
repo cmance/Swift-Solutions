@@ -68,6 +68,7 @@ public class Program
         builder.Services.AddScoped<ITagRepository, TagRepository>();
         builder.Services.AddScoped<IFavoritesRepository, FavoritesRepository>();
         builder.Services.AddScoped<IEventRepository, EventRepository>();
+        builder.Services.AddScoped<IBookmarkListRepository, BookmarkListRepository>();
         builder.Services.AddScoped<IScheduledNotificationRepository, ScheduledNotificationRepository>();
 
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();

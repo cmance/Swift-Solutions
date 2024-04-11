@@ -9,9 +9,15 @@ CREATE TABLE [PG_User] (
 
 CREATE TABLE [FavoriteEvents] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
-  [UserID] INTEGER NOT NULL,
+  [BookmarkListID] INTEGER NOT NULL,
   [EventID] INTEGER NOT NULL
 );
+
+CREATE TABLE [BookmarkList] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [UserID] INTEGER NOT NULL,
+  [Title] NVARCHAR(128) NOT NULL,
+)
 
 CREATE TABLE [EventHistory] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
@@ -48,6 +54,6 @@ ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([U
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 
 ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
-ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
+ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_BookmarkListID FOREIGN KEY ([BookmarkListID]) REFERENCES [BookmarkList] ([ID]);
 
 ALTER TABLE [ScheduledNotification] ADD CONSTRAINT FK_ScheduledNotification_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);

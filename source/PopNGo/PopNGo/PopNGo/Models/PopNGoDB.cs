@@ -15,6 +15,8 @@ public partial class PopNGoDB : DbContext
     {
     }
 
+    public virtual DbSet<BookmarkList> BookmarkLists { get; set; }
+
     public virtual DbSet<Event> Events { get; set; }
 
     public virtual DbSet<EventHistory> EventHistories { get; set; }
@@ -27,130 +29,64 @@ public partial class PopNGoDB : DbContext
 
     public virtual DbSet<Tag> Tags { get; set; }
 
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     if (!optionsBuilder.IsConfigured)
-    //     {
-    //         optionsBuilder.UseSqlServer("Name=ServerConnection");
-    //     }
-    //     optionsBuilder.UseLazyLoadingProxies();
-    // }
+/*    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseSqlServer("Name=ServerConnection");*/
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BookmarkList>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Bookmark__3214EC276F3C30A6");
+        });
+
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Event__3214EC27439377A6");
-
-            entity.ToTable("Event");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.ApiEventId)
-                .IsRequired()
-                .HasMaxLength(255)
-                .HasColumnName("ApiEventID");
-            entity.Property(e => e.EventDate).HasColumnType("datetime");
-            entity.Property(e => e.EventDescription)
-                .IsRequired()
-                .HasMaxLength(1000);
-            entity.Property(e => e.EventImage).HasMaxLength(255);
-            entity.Property(e => e.EventLocation)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.EventName)
-                .IsRequired()
-                .HasMaxLength(255);
+            entity.HasKey(e => e.Id).HasName("PK__Event__3214EC27C8A5B7BA");
         });
 
         modelBuilder.Entity<EventHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC27933BF87F");
-
-            entity.ToTable("EventHistory");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.EventId).HasColumnName("EventID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
-            entity.Property(e => e.ViewedDate).HasColumnType("datetime");
+            entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC273051FAFB");
 
             entity.HasOne(d => d.Event).WithMany(p => p.EventHistories)
-                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventHistory_EventID");
 
             entity.HasOne(d => d.User).WithMany(p => p.EventHistories)
-                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventHistory_UserID");
         });
 
         modelBuilder.Entity<FavoriteEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC2771177849");
+            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC27E7740320");
 
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.EventId).HasColumnName("EventID");
-            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.HasOne(d => d.BookmarkList).WithMany(p => p.FavoriteEvents)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_FavoriteEvents_BookmarkListID");
 
             entity.HasOne(d => d.Event).WithMany(p => p.FavoriteEvents)
-                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FavoriteEvents_EventID");
-
-            entity.HasOne(d => d.User).WithMany(p => p.FavoriteEvents)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_FavoriteEvents_UserID");
         });
 
         modelBuilder.Entity<PgUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PG_User__3214EC278DB30605");
-
-            entity.ToTable("PG_User");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AspnetuserId)
-                .IsRequired()
-                .HasMaxLength(255)
-                .HasColumnName("ASPNETUserID");
+            entity.HasKey(e => e.Id).HasName("PK__PG_User__3214EC27172EB36C");
         });
 
         modelBuilder.Entity<ScheduledNotification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC274814CA00");
-
-            entity.ToTable("ScheduledNotification");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Time).HasColumnType("datetime");
-            entity.Property(e => e.Type)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.UserId).HasColumnName("UserID");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC271FF82129");
 
             entity.HasOne(d => d.User).WithMany(p => p.ScheduledNotifications)
-                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ScheduledNotification_UserID");
         });
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC2741992543");
-
-            entity.ToTable("Tag");
-
-            entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.BackgroundColor)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(255);
-            entity.Property(e => e.TextColor)
-                .IsRequired()
-                .HasMaxLength(255);
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC27890DE4A8");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -22,9 +22,13 @@ VALUES ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2
 DECLARE @event1ID int = (SELECT [ID] FROM [Event] WHERE [ApiEventID] = 'event1');
 DECLARE @event2ID int = (SELECT [ID] FROM [Event] WHERE [ApiEventID] = 'event2');
 
+-- Insert into BookmarkList
+INSERT INTO [BookmarkList] ([UserID], [Title]) Values (@user1ID, 'Wishlist events :)')
+DECLARE @bookmarkListId int = (SELECT [ID] FROM [BookmarkList] WHERE [Title] = 'Wishlist events :)');
+
 -- Insert into FavoriteEvents
-INSERT INTO [FavoriteEvents] ([UserID], [EventID]) VALUES (@user1ID, @event1ID);
-INSERT INTO [FavoriteEvents] ([UserID], [EventID]) VALUES (@user2ID, @event2ID);
+INSERT INTO [FavoriteEvents] ([BookmarkListID], [EventID]) VALUES (@bookmarkListId, @event1ID);
+INSERT INTO [FavoriteEvents] ([BookmarkListID], [EventID]) VALUES (@bookmarkListId, @event2ID);
 
 -- Insert into EventHistory
 INSERT INTO [EventHistory] ([UserID], [EventID], [ViewedDate]) VALUES (@user1ID, @event1ID, '2022-01-01T00:00:00');

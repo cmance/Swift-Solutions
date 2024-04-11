@@ -1,30 +1,8 @@
 import { buildEventCard, validateBuildEventCardProps } from "./ui/buildEventCard.js";
 import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './ui/buildEventDetailsModal.js';
 import { formatTags } from "./util/tags.js";
-import { getEventIsFavorited } from "./api/favorites/getEventIsFavorited.js";
-import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
-import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
-import { showToast } from './util/toast.js';
-
-async function onPressFavorite(eventInfo, favorited) {
-    if (favorited) {
-        await removeEventFromFavorites(eventInfo).catch((error) => {
-            // TODO: check that it is an unauthorized error
-            // Unauthorized, show the login/signup modal
-            showLoginSignupModal();
-        })
-        showToast('Event unfavorited!');
-        eventInfo.favorited = false; // Update the favorited status
-    } else {
-        await addEventToFavorites(eventInfo).catch((error) => {
-            // TODO: check that it is an unauthorized error
-            // Unauthorized, show the login/signup modal
-            showLoginSignupModal();
-        })
-        showToast('Event favorited!');
-        eventInfo.favorited = true; // Update the favorited status
-    }
-}
+import { getBookmarkLists } from "./api/bookmarkLists/getBookmarkLists.js";
+import { onPressSaveToBookmarkList } from "./util/onPressSaveToBookmarkList.js";
 
 // Fetch event data and display it on page load
 document.addEventListener('DOMContentLoaded', function () {
@@ -44,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     // Append event cards to the container element
-    // Append event cards to the container
     async function displayEvents(events) {
         const container = document.getElementById('event-history-card-container');
         if (!container) {
@@ -56,29 +33,31 @@ document.addEventListener('DOMContentLoaded', function () {
         container.innerHTML = '';
 
         // Append event cards to the container
-        for (const event of events) {
+        for (const eventInfo of events) {
             // Get the template
             const template = document.getElementById('event-card-template');
 
             let eventApiBody = {
-                ApiEventID: event.apiEventID || "No ID available",
-                EventDate: event.eventDate || "No date available",
-                EventName: event.eventName || "No name available",
-                EventDescription: event.eventDescription || "No description available",
-                EventLocation: event.eventLocation || "No location available",
-                EventImage: event.eventThumbnail,
+                ApiEventID: eventInfo.apiEventID || "No ID available",
+                EventDate: eventInfo.eventDate || "No date available",
+                EventName: eventInfo.eventName || "No name available",
+                EventDescription: eventInfo.eventDescription || "No description available",
+                EventLocation: eventInfo.eventLocation || "No location available",
+                EventImage: eventInfo.eventImage,
             };
 
+            const bookmarkLists = await getBookmarkLists();
+
             let eventProps = {
-                img: event.eventImage,
-                title: event.eventName,
-                date: new Date(event.eventDate),
-                city: event.eventLocation.split(',')[1],
-                state: event.eventLocation.split(',')[2],
-                tags: await formatTags(event.eventTags), // This property doesn't exist in the provided JSON object
-                favorited: await getEventIsFavorited(event.apiEventID), // Assuming id is the eventID
-                onPressEvent: () => onClickDetailsAsync(event),
-                onPressFavorite: () => onPressFavorite(eventApiBody, eventProps.favorited)
+                img: eventInfo.eventImage,
+                title: eventInfo.eventName,
+                date: new Date(eventInfo.eventDate),
+                city: eventInfo.eventLocation.split(',')[1],
+                state: eventInfo.eventLocation.split(',')[2],
+                tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
+                bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
+                onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventApiBody, bookmarkListName),
+                onPressEvent: () => onClickDetailsAsync(eventInfo),
             };
             
             // Clone the template
@@ -107,7 +86,6 @@ async function fetchEvents() {
         throw new Error('Network response was not ok');
     }
     const data = await response.json();
-    console.log(data);
     return data;
 }
 
@@ -116,16 +94,6 @@ async function fetchEvents() {
  * @param {any} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
-    console.log("event")
-    let eventApiBody = {
-        ApiEventID: eventInfo.apiEventID || "No ID available",
-        EventDate: eventInfo.eventDate || "No date available",
-        EventName: eventInfo.eventName || "No name available",
-        EventDescription: eventInfo.eventDescription || "No description available",
-        EventLocation: eventInfo.eventLocation|| "No location available",
-        EventImage: eventInfo.eventImage
-    };
-
     const eventDetailsModalProps = {
         img: eventInfo.eventImage,
         title: eventInfo.eventName,
@@ -133,8 +101,6 @@ async function onClickDetailsAsync(eventInfo) {
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
         tags: [], // TODO: tags should be stored on event
-        favorited: await getEventIsFavorited(eventInfo.apiEventID),
-        onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
     }
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {

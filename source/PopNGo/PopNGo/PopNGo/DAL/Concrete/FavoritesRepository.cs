@@ -1,6 +1,7 @@
 using PopNGo.DAL.Abstract;
 using PopNGo.Models;
 using Microsoft.EntityFrameworkCore;
+using PopNGo.ExtensionMethods;
 
 namespace PopNGo.DAL.Concrete
 {
@@ -15,19 +16,15 @@ namespace PopNGo.DAL.Concrete
             _events = context.Events;
         }
 
-        public void AddFavorite(int userId, string eventId)
+        public void AddFavorite(int bookmarkListId, string eventId)
         {
             if (string.IsNullOrEmpty(eventId))
             {
                 throw new ArgumentException("EventId cannot be null or empty", nameof(eventId));
             }
 
-            var eventEntity = _events.FirstOrDefault(e => e.ApiEventId == eventId);
-            if (eventEntity == null)
-            {
-                throw new ArgumentException($"No event found with the id {eventId}", nameof(eventId));
-            }
-            var favoriteEvent = new FavoriteEvent { UserId = userId, EventId = eventEntity.Id };
+            var eventEntity = _events.FirstOrDefault(e => e.ApiEventId == eventId) ?? throw new ArgumentException($"No event found with the id {eventId}", nameof(eventId));
+            var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkListId, EventId = eventEntity.Id };
 
             try
             {
@@ -40,17 +37,17 @@ namespace PopNGo.DAL.Concrete
             }
         }
 
-        public void RemoveFavorite(int userId, string apiEventId)
+        public void RemoveFavorite(int bookmarkListId, string apiEventId)
         {
             if (string.IsNullOrEmpty(apiEventId))
             {
                 throw new ArgumentException("ApiEventId cannot be null or empty", nameof(apiEventId));
             }
 
-            var favoriteEvent = _favoriteEvents.FirstOrDefault(fe => fe.UserId == userId && fe.Event.ApiEventId == apiEventId);
+            var favoriteEvent = _favoriteEvents.FirstOrDefault(fe => fe.BookmarkListId == bookmarkListId && fe.Event.ApiEventId == apiEventId);
             if (favoriteEvent == null)
             {
-                throw new ArgumentException($"No favorite event found for user {userId} with the id {apiEventId}", nameof(apiEventId));
+                throw new ArgumentException($"No favorite event found for bookmarkListId {bookmarkListId} with the event id {apiEventId}", nameof(apiEventId));
             }
 
             try
@@ -64,23 +61,17 @@ namespace PopNGo.DAL.Concrete
             }
         }
 
-        public List<PopNGo.Models.DTO.Event> GetUserFavorites(int userId)
+
+        // TODO: change to GetFavoriteEventsFromBookmarkList(int userId, int listId)
+        public List<PopNGo.Models.DTO.Event> GetUserFavorites(int bookmarkListId)
         {
             List<PopNGo.Models.DTO.Event> userFavorites;
             try
             {
                 userFavorites = _favoriteEvents
-                    .Where(fe => fe.UserId == userId)
+                    .Where(fe => fe.BookmarkListId == bookmarkListId)
                     .Select(fe => fe.Event)
-                    .Select(e => new PopNGo.Models.DTO.Event
-                    {
-                        // Assuming PopNGo.Models.DTO.Event and PopNGo.Models.Event have similar properties
-                        ApiEventID = e.ApiEventId,
-                        EventDate = e.EventDate,
-                        EventName = e.EventName,
-                        EventDescription = e.EventDescription,
-                        EventLocation = e.EventLocation
-                    })
+                    .Select(e => e.ToDTO())
                     .ToList();
             }
             catch (Exception ex)
@@ -98,19 +89,22 @@ namespace PopNGo.DAL.Concrete
             {
                 throw new ArgumentException("ApiEventId cannot be null or empty", nameof(apiEventId));
             }
+            // Check if the event exists in any of the user's bookmark lists
+            return _favoriteEvents.Any(fe => fe.BookmarkList.UserId == userId && fe.Event.ApiEventId == apiEventId);
+        }
 
-            bool isFavorite;
-            try
+        public bool IsInBookmarkList(string bookmarkListName, string apiEventId)
+        {
+            if (string.IsNullOrEmpty(bookmarkListName))
             {
-                isFavorite = _favoriteEvents.Any(fe => fe.UserId == userId && fe.Event.ApiEventId == apiEventId);
+                throw new ArgumentException("BookmarkListName cannot be null or empty", nameof(bookmarkListName));
             }
-            catch (Exception ex)
+            if (string.IsNullOrEmpty(apiEventId))
             {
-                // Log the exception, rethrow it, or handle it in some other way
-                throw new Exception("Error checking if event is a favorite", ex);
+                throw new ArgumentException("ApiEventId cannot be null or empty", nameof(apiEventId));
             }
-
-            return isFavorite;
+            // Check if the event exists in the specified bookmark list
+            return _favoriteEvents.Any(fe => fe.BookmarkList.Title == bookmarkListName && fe.Event.ApiEventId == apiEventId);
         }
     }
 }

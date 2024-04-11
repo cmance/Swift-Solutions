@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using PopNGo.Areas.Identity.Data;
+using PopNGo.DAL.Abstract;
 using PopNGo.Data;
 using PopNGo.Models;
 
@@ -34,13 +35,16 @@ namespace PopNGo.Areas.Identity.Pages.Account
         private readonly IEmailSender _emailSender;
         private readonly PopNGoDB _popNGoDBContext;
 
+        private readonly IBookmarkListRepository _bookmarkListRepository;
+
         public RegisterModel(
             UserManager<PopNGoUser> userManager,
             IUserStore<PopNGoUser> userStore,
             SignInManager<PopNGoUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            PopNGoDB popNGoDBContext)
+            PopNGoDB popNGoDBContext,
+            IBookmarkListRepository bookmarkListRepository)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -49,6 +53,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _popNGoDBContext = popNGoDBContext;
+            _bookmarkListRepository = bookmarkListRepository;
         }
 
         /// <summary>
@@ -164,6 +169,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
                     _popNGoDBContext.PgUsers.Add(newUser);
                     await _popNGoDBContext.SaveChangesAsync();
 
+                    _bookmarkListRepository.AddBookmarkList(newUser.Id, "Favorites");
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));

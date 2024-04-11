@@ -18,8 +18,9 @@ public class FavoritesApiController : Controller
     private readonly IEventRepository _eventRepo;
     private readonly UserManager<PopNGoUser> _userManager;
     private readonly IPgUserRepository _pgUserRepository;
+    private readonly IBookmarkListRepository _bookmarkListRepository;
 
-    public FavoritesApiController(ILogger<FavoritesApiController> logger, IConfiguration configuration, IFavoritesRepository favoritesRepo, IEventRepository eventRepo, UserManager<PopNGoUser> userManager, IPgUserRepository pgUserRepository)
+    public FavoritesApiController(ILogger<FavoritesApiController> logger, IConfiguration configuration, IFavoritesRepository favoritesRepo, IEventRepository eventRepo, UserManager<PopNGoUser> userManager, IPgUserRepository pgUserRepository, IBookmarkListRepository bookmarkListRepository)
     {
         _logger = logger;
         _configuration = configuration;
@@ -27,10 +28,16 @@ public class FavoritesApiController : Controller
         _eventRepo = eventRepo;
         _userManager = userManager;
         _pgUserRepository = pgUserRepository;
+        _bookmarkListRepository = bookmarkListRepository;
     }
 
     [HttpPost("AddFavorite")]
-    public async Task<IActionResult> AddFavorite([FromBody] PopNGo.Models.DTO.Event eventInfo) //AddFavoriteRequest is a class that contains a Favorite and an Event
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> AddFavorite([FromBody] BookmarkFavorite bookmarkFavorite) //AddFavoriteRequest is a class that contains a Favorite and an Event
     {
         try
         {
@@ -46,13 +53,30 @@ public class FavoritesApiController : Controller
                 return Unauthorized();
             }
 
+            var eventInfo = bookmarkFavorite.EventInfo;
+
             if (!_eventRepo.IsEvent(eventInfo.ApiEventID)) //If the event does not exist, add it to the events
             {
                 _eventRepo.AddEvent(eventInfo.ApiEventID, eventInfo.EventDate, eventInfo.EventName, eventInfo.EventDescription, eventInfo.EventLocation, eventInfo.EventImage);
             }
 
+            if (string.IsNullOrEmpty(bookmarkFavorite.BookmarkListTitle))
+            {
+                // If the bookmark list title is null or empty, fail
+                return BadRequest("Bookmark list title cannot be null or empty.");
+            }
+
+            // If the favorite is already in the list, return 204 No Content
+            if (_favoritesRepo.IsInBookmarkList(bookmarkFavorite.BookmarkListTitle, eventInfo.ApiEventID))
+            {
+                return NoContent();
+            }
+
+            // Get the bookmark list ID from the title
+            int bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, bookmarkFavorite.BookmarkListTitle);
+
             // Whether the event existed or not, add it to the favorites
-            _favoritesRepo.AddFavorite(pgUser.Id, eventInfo.ApiEventID); // AddFavorite already has error handling
+            _favoritesRepo.AddFavorite(bookmarkListId, eventInfo.ApiEventID);
             return Ok();
         }
         catch (Exception ex)
@@ -66,7 +90,11 @@ public class FavoritesApiController : Controller
     }
 
     [HttpPost("RemoveFavorite")]
-    public async Task<IActionResult> RemoveFavorite([FromBody] PopNGo.Models.DTO.Event eventInfo)
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> RemoveFavorite([FromBody] PopNGo.Models.DTO.Event eventInfo, string bookmarkListTitle)
     {
         PopNGoUser user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -87,7 +115,16 @@ public class FavoritesApiController : Controller
                 _eventRepo.AddEvent(eventInfo.ApiEventID, eventInfo.EventDate, eventInfo.EventName, eventInfo.EventDescription, eventInfo.EventLocation, eventInfo.EventImage);
             }
 
-            _favoritesRepo.RemoveFavorite(pgUser.Id, eventInfo.ApiEventID);
+            if (string.IsNullOrEmpty(bookmarkListTitle))
+            {
+                // If the bookmark list title is null or empty, fail
+                return BadRequest("Bookmark list title cannot be null or empty.");
+            }
+
+            // Get the bookmark list ID from the title
+            int bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, bookmarkListTitle);
+
+            _favoritesRepo.RemoveFavorite(bookmarkListId, eventInfo.ApiEventID);
             return Ok();
         }
         catch (Exception ex)
@@ -100,8 +137,12 @@ public class FavoritesApiController : Controller
         }
     }
 
-    [HttpGet("GetUserFavorites")]
-    public async Task<ActionResult<IEnumerable<PopNGo.Models.DTO.Event>>> GetUserFavorites()
+    [HttpGet("Favorites")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<IEnumerable<PopNGo.Models.DTO.Event>>> GetUserFavorites(string bookmarkListTitle)
     {
         try
         {
@@ -117,13 +158,25 @@ public class FavoritesApiController : Controller
                 return Unauthorized();
             }
 
-            List<PopNGo.Models.DTO.Event> events = _favoritesRepo.GetUserFavorites(pgUser.Id);
-            if (events == null || events.Count == 0)
+            if (string.IsNullOrEmpty(bookmarkListTitle))
             {
-                return NotFound();
+                // If the bookmark list title is null or empty, fail
+                return BadRequest("Bookmark list title cannot be null or empty.");
             }
 
-            return events;
+            // Get the bookmark list ID from the title
+            int bookmarkListId;
+            try
+            {
+                bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, bookmarkListTitle);
+            } catch (ArgumentException)
+            {
+                return NotFound($"No bookmark list with the name {bookmarkListTitle} found");
+            }
+
+            List<PopNGo.Models.DTO.Event> events = _favoritesRepo.GetUserFavorites(bookmarkListId);
+            
+            return Ok(events);
         }
         catch (Exception ex)
         {
@@ -136,6 +189,9 @@ public class FavoritesApiController : Controller
     }
 
     [HttpGet("IsFavorite")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<bool>> IsFavorite(string eventId)
     {
         try
