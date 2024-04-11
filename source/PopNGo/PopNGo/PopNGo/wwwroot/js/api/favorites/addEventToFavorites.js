@@ -9,14 +9,17 @@
     public string eventLocation
 }*/
 
-export async function addEventToFavorites(event) {
+export async function addEventToFavorites(bookmarkListName, event) {
     let url = "/api/FavoritesApi/AddFavorite";
     const res = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event)
+        body: JSON.stringify({
+            bookmarkListTitle: bookmarkListName,
+            eventInfo: event
+        })
     })
 
     if (!res.ok) {

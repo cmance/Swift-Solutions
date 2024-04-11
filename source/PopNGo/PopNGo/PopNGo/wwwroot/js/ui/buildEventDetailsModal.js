@@ -18,17 +18,6 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     // Set the location
     eventDetailsModalElement.querySelector('#event-modal-location').textContent = props.fullAddress;
 
-    // Set the favorite status
-    const bookmarkContainer = eventDetailsModalElement.querySelector('#event-modal-bookmark-container');
-    const bookmarkImage = eventDetailsModalElement.querySelector('#event-modal-bookmark-icon');
-    bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
-
-    bookmarkContainer.addEventListener('click', () => {
-        props.onPressFavorite();
-        props.favorited = !props.favorited;
-        bookmarkImage.src = props.favorited ? '/media/images/heart-filled.svg' : '/media/images/heart-outline.svg';
-    });
-
     // Set the tags
     const tagsContainer = eventDetailsModalElement.querySelector('#modal-event-card-tags-container');
     tagsContainer.innerHTML = '';
@@ -92,8 +81,6 @@ export function validateBuildEventDetailsModalProps(data) {
         date: x => x instanceof Date,
         fullAddress: x => typeof x === 'string',
         tags: x => Array.isArray(x),
-        favorited: x => typeof x === 'boolean',
-        onPressFavorite: x => (typeof x === 'function' || x === undefined || x === null),
     }
 
     return validateObject(data, schema).length === 0;

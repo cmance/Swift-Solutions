@@ -21,24 +21,6 @@
     font-weight: lighter;
 }
 
-#event-modal-bookmark-container {
-    height: 15%;
-    background-color: #D9D9D9;
-    border-radius: 50%;
-    -ms-align-content: inherit;
-    -webkit-align-content: inherit;
-    align-content: inherit;
-    display: flex;
-    justify-content: center;
-    align-self: flex-end;
-}
-
-#event-modal-bookmark-icon {
-    width: 25px;
-    padding: 15%;
-    object-fit: cover;
-}
-
 .event-modal-tag {
     background-color: lightcoral;
     padding: 0px 2% 0px 2%;

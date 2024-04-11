@@ -1,3 +1,5 @@
+-- Uses SQLLite syntax
+
 -- Insert into PG_User
 INSERT INTO [PG_User] ([ASPNETUserID])
     VALUES
@@ -12,9 +14,13 @@ VALUES ('event1', '2022-01-01T00:00:00', 'Event 1', 'Description 1', 'Location 1
 INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage]) 
 VALUES ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2', 'https://via.placeholder.com/150');
 
+-- Insert into BookmarkList
+INSERT INTO [BookmarkList] ([UserID], [Title]) VALUES (1, 'Wishlist events :)');
+INSERT INTO [BookmarkList] ([UserID], [Title]) VALUES (2, 'Concerts!');
+
 -- Insert into FavoriteEvents
-INSERT INTO [FavoriteEvents] ([UserID], [EventID]) VALUES (1, 1);
-INSERT INTO [FavoriteEvents] ([UserID], [EventID]) VALUES (2, 2);
+INSERT INTO [FavoriteEvents] ([BookmarkListID], [EventID]) VALUES (1, 1);
+INSERT INTO [FavoriteEvents] ([BookmarkListID], [EventID]) VALUES (2, 2);
 
 -- Insert into EventHistory
 INSERT INTO [EventHistory] ([UserID], [EventID], [ViewedDate]) VALUES (1, 1, '2022-01-01T00:00:00');
