@@ -65,24 +65,15 @@ async function loadSearchBarAndEvents(city, state, country) {
  * Takes in an event info object and adds it to the history via http and opens the event details modal
  * @async
  * @function onClickDetailsAsync
- * @param {any} eventInfo
+ * @param {string} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
-    let eventApiBody = {
-        ApiEventID: eventInfo.eventID || "No ID available",
-        EventDate: eventInfo.eventStartTime || "No date available",
-        EventName: eventInfo.eventName || "No name available",
-        EventDescription: eventInfo.eventDescription || "No description available",
-        EventLocation: eventInfo.full_Address || "No location available",
-        EventImage: eventInfo.eventThumbnail
-    };
-
     const eventDetailsModalProps = {
-        img: eventInfo.eventThumbnail,
+        img: eventInfo.eventImage,
         title: eventInfo.eventName,
         description: (eventInfo.eventDescription ?? 'No description') + '...',
-        date: new Date(eventInfo.eventStartTime),
-        fullAddress: eventInfo.full_Address,
+        date: new Date(eventInfo.eventDate),
+        fullAddress: eventInfo.eventLocation,
         tags: await formatTags(eventInfo.eventTags),
     }
 
@@ -91,7 +82,7 @@ async function onClickDetailsAsync(eventInfo) {
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
 
-        addEventToHistory(eventApiBody);
+        addEventToHistory(eventInfo.apiEventID);
     };
 }
 
@@ -153,27 +144,19 @@ export async function displayEvents(events) {
 
     for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
-
-        let eventApiBody = {
-            ApiEventID: eventInfo.eventID || "No ID available",
-            EventDate: eventInfo.eventStartTime || "No date available",
-            EventName: eventInfo.eventName || "No name available",
-            EventDescription: eventInfo.eventDescription || "No description available",
-            EventLocation: eventInfo.full_Address || "No location available",
-            EventImage: eventInfo.eventThumbnail,
-        };
-
-        const bookmarkLists = await getBookmarkLists();
+        
+        // TODO: BUG this errors when not logged in
+        let bookmarkLists = await getBookmarkLists();
 
         let eventCardProps = {
-            img: eventInfo.eventThumbnail,
+            img: eventInfo.eventImage,
             title: eventInfo.eventName,
-            date: new Date(eventInfo.eventStartTime),
-            city: eventInfo.full_Address.split(',')[1],
-            state: eventInfo.full_Address.split(',')[2],
+            date: new Date(eventInfo.eventDate),
+            city: eventInfo.eventLocation.split(',')[1],
+            state: eventInfo.eventLocation.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
             bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
-            onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventApiBody, bookmarkListName),
+            onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         }
         if (validateBuildEventCardProps(eventCardProps)) {

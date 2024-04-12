@@ -14,6 +14,10 @@
  * @returns {Promise<BookmarkList[]>}
  */
 export async function getBookmarkLists() {
-    let res = await fetch(`/api/BookmarkListApi/BookmarkLists`)
-    return await res.json();
+    try {
+        const res = await fetch(`/api/BookmarkListApi/BookmarkLists`);
+        return await res.json();
+    } catch (error) {
+        throw new Error('Network response was not ok');
+    }
 }

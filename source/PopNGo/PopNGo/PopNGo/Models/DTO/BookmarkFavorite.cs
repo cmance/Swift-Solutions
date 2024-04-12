@@ -8,7 +8,6 @@ namespace PopNGo.Models.DTO
     {
         public int Id { get; set; }
         public string BookmarkListTitle { get; set; }
-        public Event EventInfo { get; set; }
-
+        public string ApiEventId { get; set; }
     }
 }
