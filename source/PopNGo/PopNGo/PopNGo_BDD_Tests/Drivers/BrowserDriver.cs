@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Permissions;
 
 namespace PopNGo_BDD_Tests.Drivers
 {
@@ -17,11 +18,13 @@ namespace PopNGo_BDD_Tests.Drivers
     public class BrowserDriver : IDisposable
     {
         private readonly Lazy<IWebDriver> _currentWebDriverLazy;
+        private IJavaScriptExecutor js;
         private bool _isDisposed = false;
 
         public BrowserDriver()
         {
             _currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
+            js = (IJavaScriptExecutor)Current;
         }
 
         /// <summary>
@@ -70,6 +73,19 @@ namespace PopNGo_BDD_Tests.Drivers
             }
 
             _isDisposed = true;
+        }
+
+        public void ScrollToElement(IWebElement element)
+        {
+            if (element != null)
+            {
+                js.ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                Thread.Sleep(1000);
+            }
+            else
+            {
+                throw new ArgumentNullException("Element is null");
+            }
         }
     }
 }

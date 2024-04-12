@@ -20,6 +20,8 @@ namespace PopNGo_BDD_Tests.Shared
         public static readonly Dictionary<string, string> Paths = new()
         {
             { "Home" , "/" },
+            { "Admin", "/Admin" },
+            { "Notifications", "/Admin/ScheduledNotifications" },
             { "Login", "/Identity/Account/Login" },
             { "SelectGroup", "/MyAccount/SelectGroup" },
             { "AdminQuestions", "/Admin/Questions" },
