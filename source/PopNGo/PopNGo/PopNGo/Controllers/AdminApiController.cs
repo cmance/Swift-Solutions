@@ -207,6 +207,8 @@ public class AdminApiController : Controller
         return true;
     }
 
+//============================================================================================================
+
     [HttpGet("scheduledNotifications/sendEmail/notificationId={notificationId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -246,7 +248,7 @@ public class AdminApiController : Controller
 
     [HttpDelete("scheduledNotifications/deleteNotification/notificationId={notificationId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
-    public async Task<ActionResult<bool>> DeleteScheduledNotification(int notificationId)
+    public async Task<ActionResult<int>> DeleteScheduledNotification(int notificationId)
     {
         var notification = _scheduledNotificationRepository.FindById(notificationId);
         if (notification == null)
@@ -269,15 +271,16 @@ public class AdminApiController : Controller
     
                 Timer timer = new Timer(TimedEmailService.DoWork, nextNotification, TimeSpan.FromSeconds((next - current).TotalSeconds), TimeSpan.FromDays(1));
                 ScheduleTasking.AddTask(nextNotification, timer);
+
+                return nextNotificationId;
             }
-            return result;
+            return 0;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Failed to delete scheduled notification for notification {notificationId}", notificationId);
-            return false;
+            return 0;
         }
-        return true;
     }
 
     [HttpGet("scheduledNotifications/getNotificationInfo/notificationId={notificationId}")]

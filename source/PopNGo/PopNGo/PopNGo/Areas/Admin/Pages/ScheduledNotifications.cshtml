@@ -31,13 +31,14 @@
                 <tbody class="text-light">
                     @foreach (var schedule in Model.Schedules)
                     {
-                        <tr>
+                        <tr data-userid="@schedule.UserId" data-scheduleid="@schedule.Id">
                             <td>@schedule.UserName</td>
                             <td>@schedule.NotificationEmail</td>
                             <td>@schedule.Type</td>
                             <td>@schedule.Time</td>
                         </tr>
-                        <tr data-id="@schedule.Id">
+                        @* <tr data-id="@schedule.Id"> *@
+                        <tr>
                             <td colspan="4">
                                 <div class="d-flex justify-content-between">
                                     <button class="btn btn-outline-primary" type="button" id="send-notification-email">Send Now</button>

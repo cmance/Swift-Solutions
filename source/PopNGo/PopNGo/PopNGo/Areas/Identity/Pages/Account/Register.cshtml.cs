@@ -54,6 +54,11 @@ namespace PopNGo.Areas.Identity.Pages.Account
             _emailSender = emailSender;
             _popNGoDBContext = popNGoDBContext;
             _bookmarkListRepository = bookmarkListRepository;
+
+            if(_popNGoDBContext == null)
+            {
+                throw new ArgumentNullException(nameof(popNGoDBContext));
+            }
         }
 
         /// <summary>

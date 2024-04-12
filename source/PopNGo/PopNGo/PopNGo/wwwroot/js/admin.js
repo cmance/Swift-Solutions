@@ -72,37 +72,37 @@ function ProcessUsersTab() {
 
 function ProcessScheduledNotificationsTab() {
     Array.from(document.getElementsByName("admin-schedules-table")[0].querySelector('tbody').getElementsByTagName('tr')).forEach(t => {
-        if(t.dataset.id) {
-            t.querySelector('#send-notification-email').addEventListener('click', async function() {
+        if(t.dataset.userid) {
+            const buttonRow = t.nextElementSibling;
+            if(buttonRow === null) console.error("No button row found for schedule id: " + t.dataset.scheduleid);
+            buttonRow.querySelector('#send-notification-email').addEventListener('click', async function() {
                 console.log("send-notification-email clicked");
                 try {
-                    const data = await sendNotificationEmail(t.dataset.id);
+                    const data = await sendNotificationEmail(t.dataset.scheduleid);
                     console.log(data);
                 } catch (error) {
                     console.error(error);
                 }
             });
-            t.querySelector('#edit-notification').addEventListener('click', async function() {
-                buildAdminScheduleDetailsModal(document.getElementById('admin-schedule-details-modal'), await getNotificationInfo(t.dataset.id));
+            buttonRow.querySelector('#edit-notification').addEventListener('click', async function() {
+                buildAdminScheduleDetailsModal(document.getElementById('admin-schedule-details-modal'), await getNotificationInfo(t.dataset.scheduleid));
                 const modal = new bootstrap.Modal(document.getElementById('admin-schedule-details-modal'));
                 modal.show();
                 while(document.getElementById('admin-schedule-details-modal').classList.contains('show')) {
                     await new Promise(resolve => setTimeout(resolve, 500));
                 }
-                const scheduleData = await getNotificationInfo(t.dataset.id);
-                const previousRow = t.previousElementSibling;
-                previousRow.querySelector(':nth-child(3)').innerText = scheduleData.type;
-                previousRow.querySelector(':nth-child(4)').innerText = formatStartTime(scheduleData.time);
+                const scheduleData = await getNotificationInfo(t.dataset.scheduleid);
+                t.querySelector(':nth-child(3)').innerText = scheduleData.type;
+                t.querySelector(':nth-child(4)').innerText = formatStartTime(scheduleData.time);
             });
-            t.querySelector('#delete-notification').addEventListener('click', async function() {
+            buttonRow.querySelector('#delete-notification').addEventListener('click', async function() {
                 try {
-                    const data = await deleteNotification(t.dataset.id);
-                    if(data) {
-                        t.dataset.id = +t.dataset.id + 1;
-                        const scheduleData = await getNotificationInfo(t.dataset.id);
-                        const previousRow = t.previousElementSibling;
-                        previousRow.querySelector(':nth-child(3)').innerText = scheduleData.type;
-                        previousRow.querySelector(':nth-child(4)').innerText = formatStartTime(scheduleData.time);
+                    const data = await deleteNotification(t.dataset.scheduleid);
+                    if(data > 0) {
+                        t.dataset.scheduleid = +data;
+                        const scheduleData = await getNotificationInfo(t.dataset.scheduleid);
+                        t.querySelector(':nth-child(3)').innerText = scheduleData.type;
+                        t.querySelector(':nth-child(4)').innerText = formatStartTime(scheduleData.time);
                     }
                 } catch (error) {
                     console.error(error);

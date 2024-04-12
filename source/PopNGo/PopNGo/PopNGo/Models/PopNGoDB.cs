@@ -29,8 +29,14 @@ public partial class PopNGoDB : DbContext
 
     public virtual DbSet<Tag> Tags { get; set; }
 
-/*    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ServerConnection");*/
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    // {
+    //     if (!optionsBuilder.IsConfigured)
+    //     {
+    //         optionsBuilder.UseSqlServer("Name=ServerConnection");
+    //     }
+    //     optionsBuilder.UseLazyLoadingProxies();
+    // }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -49,10 +55,12 @@ public partial class PopNGoDB : DbContext
             entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC273051FAFB");
 
             entity.HasOne(d => d.Event).WithMany(p => p.EventHistories)
+                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventHistory_EventID");
 
             entity.HasOne(d => d.User).WithMany(p => p.EventHistories)
+                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventHistory_UserID");
         });
@@ -66,6 +74,7 @@ public partial class PopNGoDB : DbContext
                 .HasConstraintName("FK_FavoriteEvents_BookmarkListID");
 
             entity.HasOne(d => d.Event).WithMany(p => p.FavoriteEvents)
+                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FavoriteEvents_EventID");
         });

@@ -86,6 +86,7 @@ namespace PopNGo.Areas.Admin.Pages
                     }
                 }            
 
+                Schedules = Schedules.OrderBy(s => s.Id).ToList();
             }
 
             return Page();
