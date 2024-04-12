@@ -1,13 +1,8 @@
 import { createTags, formatTags } from './util/tags.js';
-import { showLoginSignupModal } from './util/showUnauthorizedLoginModal.js';
 import { addEventToHistory } from './api/history/addEventToHistory.js';
-import { showToast } from './util/toast.js';
 import { buildEventCard, validateBuildEventCardProps } from './ui/buildEventCard.js';
 import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './ui/buildEventDetailsModal.js';
 import { getEvents } from './api/events/getEvents.js';
-import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
-import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
-import { addEventToFavorites } from './api/favorites/addEventToFavorites.js';
 import { loadMapScript } from './util/loadMapScript.js';
 import { getLocationCoords } from './util/getSearchLocationCoords.js';
 import {
@@ -15,8 +10,9 @@ import {
     setCity, setCountry, setState, toggleSearching
 } from './util/searchBarEvents.js';
 import { debounceUpdateLocationAndFetch } from './util/mapFetching.js';
-import { getNearestCityAndState } from './util/getNearestCityAndState.js';
 import { getNearestCityAndStateAndCountry } from './util/getNearestCityAndStateAndCountry.js';
+import { getBookmarkLists } from './api/bookmarkLists/getBookmarkLists.js';
+import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 
 let map = null;
 let page = 0;
@@ -69,24 +65,15 @@ async function loadSearchBarAndEvents(city, state, country) {
  * Takes in an event info object and adds it to the history via http and opens the event details modal
  * @async
  * @function onClickDetailsAsync
- * @param {any} eventInfo
+ * @param {string} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
-    let eventApiBody = {
-        ApiEventID: eventInfo.eventID || "No ID available",
-        EventDate: eventInfo.eventStartTime || "No date available",
-        EventName: eventInfo.eventName || "No name available",
-        EventDescription: eventInfo.eventDescription || "No description available",
-        EventLocation: eventInfo.full_Address || "No location available",
-        EventImage: eventInfo.eventThumbnail
-    };
-
     const eventDetailsModalProps = {
-        img: eventInfo.eventThumbnail,
+        img: eventInfo.eventImage,
         title: eventInfo.eventName,
         description: (eventInfo.eventDescription ?? 'No description') + '...',
-        date: new Date(eventInfo.eventStartTime),
-        fullAddress: eventInfo.full_Address,
+        date: new Date(eventInfo.eventDate),
+        fullAddress: eventInfo.eventLocation,
         tags: await formatTags(eventInfo.eventTags),
         favorited: await getEventIsFavorited(eventInfo.eventID),
         ticketLinks : eventInfo.ticketLinks,
@@ -100,7 +87,7 @@ async function onClickDetailsAsync(eventInfo) {
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
 
-        addEventToHistory(eventApiBody);
+        addEventToHistory(eventInfo.apiEventID);
     };
 }
 
@@ -162,67 +149,25 @@ export async function displayEvents(events) {
 
     for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
+        
+        // TODO: BUG this errors when not logged in
+        let bookmarkLists = await getBookmarkLists();
 
-        let eventApiBody = {
-            ApiEventID: eventInfo.eventID || "No ID available",
-            EventDate: eventInfo.eventStartTime || "No date available",
-            EventName: eventInfo.eventName || "No name available",
-            EventDescription: eventInfo.eventDescription || "No description available",
-            EventLocation: eventInfo.full_Address || "No location available",
-        };
-
-        // TODO: add validation
         let eventCardProps = {
-            img: eventInfo.eventThumbnail,
+            img: eventInfo.eventImage,
             title: eventInfo.eventName,
-            date: new Date(eventInfo.eventStartTime),
-            city: eventInfo.full_Address.split(',')[1],
-            state: eventInfo.full_Address.split(',')[2],
+            date: new Date(eventInfo.eventDate),
+            city: eventInfo.eventLocation.split(',')[1],
+            state: eventInfo.eventLocation.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
-            favorited: await getEventIsFavorited(eventInfo.eventID),
-            onPressFavorite: () => onPressFavorite(eventApiBody, eventCardProps.favorited),
+            bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
+            onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
             onPressEvent: () => onClickDetailsAsync(eventInfo),
-
         }
         if (validateBuildEventCardProps(eventCardProps)) {
             buildEventCard(newEventCard, eventCardProps);
             eventsContainer.appendChild(newEventCard);
         }
-    }
-}
-
-/**
- * Takes in an apiEventId, and a favorite status, and updates the favorite status of the event via http
- * 
- * eventApiBody: {
-        ApiEventID: eventInfo.eventID || "No ID available",
-        EventDate: eventInfo.eventStartTime || "No date available",
-        EventName: eventInfo.eventName || "No name available",
-        EventDescription: eventInfo.eventDescription || "No description available",
-        EventLocation: eventInfo.full_Address || "No location available",
-    };
- * 
- * @async
- * @function onPressFavorite
- * @param {object} eventApiBody
- * @param {any} favorited
- * @returns {Promise<void>}
- */
-async function onPressFavorite(eventInfo, favorited) {
-    if (favorited) {
-        removeEventFromFavorites(eventInfo).catch((error) => {
-            // TODO: check that it is an unauthorized error
-            // Unauthorized, show the login/signup modal
-            showLoginSignupModal();
-        })
-        showToast('Event unfavorited!');
-    } else {
-        addEventToFavorites(eventInfo).catch((error) => {
-            // TODO: check that it is an unauthorized error
-            // Unauthorized, show the login/signup modal
-            showLoginSignupModal();
-        })
-        showToast('Event favorited!');
     }
 }
 

@@ -1,24 +1,46 @@
+<<<<<<< HEAD
 <Project Sdk="Microsoft.NET.Sdk">
+=======
+﻿<Project Sdk="Microsoft.NET.Sdk">
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+<<<<<<< HEAD
+=======
+    <UserSecretsId>a8b10345-c8b2-48ab-9fbc-1367cdd59713</UserSecretsId>
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+<<<<<<< HEAD
     <PackageReference Include="Reqnroll.NUnit" Version="1.0.0" />
+=======
+    <PackageReference Include="Reqnroll.NUnit" Version="1.0.1" />
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
     <PackageReference Include="nunit" Version="3.14.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="FluentAssertions" Version="6.12.0" />
     <PackageReference Include="Selenium.WebDriver.GeckoDriver" Version="0.34.0" />
     <PackageReference Include="SpecFlow.Actions.Selenium" Version="0.1.332" />
+<<<<<<< HEAD
 
     <ProjectReference Include="..\PopNGo\PopNGo.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+=======
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PopNGo\PopNGo.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
     <Folder Include="Drivers\" />
     <Folder Include="Support\" />
   </ItemGroup>

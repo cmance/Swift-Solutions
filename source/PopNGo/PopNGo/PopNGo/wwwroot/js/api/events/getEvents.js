@@ -1,4 +1,3 @@
-import { toggleNoEventsSection, toggleSearchingEventsSection } from "../../util/searchBarEvents.js";
 /* Data return example:
 [
     { 

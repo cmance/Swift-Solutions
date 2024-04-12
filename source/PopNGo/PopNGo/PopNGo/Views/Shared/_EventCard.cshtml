@@ -21,8 +21,15 @@
                 <div class="event-tag rounded-pill">Tag3</div>
             </div>
         </div>
-        <div id="event-card-bookmark-container" class="bg-white">
-            <img id="event-card-bookmark-icon" src="/media/images/heart-outline.svg" alt="Bookmark event" />
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="event-card-bookmark-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Save
+            </button>
+            <div class="dropdown-menu" id="event-card-bookmark-dropdown-menu" aria-labelledby="event-card-bookmark-button">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <a class="dropdown-item" href="#">Something else here</a>
+            </div>
         </div>
     </div>
 </template>
