@@ -1,4 +1,3 @@
-using PopNGo.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -20,7 +19,8 @@ namespace PopNGo_BDD_Tests.StepDefinitions
 
         public TicketsVenueInformationStepDefinitions()
         {
-            _webDriver = new FirefoxDriver(); // Or use another browser driver
+            var browserDriver = new BrowserDriver();
+            _webDriver = browserDriver.Current;
             _explorePage = new ExplorePageObject(_webDriver);
             _homePage = new HomePageObject(_webDriver);
         }

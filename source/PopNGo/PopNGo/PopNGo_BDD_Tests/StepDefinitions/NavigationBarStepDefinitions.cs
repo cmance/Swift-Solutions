@@ -1,4 +1,3 @@
-using PopNGo.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -22,7 +21,8 @@ namespace PopNGo_BDD_Tests.StepDefinitions
 
         public NavigationBarStepDefinitions()
         {
-            _webDriver = new FirefoxDriver(); // Or use another browser driver
+            var browserDriver = new BrowserDriver();
+            _webDriver = browserDriver.Current;
             _homePage = new HomePageObject(_webDriver);
         }
 
@@ -36,8 +36,9 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         public void GivenTheUserIsOnTheHomePage()
         {
             _webDriver.Navigate().GoToUrl(Common.UrlFor("Home"));
-
+            Thread.Sleep(8000);
         }
+
 
         [Then("the user should see the navigation bar")]
         public void ThenTheUserShouldSeeTheNavigationBar()
