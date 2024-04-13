@@ -140,6 +140,7 @@ public class FavoritesRepositoryTests
         var apiEventId = "testEventId";
         var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
         var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkListId, EventId = eventEntity.Id, Event = eventEntity };
+        
 
         var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
 

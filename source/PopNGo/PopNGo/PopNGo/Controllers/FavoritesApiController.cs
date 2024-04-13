@@ -15,17 +15,15 @@ public class FavoritesApiController : Controller
     private readonly ILogger<FavoritesApiController> _logger;
     private readonly IConfiguration _configuration;
     private readonly IFavoritesRepository _favoritesRepo;
-    private readonly IEventRepository _eventRepo;
     private readonly UserManager<PopNGoUser> _userManager;
     private readonly IPgUserRepository _pgUserRepository;
     private readonly IBookmarkListRepository _bookmarkListRepository;
 
-    public FavoritesApiController(ILogger<FavoritesApiController> logger, IConfiguration configuration, IFavoritesRepository favoritesRepo, IEventRepository eventRepo, UserManager<PopNGoUser> userManager, IPgUserRepository pgUserRepository, IBookmarkListRepository bookmarkListRepository)
+    public FavoritesApiController(ILogger<FavoritesApiController> logger, IConfiguration configuration, IFavoritesRepository favoritesRepo, UserManager<PopNGoUser> userManager, IPgUserRepository pgUserRepository, IBookmarkListRepository bookmarkListRepository)
     {
         _logger = logger;
         _configuration = configuration;
         _favoritesRepo = favoritesRepo;
-        _eventRepo = eventRepo;
         _userManager = userManager;
         _pgUserRepository = pgUserRepository;
         _bookmarkListRepository = bookmarkListRepository;
@@ -53,13 +51,6 @@ public class FavoritesApiController : Controller
                 return Unauthorized();
             }
 
-            var eventInfo = bookmarkFavorite.EventInfo;
-
-            if (!_eventRepo.IsEvent(eventInfo.ApiEventID)) //If the event does not exist, add it to the events
-            {
-                _eventRepo.AddEvent(eventInfo.ApiEventID, eventInfo.EventDate, eventInfo.EventName, eventInfo.EventDescription, eventInfo.EventLocation, eventInfo.EventImage);
-            }
-
             if (string.IsNullOrEmpty(bookmarkFavorite.BookmarkListTitle))
             {
                 // If the bookmark list title is null or empty, fail
@@ -67,7 +58,7 @@ public class FavoritesApiController : Controller
             }
 
             // If the favorite is already in the list, return 204 No Content
-            if (_favoritesRepo.IsInBookmarkList(bookmarkFavorite.BookmarkListTitle, eventInfo.ApiEventID))
+            if (_favoritesRepo.IsInBookmarkList(bookmarkFavorite.BookmarkListTitle, bookmarkFavorite.ApiEventId))
             {
                 return NoContent();
             }
@@ -76,7 +67,7 @@ public class FavoritesApiController : Controller
             int bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, bookmarkFavorite.BookmarkListTitle);
 
             // Whether the event existed or not, add it to the favorites
-            _favoritesRepo.AddFavorite(bookmarkListId, eventInfo.ApiEventID);
+            _favoritesRepo.AddFavorite(bookmarkListId, bookmarkFavorite.ApiEventId);
             return Ok();
         }
         catch (Exception ex)
@@ -94,7 +85,7 @@ public class FavoritesApiController : Controller
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> RemoveFavorite([FromBody] PopNGo.Models.DTO.Event eventInfo, string bookmarkListTitle)
+    public async Task<IActionResult> RemoveFavorite([FromBody] BookmarkFavorite bookmarkFavorite)
     {
         PopNGoUser user = await _userManager.GetUserAsync(User);
         if (user == null)
@@ -110,21 +101,16 @@ public class FavoritesApiController : Controller
 
         try
         {
-            if (!_eventRepo.IsEvent(eventInfo.ApiEventID)) //If the event does not exist, add it to the events
-            {
-                _eventRepo.AddEvent(eventInfo.ApiEventID, eventInfo.EventDate, eventInfo.EventName, eventInfo.EventDescription, eventInfo.EventLocation, eventInfo.EventImage);
-            }
-
-            if (string.IsNullOrEmpty(bookmarkListTitle))
+            if (string.IsNullOrEmpty(bookmarkFavorite.BookmarkListTitle))
             {
                 // If the bookmark list title is null or empty, fail
                 return BadRequest("Bookmark list title cannot be null or empty.");
             }
 
             // Get the bookmark list ID from the title
-            int bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, bookmarkListTitle);
+            int bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, bookmarkFavorite.BookmarkListTitle);
 
-            _favoritesRepo.RemoveFavorite(bookmarkListId, eventInfo.ApiEventID);
+            _favoritesRepo.RemoveFavorite(bookmarkListId, bookmarkFavorite.ApiEventId);
             return Ok();
         }
         catch (Exception ex)

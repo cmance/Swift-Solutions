@@ -37,15 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Get the template
             const template = document.getElementById('event-card-template');
 
-            let eventApiBody = {
-                ApiEventID: eventInfo.apiEventID || "No ID available",
-                EventDate: eventInfo.eventDate || "No date available",
-                EventName: eventInfo.eventName || "No name available",
-                EventDescription: eventInfo.eventDescription || "No description available",
-                EventLocation: eventInfo.eventLocation || "No location available",
-                EventImage: eventInfo.eventImage,
-            };
-
             const bookmarkLists = await getBookmarkLists();
 
             let eventProps = {
@@ -56,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 state: eventInfo.eventLocation.split(',')[2],
                 tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
                 bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
-                onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventApiBody, bookmarkListName),
+                onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
                 onPressEvent: () => onClickDetailsAsync(eventInfo),
             };
             

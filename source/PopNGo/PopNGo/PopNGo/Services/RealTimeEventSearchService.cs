@@ -18,8 +18,8 @@ namespace PopNGo.Services
 
     class TicketLink
     {
-        public string source { get; set; }
-        public string link { get; set; }
+        public string? source { get; set; }
+        public string? link { get; set; }
     }
 
     class InfoLink
@@ -35,7 +35,7 @@ namespace PopNGo.Services
         public string phone_number { get; set; }
         public string website { get; set; }
         public int review_count { get; set; }
-        public double rating { get; set; }
+        public decimal rating { get; set; }
         public string subtype { get; set; }
         public List<string> subtypes { get; set; }
         public string full_address { get; set; }
@@ -124,6 +124,7 @@ namespace PopNGo.Services
                 };
 
                 AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
+                
                 IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
                 {
                     EventID = data.event_id,
@@ -139,6 +140,14 @@ namespace PopNGo.Services
                     Longitude = data.venue?.longitude ?? 0,
                     Latitude = data.venue?.latitude ?? 0,
                     Phone_Number = data.venue?.phone_number,
+                    VenueName = data.venue?.name,
+                    VenueRating = data.venue?.rating,
+                    VenueWebsite = data.venue?.website,
+                    TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
+                    {
+                        Source = t.source,
+                        Link = t.link
+                    }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
                     EventTags = data.tags
                 }).ToList();
                 

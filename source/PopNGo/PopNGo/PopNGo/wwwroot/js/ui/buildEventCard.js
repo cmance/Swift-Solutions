@@ -65,7 +65,7 @@ export const buildEventCard = (eventCardElement, props) => {
     const bookmarkDropdownMenu = eventCardElement.querySelector('.dropdown-menu');
     bookmarkDropdownMenu.innerHTML = ''
 
-    if (!props.bookmarkListNames || !props.onPressBookmarkList) {
+    if (!props.bookmarkListNames || !props.onPressBookmarkList || props.bookmarkListNames.length === 0) {
         // If no bookmark list names are provided, remove the dropdown menu
         eventCardElement.querySelector('#event-card-bookmark-button').remove();
     } else {
