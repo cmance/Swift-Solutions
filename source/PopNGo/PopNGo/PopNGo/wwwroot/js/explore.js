@@ -13,6 +13,7 @@ import { debounceUpdateLocationAndFetch } from './util/mapFetching.js';
 import { getNearestCityAndStateAndCountry } from './util/getNearestCityAndStateAndCountry.js';
 import { getBookmarkLists } from './api/bookmarkLists/getBookmarkLists.js';
 import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
+import { UnauthorizedError } from './util/errors.js';
 
 let map = null;
 let page = 0;
@@ -142,11 +143,20 @@ export async function displayEvents(events) {
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
 
+    // TODO: BUG this errors when not logged in
+    let bookmarkLists = [];
+    try {
+        bookmarkLists = await getBookmarkLists();
+    } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            console.error("Unauthorized to get bookmark lists");
+        } else {
+            console.error("Error getting bookmark lists", error);
+        }
+    }
+
     for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
-        
-        // TODO: BUG this errors when not logged in
-        let bookmarkLists = await getBookmarkLists();
 
         let eventCardProps = {
             img: eventInfo.eventImage,
