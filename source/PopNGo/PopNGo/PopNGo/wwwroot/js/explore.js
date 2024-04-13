@@ -13,6 +13,7 @@ import { debounceUpdateLocationAndFetch } from './util/mapFetching.js';
 import { getNearestCityAndStateAndCountry } from './util/getNearestCityAndStateAndCountry.js';
 import { getBookmarkLists } from './api/bookmarkLists/getBookmarkLists.js';
 import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
+import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
 
 let map = null;
 let page = 0;
@@ -68,6 +69,7 @@ async function loadSearchBarAndEvents(city, state, country) {
  * @param {string} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
+    console.log("Event Info: ", eventInfo);
     const eventDetailsModalProps = {
         img: eventInfo.eventImage,
         title: eventInfo.eventName,
@@ -75,7 +77,7 @@ async function onClickDetailsAsync(eventInfo) {
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
         tags: await formatTags(eventInfo.eventTags),
-        favorited: await getEventIsFavorited(eventInfo.eventID),
+        favorited: await getEventIsFavorited(eventInfo.apiEventID),
         ticketLinks : eventInfo.ticketLinks,
         venue: eventInfo.venue,
         onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)

@@ -25,16 +25,10 @@ namespace PopNGo.Models
         public double Longitude { get; set; }
         public string Phone_Number { get; set; }
         public List<string> EventTags { get; set; } = [];
-<<<<<<< HEAD
-        public Venue Venue { get; set; } // Add this property
-        public List<TicketLink> TicketLinks { get; set; } // Add this property
-
-=======
         public string VenueName { get; set; }
         public decimal? VenueRating { get; set; }
         public string VenueWebsite { get; set; }
         public IEnumerable<PopNGo.Models.DTO.TicketLink> TicketLinks { get; set; }
->>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
     }
 }
 

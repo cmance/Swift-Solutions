@@ -7,5 +7,6 @@
  */
 export async function getEventIsFavorited(apiEventId) {
     let res = await fetch(`/api/FavoritesApi/IsFavorite?eventId=${apiEventId}`)
+    console.log(res);
     return await res.json();
 }

@@ -1,6 +1,7 @@
 import { validateObject } from '../validation.js';
 
 export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
+    console.log(props);
     // Set the image
     if (props.img === null || props.img === undefined) {
         eventDetailsModalElement.querySelector('#event-modal-img').src = '/media/images/placeholder_event_card_image.png';
@@ -65,6 +66,7 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     // Buy Tickets Dropdown
     const buyTicketsDropdownContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
+    // console.log(props);
     createBuyTicketsDropdown(buyTicketsDropdownContainer, props);
 
     // View Venue Btn
@@ -77,18 +79,18 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     viewVenueButtonContainer.appendChild(viewVenueButton);
 
-    const venue = props.venue;
+    console.log(props);
 
-    document.getElementById('venue-modal-title').textContent = venue.name || 'No Venue Name Provided';
-    document.getElementById('venue-modal-full-address').textContent = venue.full_address || 'No Venue Address Provided';
-    document.getElementById('venue-modal-phone').textContent = venue.phone_number || 'No Venue Phone Provided';
-    if (venue.website) {
+    document.getElementById('venue-modal-title').textContent = props.venueName || 'No Venue Name Provided';
+    document.getElementById('venue-modal-full-address').textContent = props.eventLocation || 'No Venue Address Provided';
+    document.getElementById('venue-modal-phone').textContent = props.venuePhoneNumber || 'No Venue Phone Provided';
+    if (props.venueWebsite) {
         document.querySelector('#venue-modal-website').style.display = 'block';
-        document.querySelector('#venue-modal-website .venue-website-link').href = venue.website;
+        document.querySelector('#venue-modal-website .venue-website-link').href = props.venueWebsite;
     } else {
         document.querySelector('#venue-modal-website').style.display = 'none';
     }
-    const rating = Math.floor(venue.rating);
+    const rating = Math.floor(props.venueRating);
 
     // Get the rating container
     const ratingContainer = document.getElementById('venue-modal-rating');
@@ -100,7 +102,7 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     const ratingString = document.createElement('span');
     
     // Set the text content of the rating string to the venue rating
-    ratingString.textContent = `(${venue.rating})`;
+    ratingString.textContent = `(${props.venueRating})`;
     
     // Append the rating string to the rating container
     if (rating) {
@@ -158,7 +160,6 @@ export function validateBuildEventDetailsModalProps(data) {
 
     return validateObject(data, schema).length === 0;
 }
-<<<<<<< HEAD
 
 /**
  * Creates a buy tickets dropdown button for the event details modal
@@ -172,8 +173,8 @@ export function createBuyTicketsDropdown(buyTicketsDropdownContainer, props) {
 
     // Clear any existing dropdown items
     dropdownMenu.innerHTML = '';
-
-    if (!props.ticketLinks) {
+    console.log(props.ticketLinks);
+    if (props.ticketLinks.length === 0) {
         buyTicketsButton.classList.add('disabled'); // Disable the button
         buyTicketsDropdownContainer.title = "No ticket links available for this event.";
     } else {
@@ -190,5 +191,3 @@ export function createBuyTicketsDropdown(buyTicketsDropdownContainer, props) {
         });
     }
 }
-=======
->>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e

@@ -18,19 +18,25 @@ namespace PopNGo.DAL.Concrete
         public Event AddEvent(EventDetail eventDetail)
         {
             ValidateEventParameters(eventDetail);
-            var newEvent = new Event {
+            var newEvent = new Event
+            {
                 ApiEventId = eventDetail.EventID,
                 EventDate = eventDetail.EventStartTime,
                 EventName = eventDetail.EventName,
                 EventDescription = eventDetail.EventDescription,
                 EventLocation = eventDetail.Full_Address,
                 EventImage = eventDetail.EventThumbnail,
+                VenuePhoneNumber = eventDetail.Phone_Number,
+                VenueName = eventDetail.VenueName,
+                VenueRating = eventDetail.VenueRating,
+                VenueWebsite = eventDetail.VenueWebsite
             };
             var addedEvent = AddOrUpdate(newEvent);
 
             foreach (var ticketLink in eventDetail.TicketLinks)
             {
-                var newTicketLink = new TicketLink {
+                var newTicketLink = new TicketLink
+                {
                     EventId = addedEvent.Id,
                     Source = ticketLink.Source,
                     Link = ticketLink.Link,

@@ -116,7 +116,7 @@ namespace PopNGo.Services
                     if (response.IsSuccessStatusCode)
                     {
                         responseBody = await response.Content.ReadAsStringAsync();
-
+                        _logger.LogInformation($"Response body: {responseBody}");
                         if (!string.IsNullOrEmpty(responseBody))
                         {
                             break;
@@ -137,39 +137,7 @@ namespace PopNGo.Services
                 // Wait for 1 second before retrying
                 await Task.Delay(1000);
 
-<<<<<<< HEAD
                 retryCount++;
-=======
-                AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
-                
-                IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
-                {
-                    EventID = data.event_id,
-                    EventName = data.name,
-                    EventLink = data.link,
-                    EventDescription = data.description,
-                    EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue,
-                    EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue,
-                    EventIsVirtual = data.is_virtual,
-                    EventThumbnail = data.thumbnail,
-                    EventLanguage = data.language,
-                    Full_Address = data.venue?.full_address ?? "",
-                    Longitude = data.venue?.longitude ?? 0,
-                    Latitude = data.venue?.latitude ?? 0,
-                    Phone_Number = data.venue?.phone_number,
-                    VenueName = data.venue?.name,
-                    VenueRating = data.venue?.rating,
-                    VenueWebsite = data.venue?.website,
-                    TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
-                    {
-                        Source = t.source,
-                        Link = t.link
-                    }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
-                    EventTags = data.tags
-                }).ToList();
-                
-                return eventDetails;
->>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
             }
 
             if (string.IsNullOrEmpty(responseBody))
@@ -184,7 +152,8 @@ namespace PopNGo.Services
             };
 
             AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
-            IList<EventDetail> eventDetails = allEventDetail.data?.Select(data => data == null ? null : new EventDetail
+
+            IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
             {
                 EventID = data.event_id,
                 EventName = data.name,
@@ -199,9 +168,15 @@ namespace PopNGo.Services
                 Longitude = data.venue?.longitude ?? 0,
                 Latitude = data.venue?.latitude ?? 0,
                 Phone_Number = data.venue?.phone_number,
-                EventTags = data.tags,
-                Venue = data.venue,
-                TicketLinks = data.ticket_links
+                VenueName = data.venue?.name,
+                VenueRating = data.venue?.rating,
+                VenueWebsite = data.venue?.website,
+                TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
+                {
+                    Source = t.source,
+                    Link = t.link
+                }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
+                EventTags = data.tags
             }).ToList();
 
             return eventDetails;
@@ -260,9 +235,7 @@ namespace PopNGo.Services
                     Longitude = newEvent.data.venue?.longitude ?? 0,
                     Latitude = newEvent.data.venue?.latitude ?? 0,
                     Phone_Number = newEvent.data.venue?.phone_number,
-                    EventTags = newEvent.data.tags ?? new List<string>(),
-                    Venue = newEvent.data.venue ?? new Venue(),
-                    TicketLinks = newEvent.data.ticket_links
+                    EventTags = newEvent.data.tags ?? new List<string>()
                 };
             }
             catch (Exception ex)
