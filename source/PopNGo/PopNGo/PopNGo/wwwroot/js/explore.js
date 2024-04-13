@@ -79,7 +79,10 @@ async function onClickDetailsAsync(eventInfo) {
         tags: await formatTags(eventInfo.eventTags),
         favorited: await getEventIsFavorited(eventInfo.apiEventID),
         ticketLinks : eventInfo.ticketLinks,
-        venue: eventInfo.venue,
+        venueName: eventInfo.venueName,
+        venuePhoneNumber: eventInfo.venuePhoneNumber,
+        venueRating: eventInfo.venueRating,
+        venueWebsite: eventInfo.venueWebsite,
         onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
     }
     

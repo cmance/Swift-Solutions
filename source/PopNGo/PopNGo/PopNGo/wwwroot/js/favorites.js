@@ -115,7 +115,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
     // Display the favorite events
     const eventCardTemplate = document.getElementById('event-card-template');
     const favoriteEventsContainer = document.getElementById('favorite-events-container');
-
+    console.log(favoriteEvents);
     favoriteEvents.forEach(async eventInfo => {
         let eventProps = {
             img: eventInfo.eventImage,
@@ -124,9 +124,15 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             city: eventInfo.eventLocation.split(',')[1],
             state: eventInfo.eventLocation.split(',')[2],
             tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
+            ticketLinks : eventInfo.ticketLinks,
+            venueName: eventInfo.venueName,
+            venuePhoneNumber: eventInfo.venuePhoneNumber,
+            venueRating: eventInfo.venueRating,
+            venueWebsite: eventInfo.venueWebsite,
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         };
-        
+        // console.log("Favorites Event Props");
+        // console.log(eventProps);
         // Clone the template
         const eventCard = eventCardTemplate.content.cloneNode(true);
     
@@ -142,13 +148,20 @@ async function displayEventsFromBookmarkList(bookmarkList) {
  * @param {Object} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
+    console.log("onClickDetailsAsync Favorites");
+    console.log(eventInfo);
     const eventDetailsModalProps = {
         img: eventInfo.eventImage,
         title: eventInfo.eventName,
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
-        tags: [], // TODO: tags should be stored on event
+        ticketLinks : eventInfo.ticketLinks,
+        venueName: eventInfo.venueName,
+        venuePhoneNumber: eventInfo.venuePhoneNumber,
+        venueRating: eventInfo.venueRating,
+        venueWebsite: eventInfo.venueWebsite,
+        tags: [] // TODO: tags should be stored on event
     }
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {

@@ -70,7 +70,20 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     createBuyTicketsDropdown(buyTicketsDropdownContainer, props);
 
     // View Venue Btn
-    const viewVenueButtonContainer = eventDetailsModalElement.querySelector('#view-venue-btn');
+    buildVenueDetailsModal(eventDetailsModalElement, props);
+
+}
+
+/**
+ * Builds the Venue details modal
+ * @function buildVenueDetailsModal
+ * @param {HTMLElement} venueDetailsModalElement
+ * @param {any} props
+ * @returns {void}
+ */
+export function buildVenueDetailsModal(venueDetailsModalElement, props) {
+    console.log(props);
+    const viewVenueButtonContainer = venueDetailsModalElement.querySelector('#view-venue-btn');
     viewVenueButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
 
     const viewVenueButton = document.createElement('button');
@@ -94,34 +107,32 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     // Get the rating container
     const ratingContainer = document.getElementById('venue-modal-rating');
-    
+
     // Clear the rating container
     ratingContainer.innerHTML = '';
-    
+
     // Create a new span element for the rating string
     const ratingString = document.createElement('span');
-    
+
     // Set the text content of the rating string to the venue rating
     ratingString.textContent = `(${props.venueRating})`;
-    
+
     // Append the rating string to the rating container
     if (rating) {
         ratingContainer.appendChild(ratingString);
     }
 
-    
     // Loop as many times as the rating
     for (let i = 0; i < rating; i++) {
         // Create a new span element for the star
         const star = document.createElement('span');
-    
+
         // Set the HTML content of the star to the given HTML string
         star.innerHTML = `<span class="star" data-value="${i + 1}">&#9733;</span>`;
-    
+
         // Append the star to the rating container
         ratingContainer.appendChild(star);
     }
-
 
     viewVenueButton.addEventListener('click', () => {
         const viewVenueModal = document.getElementById('view-venue-modal');
@@ -136,7 +147,6 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
             }
         });
     });
-
 }
 
 /**
