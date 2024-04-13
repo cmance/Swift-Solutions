@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PopNGo.Models;
 
+[Table("Tag")]
 public partial class Tag
 {
     public int Id { get; set; }

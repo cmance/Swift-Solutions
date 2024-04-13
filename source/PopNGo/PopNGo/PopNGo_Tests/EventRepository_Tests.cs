@@ -48,6 +48,7 @@ public class EventRepositoryTests
         var eventDescription = "Test Description";
         var eventLocation = "Test Location";
         var eventImage = "";
+        IEnumerable<PopNGo.Models.DTO.TicketLink> ticketLinks = new List<PopNGo.Models.DTO.TicketLink>();
 
         var eventDetail = new EventDetail
         {
@@ -56,7 +57,8 @@ public class EventRepositoryTests
             EventName = eventName,
             EventDescription = eventDescription,
             Full_Address = eventLocation,
-            EventThumbnail = eventImage
+            EventThumbnail = eventImage,
+            TicketLinks = ticketLinks
         };
 
         var events = new List<Event>();

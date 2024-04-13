@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Humanizer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,29 +32,35 @@ namespace PopNGo.Areas.Identity.Pages.Account
         private readonly UserManager<PopNGoUser> _userManager;
         private readonly IUserStore<PopNGoUser> _userStore;
         private readonly IUserEmailStore<PopNGoUser> _emailStore;
+        private readonly IPasswordValidator<PopNGoUser> _passwordValidator;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly PopNGoDB _popNGoDBContext;
 
         private readonly IBookmarkListRepository _bookmarkListRepository;
+        private readonly IScheduledNotificationRepository _scheduledNotificationRepository;
 
         public RegisterModel(
             UserManager<PopNGoUser> userManager,
             IUserStore<PopNGoUser> userStore,
+            IPasswordValidator<PopNGoUser> passwordValidator,
             SignInManager<PopNGoUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
             PopNGoDB popNGoDBContext,
-            IBookmarkListRepository bookmarkListRepository)
+            IBookmarkListRepository bookmarkListRepository,
+            IScheduledNotificationRepository scheduledNotificationRepository)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
+            _passwordValidator = passwordValidator;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _popNGoDBContext = popNGoDBContext;
             _bookmarkListRepository = bookmarkListRepository;
+            _scheduledNotificationRepository = scheduledNotificationRepository;
 
             if(_popNGoDBContext == null)
             {
@@ -150,6 +157,19 @@ namespace PopNGo.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/Identity/Account/Login");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+            // Validate the password before proceeding
+            var passwordValid = await _passwordValidator.ValidateAsync(_userManager, null, Input.Password);
+            if (!passwordValid.Succeeded)
+            {
+                foreach (var error in passwordValid.Errors)
+                {
+                    ModelState.AddModelError(error.Code, error.Description);
+                }
+
+                return Page();
+            }
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -158,6 +178,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.NotificationEmail = Input.Email;
 
+                Console.WriteLine("User: " + user.FirstName + " " + user.Id);
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -175,6 +196,8 @@ namespace PopNGo.Areas.Identity.Pages.Account
                     await _popNGoDBContext.SaveChangesAsync();
 
                     _bookmarkListRepository.AddBookmarkList(newUser.Id, "Favorites");
+                    await _scheduledNotificationRepository.AddScheduledNotification(newUser.Id, DateTime.Now.AtMidnight().AddDays(1), "Upcoming Events");
+
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
