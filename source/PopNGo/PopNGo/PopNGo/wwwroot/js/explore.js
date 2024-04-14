@@ -13,7 +13,7 @@ import { debounceUpdateLocationAndFetch } from './util/mapFetching.js';
 import { getNearestCityAndStateAndCountry } from './util/getNearestCityAndStateAndCountry.js';
 import { getBookmarkLists } from './api/bookmarkLists/getBookmarkLists.js';
 import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
-import { getEventIsFavorited } from './api/favorites/getEventIsFavorited.js';
+import { UnauthorizedError } from './util/errors.js';
 
 let map = null;
 let page = 0;
@@ -77,13 +77,11 @@ async function onClickDetailsAsync(eventInfo) {
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
         tags: await formatTags(eventInfo.eventTags),
-        favorited: await getEventIsFavorited(eventInfo.apiEventID),
         ticketLinks : eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
-        venueWebsite: eventInfo.venueWebsite,
-        onPressFavorite: () => onPressFavorite(eventApiBody, eventDetailsModalProps.favorited)
+        venueWebsite: eventInfo.venueWebsite
     }
     
 
@@ -152,11 +150,20 @@ export async function displayEvents(events) {
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
 
+    // TODO: BUG this errors when not logged in
+    let bookmarkLists = [];
+    try {
+        bookmarkLists = await getBookmarkLists();
+    } catch (error) {
+        if (error instanceof UnauthorizedError) {
+            console.error("Unauthorized to get bookmark lists");
+        } else {
+            console.error("Error getting bookmark lists", error);
+        }
+    }
+
     for (let eventInfo of events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
-        
-        // TODO: BUG this errors when not logged in
-        let bookmarkLists = await getBookmarkLists();
 
         let eventCardProps = {
             img: eventInfo.eventImage,

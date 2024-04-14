@@ -82,10 +82,10 @@ VALUES
     (3, '2022-01-02T00:00:00', 'Favorites'),
     (4, '2022-01-02T00:00:00', 'Favorites');
 
+-- Declare the cursor
 DECLARE @aspnetUserID nvarchar(128);
 DECLARE user_cursor CURSOR FOR 
-SELECT [ASPNETUserID]
-FROM [PG_User];
+SELECT [ASPNETUserID] FROM [PG_User];
 
 -- Open the cursor
 OPEN user_cursor;
@@ -97,15 +97,11 @@ FETCH NEXT FROM user_cursor INTO @aspnetUserID;
 WHILE @@FETCH_STATUS = 0
 BEGIN
     -- Get the ID of the user
-    DECLARE @userID int = (SELECT [ID]
-    FROM [PG_User]
-    WHERE [ASPNETUserID] = @aspnetUserID);
+
+    DECLARE @userID int = (SELECT [ID] FROM [PG_User] WHERE [ASPNETUserID] = @aspnetUserID);
 
     -- Insert a new wishlist for the user into BookmarkList
-    INSERT INTO [BookmarkList]
-        ([UserID], [Title])
-    VALUES
-        (@userID, 'Wishlist events :)');
+    INSERT INTO [BookmarkList] ([UserID], [Title]) VALUES (@userID, 'Favorites');
 
     -- Fetch the next row
     FETCH NEXT FROM user_cursor INTO @aspnetUserID;
@@ -113,4 +109,5 @@ END;
 
 -- Close and deallocate the cursor
 CLOSE user_cursor;
+
 DEALLOCATE user_cursor;

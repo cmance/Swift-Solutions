@@ -15,6 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <UpToDateCheckInput Remove="features\PG-125.feature" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 <<<<<<< HEAD
     <PackageReference Include="Reqnroll.NUnit" Version="1.0.0" />
