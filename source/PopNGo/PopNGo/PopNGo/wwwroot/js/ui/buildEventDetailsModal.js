@@ -1,6 +1,7 @@
 import { validateObject } from '../validation.js';
 
 export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
+    console.log(props);
     // Set the image
     if (props.img === null || props.img === undefined) {
         eventDetailsModalElement.querySelector('#event-modal-img').src = '/media/images/placeholder_event_card_image.png';
@@ -62,6 +63,90 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     } else {
         console.error("Button already exists in the container.");
     }
+
+    // Buy Tickets Dropdown
+    const buyTicketsDropdownContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
+    // console.log(props);
+    createBuyTicketsDropdown(buyTicketsDropdownContainer, props);
+
+    // View Venue Btn
+    buildVenueDetailsModal(eventDetailsModalElement, props);
+
+}
+
+/**
+ * Builds the Venue details modal
+ * @function buildVenueDetailsModal
+ * @param {HTMLElement} venueDetailsModalElement
+ * @param {any} props
+ * @returns {void}
+ */
+export function buildVenueDetailsModal(venueDetailsModalElement, props) {
+    console.log(props);
+    const viewVenueButtonContainer = venueDetailsModalElement.querySelector('#view-venue-btn');
+    viewVenueButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
+
+    const viewVenueButton = document.createElement('button');
+    viewVenueButton.textContent = 'View Venue';
+    viewVenueButton.className = 'btn btn-warning'; // Add Bootstrap classes
+
+    viewVenueButtonContainer.appendChild(viewVenueButton);
+
+    console.log(props);
+
+    document.getElementById('venue-modal-title').textContent = props.venueName || 'No Venue Name Provided';
+    document.getElementById('venue-modal-full-address').textContent = props.eventLocation || 'No Venue Address Provided';
+    document.getElementById('venue-modal-phone').textContent = props.venuePhoneNumber || 'No Venue Phone Provided';
+    if (props.venueWebsite) {
+        document.querySelector('#venue-modal-website').style.display = 'block';
+        document.querySelector('#venue-modal-website .venue-website-link').href = props.venueWebsite;
+    } else {
+        document.querySelector('#venue-modal-website').style.display = 'none';
+    }
+    const rating = Math.floor(props.venueRating);
+
+    // Get the rating container
+    const ratingContainer = document.getElementById('venue-modal-rating');
+
+    // Clear the rating container
+    ratingContainer.innerHTML = '';
+
+    // Create a new span element for the rating string
+    const ratingString = document.createElement('span');
+
+    // Set the text content of the rating string to the venue rating
+    ratingString.textContent = `(${props.venueRating})`;
+
+    // Append the rating string to the rating container
+    if (rating) {
+        ratingContainer.appendChild(ratingString);
+    }
+
+    // Loop as many times as the rating
+    for (let i = 0; i < rating; i++) {
+        // Create a new span element for the star
+        const star = document.createElement('span');
+
+        // Set the HTML content of the star to the given HTML string
+        star.innerHTML = `<span class="star" data-value="${i + 1}">&#9733;</span>`;
+
+        // Append the star to the rating container
+        ratingContainer.appendChild(star);
+    }
+
+    viewVenueButton.addEventListener('click', () => {
+        const viewVenueModal = document.getElementById('view-venue-modal');
+        viewVenueModal.style.display = 'block';
+
+        // Add a function to populate the modal with venue details
+
+        // Add an event listener to the modal that hides the modal when the user clicks outside of it
+        viewVenueModal.addEventListener('click', (event) => {
+            if (event.target === viewVenueModal) {
+                viewVenueModal.style.display = 'none';
+            }
+        });
+    });
 }
 
 /**
@@ -84,4 +169,35 @@ export function validateBuildEventDetailsModalProps(data) {
     }
 
     return validateObject(data, schema).length === 0;
+}
+
+/**
+ * Creates a buy tickets dropdown button for the event details modal
+ * @param {any} buyTicketsDropdownContainer
+ * @param {any} props
+ * @returns {void}
+ */
+export function createBuyTicketsDropdown(buyTicketsDropdownContainer, props) {
+    const buyTicketsButton = buyTicketsDropdownContainer.querySelector('#buyTicketsBtn');
+    const dropdownMenu = buyTicketsDropdownContainer.querySelector('.dropdown-menu');
+
+    // Clear any existing dropdown items
+    dropdownMenu.innerHTML = '';
+    console.log(props.ticketLinks);
+    if (props.ticketLinks.length === 0) {
+        buyTicketsButton.classList.add('disabled'); // Disable the button
+        buyTicketsDropdownContainer.title = "No ticket links available for this event.";
+    } else {
+        buyTicketsButton.classList.remove('disabled'); // Enable the button
+        buyTicketsDropdownContainer.title = "Click to view ticket options for this event.";
+        props.ticketLinks.forEach(ticketLink => {
+            const ticketLinkElement = document.createElement('a');
+            ticketLinkElement.textContent = ticketLink.source;
+            ticketLinkElement.href = ticketLink.link;
+            ticketLinkElement.target = '_blank';
+            ticketLinkElement.className = 'dropdown-item';
+
+            dropdownMenu.appendChild(ticketLinkElement);
+        });
+    }
 }

@@ -16,7 +16,7 @@ namespace PopNGo.Services
         public int start { get; set; }
     }
 
-    class TicketLink
+    public class TicketLink
     {
         public string? source { get; set; }
         public string? link { get; set; }
@@ -28,7 +28,7 @@ namespace PopNGo.Services
         public string link { get; set; }
     }
 
-    class Venue
+    public class Venue
     {
         public string google_id { get; set; }
         public string name { get; set; }
@@ -103,61 +103,83 @@ namespace PopNGo.Services
             string endpoint = $"search-events?query={query}&start={start}";
             _logger.LogInformation($"Calling Real Time Search Event API at {endpoint}");
 
-            try
-            {
-                HttpResponseMessage response = await _httpClient.GetAsync(endpoint);
-                string responseBody;
+            HttpResponseMessage response = null;
+            string responseBody = null;
+            int retryCount = 0;
 
-                if (response.IsSuccessStatusCode)
+            while (retryCount < 5)
+            {
+                try
                 {
-                    responseBody = await response.Content.ReadAsStringAsync();
+                    response = await _httpClient.GetAsync(endpoint);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseBody = await response.Content.ReadAsStringAsync();
+                        _logger.LogInformation($"Response body: {responseBody}");
+                        if (!string.IsNullOrEmpty(responseBody))
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        HandleErrorResponse(response.StatusCode);
+                        return Enumerable.Empty<EventDetail>();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    HandleErrorResponse(response.StatusCode);
+                    _logger.LogError(ex, "An error occurred while searching for events");
                     return Enumerable.Empty<EventDetail>();
                 }
 
-                JsonSerializerOptions options = new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                };
+                // Wait for 1 second before retrying
+                await Task.Delay(1000);
 
-                AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
-                
-                IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
-                {
-                    EventID = data.event_id,
-                    EventName = data.name,
-                    EventLink = data.link,
-                    EventDescription = data.description,
-                    EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue,
-                    EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue,
-                    EventIsVirtual = data.is_virtual,
-                    EventThumbnail = data.thumbnail,
-                    EventLanguage = data.language,
-                    Full_Address = data.venue?.full_address ?? "",
-                    Longitude = data.venue?.longitude ?? 0,
-                    Latitude = data.venue?.latitude ?? 0,
-                    Phone_Number = data.venue?.phone_number,
-                    VenueName = data.venue?.name,
-                    VenueRating = data.venue?.rating,
-                    VenueWebsite = data.venue?.website,
-                    TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
-                    {
-                        Source = t.source,
-                        Link = t.link
-                    }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
-                    EventTags = data.tags
-                }).ToList();
-                
-                return eventDetails;
+                retryCount++;
             }
-            catch (Exception ex)
+
+            if (string.IsNullOrEmpty(responseBody))
             {
-                _logger.LogError($"An error occurred: {ex.Message}");
+                _logger.LogError("responseBody is still null or empty after 5 retries");
                 return Enumerable.Empty<EventDetail>();
             }
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
+
+            IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
+            {
+                EventID = data.event_id,
+                EventName = data.name,
+                EventLink = data.link,
+                EventDescription = data.description,
+                EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue,
+                EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue,
+                EventIsVirtual = data.is_virtual,
+                EventThumbnail = data.thumbnail,
+                EventLanguage = data.language,
+                Full_Address = data.venue?.full_address ?? "",
+                Longitude = data.venue?.longitude ?? 0,
+                Latitude = data.venue?.latitude ?? 0,
+                Phone_Number = data.venue?.phone_number,
+                VenueName = data.venue?.name,
+                VenueRating = data.venue?.rating,
+                VenueWebsite = data.venue?.website,
+                TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
+                {
+                    Source = t.source,
+                    Link = t.link
+                }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
+                EventTags = data.tags
+            }).ToList();
+
+            return eventDetails;
         }
         public async Task<EventDetail> SearchEventInfoAsync(string eventId)
         {
@@ -173,10 +195,14 @@ namespace PopNGo.Services
                 if (response.IsSuccessStatusCode)
                 {
                     responseBody = await response.Content.ReadAsStringAsync();
+                    _logger.LogInformation($"Response body: {responseBody}");
+
                 }
                 else
                 {
                     HandleErrorResponse(response.StatusCode);
+                    responseBody = await response.Content.ReadAsStringAsync();
+                    _logger.LogError($"Error response body: {responseBody}");
                     return null;
                 }
 
@@ -187,7 +213,13 @@ namespace PopNGo.Services
 
                 // Console.WriteLine($"Query: {endpoint},\nResponse: {responseBody}");
                 EventInfoDetail newEvent = JsonSerializer.Deserialize<EventInfoDetail>(responseBody, options);
-                
+
+                if (newEvent == null)
+                {
+                    _logger.LogError("Deserialized event is null");
+                    return null;
+                }
+
                 return new EventDetail
                 {
                     EventID = newEvent.data.event_id,
@@ -203,7 +235,7 @@ namespace PopNGo.Services
                     Longitude = newEvent.data.venue?.longitude ?? 0,
                     Latitude = newEvent.data.venue?.latitude ?? 0,
                     Phone_Number = newEvent.data.venue?.phone_number,
-                    EventTags = newEvent.data.tags
+                    EventTags = newEvent.data.tags ?? new List<string>()
                 };
             }
             catch (Exception ex)

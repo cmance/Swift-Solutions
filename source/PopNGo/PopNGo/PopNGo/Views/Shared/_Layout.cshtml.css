@@ -24,6 +24,7 @@ a.navbar-brand {
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
+  border: 1.5px solid white; /* Adjust border thickness and color as needed */
 }
 
 .custom-nav-item {

@@ -20,6 +20,3 @@ DROP TABLE [BookmarkList];
 DROP TABLE [EventHistory];
 DROP TABLE [Event];
 DROP TABLE [ScheduledNotification];
-
--- If you also want to drop the database, uncomment the following line
--- DROP DATABASE [PopNGoDB];
