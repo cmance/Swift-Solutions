@@ -17,9 +17,8 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         private readonly HomePageObject _homePage;
         private readonly IWebDriver _webDriver;
 
-        public TicketsVenueInformationStepDefinitions()
+        public TicketsVenueInformationStepDefinitions(Drivers.BrowserDriver browserDriver)
         {
-            var browserDriver = new BrowserDriver();
             _webDriver = browserDriver.Current;
             _explorePage = new ExplorePageObject(_webDriver);
             _homePage = new HomePageObject(_webDriver);

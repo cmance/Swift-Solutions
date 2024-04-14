@@ -17,7 +17,8 @@ th {
     color: #d38100;
 }
 
-button {
+table[name="admin-schedules-table"] button,
+table[name="admin-users-table"] button {
     font-size: 0.7rem !important
 }
 

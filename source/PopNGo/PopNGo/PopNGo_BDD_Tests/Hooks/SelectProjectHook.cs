@@ -18,7 +18,7 @@ namespace PopNGo_BDD_Tests.Hooks
     ///  - we have to "reset" the state of the browser before each scenario
     /// </remarks>
     [Binding]
-    public class SharedBrowserHooks
+    public class SelectProjectHooks
     {
         [BeforeTestRun]
         public static void BeforeTestRun(ObjectContainer testThreadContainer)

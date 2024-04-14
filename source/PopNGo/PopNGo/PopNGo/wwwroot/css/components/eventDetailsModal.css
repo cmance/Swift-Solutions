@@ -9,7 +9,7 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: center;
     padding-top: 60px;

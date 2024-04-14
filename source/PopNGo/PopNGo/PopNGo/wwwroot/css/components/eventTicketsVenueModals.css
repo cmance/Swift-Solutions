@@ -60,121 +60,124 @@
     background-color: #ff9800;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-    background-color: white;
-
-    /* Borders */
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    border-bottom: 0.5px solid #888;
-    border-top: 1px solid #888;
-    border-left: 1px solid #888;
-    border-right: 1px solid #888;
-}
-
-.modal-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px;
-}
-
-.venue-modal-body {
-    position: absolute;
-    /* Changed from relative to absolute */
-    top: 50%;
-    /* Position at 50% from the top */
-    left: 50%;
-    /* Position at 50% from the left */
-    transform: translate(-50%, -50%);
-    /* Centers the element */
-    max-width: 50vw;
-    width: auto;
-}
-
-#venue-modal-rating {
-    display: flex;
-    align-items: center;
-}
-
-#venue-modal-rating span:last-child {
-    padding-right: 20px;
-}
-
-
-#venue-modal-rating span:first-child {
-    padding-right: 5px;
-}
-
+#view-venue-modal,
 #ticket-links-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    flex-wrap: wrap;
-}
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        background-color: white;
 
-.prepend-image-phone::before {
-    content: "";
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    background-image: url('../../media/images/telephone.png');
-    background-size: cover;
-    margin-right: 5px;
-    margin-left: 2px;
-}
+        /* Borders */
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 0.5px solid #888;
+        border-top: 1px solid #888;
+        border-left: 1px solid #888;
+        border-right: 1px solid #888;
+    }
 
-.prepend-image-website::before {
-    content: "";
-    display: inline-block;
-    height: 20px;
-    width: 20px;
-    background-image: url('../../media/images/website.png');
-    background-size: cover;
-    margin-right: 5px;
-    margin-left: 2px;
-}
+    .modal-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
 
-.prepend-image-address::before {
-    content: "";
-    display: inline-block;
-    height: 22px;
-    width: 22px;
-    background-image: url('../../media/images/marker.png');
-    background-size: cover;
-    margin-right: 5px;
-}
+    .venue-modal-body {
+        position: absolute;
+        /* Changed from relative to absolute */
+        top: 50%;
+        /* Position at 50% from the top */
+        left: 50%;
+        /* Position at 50% from the left */
+        transform: translate(-50%, -50%);
+        /* Centers the element */
+        max-width: 50vw;
+        width: auto;
+    }
 
-.venue-website-link {
-    position: relative;
-    top: -3px;
-    color: #212529;
-    text-decoration: none;
-}
+    #venue-modal-rating {
+        display: flex;
+        align-items: center;
+    }
 
-.venue-website-link:hover {
-    color: #FFF;
-}
+    #venue-modal-rating span:last-child {
+        padding-right: 20px;
+    }
 
-.dropdown-menu {
-    /* Add styles for the dropdown menu here */
-    background-color: #f8f9fa;
-    border: none;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
 
-.dropdown-item {
-    /* Add styles for the dropdown items here */
-    color: #212529;
-    padding: 0.25rem 1.5rem;
-    text-decoration: none;
-}
+    #venue-modal-rating span:first-child {
+        padding-right: 5px;
+    }
 
-.dropdown-item:hover {
-    background-color: #ff9800;
+    #ticket-links-container {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .prepend-image-phone::before {
+        content: "";
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        background-image: url('../../media/images/telephone.png');
+        background-size: cover;
+        margin-right: 5px;
+        margin-left: 2px;
+    }
+
+    .prepend-image-website::before {
+        content: "";
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        background-image: url('../../media/images/website.png');
+        background-size: cover;
+        margin-right: 5px;
+        margin-left: 2px;
+    }
+
+    .prepend-image-address::before {
+        content: "";
+        display: inline-block;
+        height: 22px;
+        width: 22px;
+        background-image: url('../../media/images/marker.png');
+        background-size: cover;
+        margin-right: 5px;
+    }
+
+    .venue-website-link {
+        position: relative;
+        top: -3px;
+        color: #212529;
+        text-decoration: none;
+    }
+
+    .venue-website-link:hover {
+        color: #FFF;
+    }
+
+    .dropdown-menu {
+        /* Add styles for the dropdown menu here */
+        background-color: #f8f9fa;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-item {
+        /* Add styles for the dropdown items here */
+        color: #212529;
+        padding: 0.25rem 1.5rem;
+        text-decoration: none;
+    }
+
+    .dropdown-item:hover {
+        background-color: #ff9800;
+    }
 }
