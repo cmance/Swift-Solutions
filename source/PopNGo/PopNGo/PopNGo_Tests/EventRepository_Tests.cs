@@ -4,66 +4,68 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using PopNGo.DAL.Concrete;
 using PopNGo.DAL.Abstract;
+using PopNGo.Models.DTO;
 using PopNGo.Models;
 using System.Collections.Generic;
+using System;
+
 
 namespace PopNGo_Tests;
 
 public class EventRepositoryTests
 {
-    private Mock<PopNGoDB> _mockContext;
-    private Mock<DbSet<Event>> _mockSet;
-    private EventRepository _eventRepository;
+    private static readonly string _seedFile = @"..\..\..\..\PopNGo\Data\Scripts\Testing\SEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
 
-    private Mock<DbSet<T>> GetMockDbSet<T>(List<T> list) where T : class
-    {
+    // Create this helper like this, for whatever context you desire
+    private static readonly InMemoryDbHelper<PopNGoDB> _dbHelper = new(_seedFile, DbPersistence.OneDbPerTest);
+    private static EventRepository _eventRepository = null!;
+    private static PopNGoDB _context = null!;
 
-        var mockSet = new Mock<DbSet<T>>();
-        mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(list.AsQueryable().Provider);
-        mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(list.AsQueryable().Expression);
-        mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(list.AsQueryable().ElementType);
-        mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(list.AsQueryable().GetEnumerator());
-        return mockSet;
-    }
 
     [SetUp]
     public void Setup()
     {
-        _mockContext = new Mock<PopNGoDB>();
-        _mockSet = GetMockDbSet(new List<Event>());
-        _mockContext.Setup(c => c.Events).Returns(_mockSet.Object);
-        _eventRepository = new EventRepository(_mockContext.Object);
-
-        //string EventId, DateTime EventDate, string EventName, string EventDescription, string EventLocation
-
+        _context = _dbHelper.GetContext();
+        _eventRepository = new EventRepository(_context);
     }
 
     [Test]
     public void AddEvent_ShouldAddNewEvent()
     {
         // Arrange
-        var eventId = "1";
+        var eventId = "event1";
         var eventDate = DateTime.Now;
-        var eventName = "Test Event";
+        var eventName = "Event 1";
         var eventDescription = "Test Description";
         var eventLocation = "Test Location";
         var eventImage = "";
+        IEnumerable<PopNGo.Models.DTO.TicketLink> ticketLinks = new List<PopNGo.Models.DTO.TicketLink>();
 
-        var events = new List<Event>();
-        _mockContext.Setup(m => m.Update(It.IsAny<Event>())).Callback<Event>(e => events.Add(e));
+        var eventDetail = new EventDetail
+        {
+            EventID = eventId,
+            EventStartTime = eventDate,
+            EventName = eventName,
+            EventDescription = eventDescription,
+            Full_Address = eventLocation,
+            EventThumbnail = eventImage,
+            TicketLinks = ticketLinks
+        };
+
 
         // Act
-        _eventRepository.AddEvent(eventId, eventDate, eventName, eventDescription, eventLocation, eventImage);
+        _eventRepository.AddEvent(eventDetail);
 
         // Assert
-        Assert.That(events.Count, Is.EqualTo(1));
-        var addedEvent = events.First();
-        Assert.That(addedEvent.ApiEventId, Is.EqualTo(eventId));
-        Assert.That(addedEvent.EventDate, Is.EqualTo(eventDate));
-        Assert.That(addedEvent.EventName, Is.EqualTo(eventName));
-        Assert.That(addedEvent.EventDescription, Is.EqualTo(eventDescription));
-        Assert.That(addedEvent.EventLocation, Is.EqualTo(eventLocation));
-        Assert.That(addedEvent.EventImage, Is.EqualTo(eventImage));
+         var events = _context.Events.ToList();
+        Assert.That(events.Count, Is.EqualTo(3));
+        var addedEvent = events.Last();
+        Assert.That(addedEvent.ApiEventId, Is.EqualTo(eventDetail.EventID));
+        Assert.That(addedEvent.EventDate, Is.EqualTo(eventDetail.EventStartTime.Value));
+        Assert.That(addedEvent.EventName, Is.EqualTo(eventDetail.EventName));
+        Assert.That(addedEvent.EventDescription, Is.EqualTo(eventDetail.EventDescription));
+        Assert.That(addedEvent.EventLocation, Is.EqualTo(eventDetail.Full_Address));
+        Assert.That(addedEvent.EventImage, Is.EqualTo(eventDetail.EventThumbnail));
     }
 
     [Test]
@@ -77,11 +79,21 @@ public class EventRepositoryTests
         var eventLocation = "Test Location";
         var eventImage = "";
 
+        var eventDetail = new EventDetail
+        {
+            EventID = eventId,
+            EventStartTime = eventDate,
+            EventName = eventName,
+            EventDescription = eventDescription,
+            Full_Address = eventLocation,
+            EventThumbnail = eventImage
+        };
+
         // Act
-        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventId, eventDate, eventName, eventDescription, eventLocation, eventImage));
+        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventDetail));
 
         // Assert
-        Assert.That(ex.Message, Is.EqualTo("EventId cannot be null or empty (Parameter 'eventId')"));
+        Assert.That(ex.Message, Is.EqualTo("EventId cannot be null or empty (Parameter 'EventID')"));
     }
 
     [Test]
@@ -95,11 +107,21 @@ public class EventRepositoryTests
         var eventLocation = "Test Location";
         var eventImage = "";
 
+        var eventDetails = new EventDetail
+        {
+            EventID = eventId,
+            EventStartTime = eventDate,
+            EventName = eventName,
+            EventDescription = eventDescription,
+            Full_Address = eventLocation,
+            EventThumbnail = eventImage
+        };
+
         // Act
-        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventId, eventDate, eventName, eventDescription, eventLocation, eventImage));
+        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventDetails));
 
         // Assert
-        Assert.That(ex.Message, Is.EqualTo("EventDate cannot be default (Parameter 'eventDate')"));
+        Assert.That(ex.Message, Is.EqualTo("EventDate cannot be default (Parameter 'EventStartTime')"));
     }
 
     [Test]
@@ -113,61 +135,28 @@ public class EventRepositoryTests
         var eventLocation = "Test Location";
         var eventImage = "";
 
-        // Act
-        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventId, eventDate, eventName, eventDescription, eventLocation, eventImage));
-
-        // Assert
-        Assert.That(ex.Message, Is.EqualTo("EventName cannot be null or empty (Parameter 'eventName')"));
-    }
-
-    [Test]
-    public void AddEvent_ShouldErrorIfEventDescriptionIsNull()
-    {
-        // Arrange
-        var eventId = "1";
-        var eventDate = DateTime.Now;
-        var eventName = "Test Event";
-        var eventDescription = "";
-        var eventLocation = "Test Location";
-        var eventImage = "";
+        var eventDetails = new EventDetail
+        {
+            EventID = eventId,
+            EventStartTime = eventDate,
+            EventName = eventName,
+            EventDescription = eventDescription,
+            Full_Address = eventLocation,
+            EventThumbnail = eventImage
+        };
 
         // Act
-        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventId, eventDate, eventName, eventDescription, eventLocation, eventImage));
+        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventDetails));
 
         // Assert
-        Assert.That(ex.Message, Is.EqualTo("EventDescription cannot be null or empty (Parameter 'eventDescription')"));
-    }
-
-    [Test]
-    public void AddEvent_ShouldErrorIfEventLocationIsNull()
-    {
-        // Arrange
-        var eventId = "1";
-        var eventDate = DateTime.Now;
-        var eventName = "Test Event";
-        var eventDescription = "Test Description";
-        var eventLocation = "";
-        var eventImage = "";
-
-        // Act
-        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.AddEvent(eventId, eventDate, eventName, eventDescription, eventLocation, eventImage));
-
-        // Assert
-        Assert.That(ex.Message, Is.EqualTo("EventLocation cannot be null or empty (Parameter 'eventLocation')"));
+        Assert.That(ex.Message, Is.EqualTo("EventName cannot be null or empty (Parameter 'EventName')"));
     }
 
     [Test]
     public void IsEvent_ShouldReturnTrueIfEventExists()
     {
         // Arrange
-        var eventId = "1";
-        var events = new List<Event>
-        {
-            new Event { ApiEventId = eventId }
-        };
-        _mockSet = GetMockDbSet(events);
-        _mockContext.Setup(c => c.Events).Returns(_mockSet.Object);
-        _eventRepository = new EventRepository(_mockContext.Object);
+        var eventId = "event1";
 
         // Act
         var result = _eventRepository.IsEvent(eventId);
@@ -180,14 +169,7 @@ public class EventRepositoryTests
     public void IsEvent_ShouldReturnFalseIfEventDoesNotExist()
     {
         // Arrange
-        var eventId = "1";
-        var events = new List<Event>
-        {
-            new Event { ApiEventId = "2" }
-        };
-        _mockSet = GetMockDbSet(events);
-        _mockContext.Setup(c => c.Events).Returns(_mockSet.Object);
-        _eventRepository = new EventRepository(_mockContext.Object);
+        var eventId = "fakeEvent";
 
         // Act
         var result = _eventRepository.IsEvent(eventId);

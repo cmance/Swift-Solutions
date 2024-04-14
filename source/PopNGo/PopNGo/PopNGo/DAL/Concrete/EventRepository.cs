@@ -8,23 +8,53 @@ namespace PopNGo.DAL.Concrete
     public class EventRepository : Repository<Event>, IEventRepository
     {
         private readonly DbSet<Event> _event;
+        private readonly DbSet<TicketLink> _ticketLink;
         public EventRepository(PopNGoDB context) : base(context)
         {
             _event = context.Events;
+            _ticketLink = context.TicketLinks;
         }
 
-        public void AddEvent(string EventId, DateTime EventDate, string EventName, string EventDescription, string EventLocation, string EventImage)
+        public Event AddEvent(EventDetail eventDetail)
         {
-            ValidateEventParameters(EventId, EventDate, EventName, EventDescription, EventLocation);
-            var newEvent = new Event { 
-                ApiEventId = EventId, 
-                EventDate = EventDate, 
-                EventName = EventName, 
-                EventDescription = EventDescription, 
-                EventLocation = EventLocation,
-                EventImage = EventImage
+            ValidateEventParameters(eventDetail);
+            var newEvent = new Event
+            {
+                ApiEventId = eventDetail.EventID,
+                EventDate = eventDetail.EventStartTime,
+                EventName = eventDetail.EventName,
+                EventDescription = eventDetail.EventDescription,
+                EventLocation = eventDetail.Full_Address,
+                EventImage = eventDetail.EventThumbnail,
+                VenuePhoneNumber = eventDetail.Phone_Number,
+                VenueName = eventDetail.VenueName,
+                VenueRating = eventDetail.VenueRating,
+                VenueWebsite = eventDetail.VenueWebsite
             };
-            AddOrUpdate(newEvent);
+            var addedEvent = AddOrUpdate(newEvent);
+
+            foreach (var ticketLink in eventDetail.TicketLinks)
+            {
+                var newTicketLink = new TicketLink
+                {
+                    EventId = addedEvent.Id,
+                    Source = ticketLink.Source,
+                    Link = ticketLink.Link,
+                };
+                _ticketLink.Add(newTicketLink);
+            }
+
+            return addedEvent;
+        }
+
+        public List<PopNGo.Models.DTO.Event> GetEventsFromEventApiIds(List<string> eventApiIds)
+        {
+            if (eventApiIds == null)
+            {
+                throw new ArgumentNullException(nameof(eventApiIds));
+            }
+
+            return _event.Where(e => eventApiIds.Contains(e.ApiEventId)).Select(e => e.ToDTO()).ToList();
         }
 
         public bool IsEvent(string apiEventId)
@@ -36,31 +66,21 @@ namespace PopNGo.DAL.Concrete
             return _event.Any(e => e.ApiEventId == apiEventId);
         }
 
-        private void ValidateEventParameters(string eventId, DateTime eventDate, string eventName, string eventDescription, string eventLocation)
+        private void ValidateEventParameters(EventDetail eventDetail)
         {
-            if (string.IsNullOrEmpty(eventId))
+            if (string.IsNullOrEmpty(eventDetail.EventID))
             {
-                throw new ArgumentException("EventId cannot be null or empty", nameof(eventId));
+                throw new ArgumentException("EventId cannot be null or empty", nameof(eventDetail.EventID));
             }
 
-            if (eventDate == default(DateTime))
+            if (eventDetail.EventStartTime == default(DateTime))
             {
-                throw new ArgumentException("EventDate cannot be default", nameof(eventDate));
+                throw new ArgumentException("EventDate cannot be default", nameof(eventDetail.EventStartTime));
             }
 
-            if (string.IsNullOrEmpty(eventName))
+            if (string.IsNullOrEmpty(eventDetail.EventName))
             {
-                throw new ArgumentException("EventName cannot be null or empty", nameof(eventName));
-            }
-
-            if (string.IsNullOrEmpty(eventDescription))
-            {
-                throw new ArgumentException("EventDescription cannot be null or empty", nameof(eventDescription));
-            }
-
-            if (string.IsNullOrEmpty(eventLocation))
-            {
-                throw new ArgumentException("EventLocation cannot be null or empty", nameof(eventLocation));
+                throw new ArgumentException("EventName cannot be null or empty", nameof(eventDetail.EventName));
             }
         }
     }

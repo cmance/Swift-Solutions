@@ -4,9 +4,10 @@ namespace PopNGo.DAL.Abstract
 {
     public interface IFavoritesRepository : IRepository<FavoriteEvent>
     {
-        public void AddFavorite(int userId, string eventId);
-        public void RemoveFavorite(int userId, string eventId);
-        public List<PopNGo.Models.DTO.Event> GetUserFavorites(int userId);
+        public void AddFavorite(int bookmarkListId, string eventId);
+        public void RemoveFavorite(int bookmarkListId, string eventId);
+        public List<PopNGo.Models.DTO.Event> GetUserFavorites(int bookmarkListId);
         public bool IsFavorite(int userId, string eventId);
+        public bool IsInBookmarkList(string bookmarkListName, string eventId);
     }
 }

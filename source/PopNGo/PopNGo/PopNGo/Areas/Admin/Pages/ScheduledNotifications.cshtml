@@ -1,0 +1,59 @@
+@page
+@model ScheduledNotificationsModel
+@{
+    ViewData["Title"] = "Scheduled Notifications";
+    ViewData["ActivePage"] = ManageNavPages.ScheduledNotifications;
+    @* Layout = "_Layout.cshtml"; *@
+}
+
+<partial name="../../../Views/Shared/_AdminScheduleDetailsModal" />
+
+<div class="container">
+    <partial name="../../Identity/Pages/Account/_StatusMessage" model="Model.StatusMessage" />
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Instructions</h2>
+            <p>Manage users' scheduled emails here.</p>
+        </div>
+        <hr />
+        <div class="col-md-12">
+            <h2>Scheduled Emails</h2>
+            <table class="table" name="admin-schedules-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Notification Email</th>
+                        <th>Type</th>
+                        <th>Time</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody class="text-light">
+                    @foreach (var schedule in Model.Schedules)
+                    {
+                        <tr data-userid="@schedule.UserId" data-scheduleid="@schedule.Id">
+                            <td>@schedule.UserName</td>
+                            <td>@schedule.NotificationEmail</td>
+                            <td>@schedule.Type</td>
+                            <td>@schedule.Time</td>
+                        </tr>
+                        @* <tr data-id="@schedule.Id"> *@
+                        <tr>
+                            <td colspan="4">
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-primary" type="button" id="send-notification-email">Send Now</button>
+                                    <button class="btn btn-outline-warning" type="button" id="edit-notification">Edit Notification</button>
+                                    <button class="btn btn-outline-danger" type="button" id="delete-notification">Delete Notification</button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="module" src="~/js/admin.js"></script>
+}
