@@ -7,7 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+<<<<<<< HEAD
+=======
 using System.Security.Permissions;
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
 
 namespace PopNGo_BDD_Tests.Drivers
 {
@@ -18,13 +21,19 @@ namespace PopNGo_BDD_Tests.Drivers
     public class BrowserDriver : IDisposable
     {
         private readonly Lazy<IWebDriver> _currentWebDriverLazy;
+<<<<<<< HEAD
+=======
         private IJavaScriptExecutor js;
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
         private bool _isDisposed = false;
 
         public BrowserDriver()
         {
             _currentWebDriverLazy = new Lazy<IWebDriver>(CreateWebDriver);
+<<<<<<< HEAD
+=======
             js = (IJavaScriptExecutor)Current;
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
         }
 
         /// <summary>
@@ -38,6 +47,20 @@ namespace PopNGo_BDD_Tests.Drivers
         /// <returns></returns>
         private IWebDriver CreateWebDriver()
         {
+<<<<<<< HEAD
+            // Firefox (never trusts the self-signed cert when running locally, so must bypass)
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+            firefoxOptions.AcceptInsecureCertificates = true;
+
+            // Enable location services
+            firefoxOptions.SetPreference("geo.enabled", true);
+            firefoxOptions.SetPreference("geo.provider.use_corelocation", true);
+            firefoxOptions.SetPreference("geo.prompt.testing", true);
+            firefoxOptions.SetPreference("geo.prompt.testing.allow", true);
+
+            FirefoxDriver driver = new FirefoxDriver(firefoxOptions);
+
+=======
             //Chrome browser
             //ChromeDriverService chromeDriverService = ChromeDriverService.CreateDefaultService();
             //ChromeOptions chromeOptions = new ChromeOptions();
@@ -54,6 +77,7 @@ namespace PopNGo_BDD_Tests.Drivers
             // EdgeDriver driver = new EdgeDriver(edgeDriverService, edgeOptions);
 
 
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
             return driver;
         }
 
@@ -74,6 +98,8 @@ namespace PopNGo_BDD_Tests.Drivers
 
             _isDisposed = true;
         }
+<<<<<<< HEAD
+=======
 
         public void ScrollToElement(IWebElement element)
         {
@@ -87,5 +113,6 @@ namespace PopNGo_BDD_Tests.Drivers
                 throw new ArgumentNullException("Element is null");
             }
         }
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
     }
 }

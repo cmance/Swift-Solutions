@@ -1,6 +1,6 @@
-<div id="event-details-modal" class="modal" role="dialog">
+<div id="event-details-modal" class="modal pop-in" role="dialog">
     <!-- Modal content -->
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-extra-lg" role="document">
         <div class="modal-content">
             <img id="event-modal-img" src="~/media/images/placeholder_event_card_image.png" />
             <div id="modal-event-card-tags-container">
@@ -10,7 +10,8 @@
             </div>
             <h2 id="event-modal-title" class="event-modal-headers">Event title</h2>
             <div id="modal-event-description" class="event-modal-description-text">
-                This is a description test, this is a description test, this is a description test, this is a description test, this is a description test, this is a description test, this is a description test,
+                This is a description test, this is a description test, this is a description test, this is a
+                description test, this is a description test, this is a description test, this is a description test,
             </div>
 
             <h5 class="event-modal-headers">Date & time</h5>
@@ -23,7 +24,20 @@
                 1234 Street st. NW Salem, Oregon 97123
             </div>
 
-            <div class="pt-3" id="add-to-calendar-btn">
+            <div id="buttons-container">
+                <div id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
+                <div id="right-buttons">
+                    <div id="buy-tickets-btn" title="Buy tickets for this event">
+                        <button id="buyTicketsBtn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Buy Tickets
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="buyTicketsBtn">
+                            <!-- Dropdown items will be added here by JavaScript -->
+                        </div>
+                    </div>
+                    <div id="view-venue-btn" title="View information about the venue"></div>
+                </div>
             </div>
         </div>
     </div>

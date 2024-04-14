@@ -1,0 +1,32 @@
+/* This is the unauthorized modal */
+.modal-content-unauthorized {
+    background-color: #fefefe;
+    margin: 10% auto;   
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50vw;
+    border-radius: 10px; 
+  }
+  
+  /* Modal for unauth pop in */
+  .modal-unauthorized {
+    display: none;        
+    position: fixed;      
+    z-index: 1000;        
+    left: 0;
+    top: 0;
+    width: 100%;          
+    height: 100%;        
+    overflow: auto;      
+    /* Static black background, no animation */
+    background-color: rgba(0, 0, 0, 0.4); 
+  }
+  
+  /* Body text of unauth modal */
+  .modal-body-unauthorized {
+    background-color: #fefefe;
+    padding-top: 30px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: large;
+  }

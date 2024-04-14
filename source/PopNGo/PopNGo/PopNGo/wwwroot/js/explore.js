@@ -69,6 +69,7 @@ async function loadSearchBarAndEvents(city, state, country) {
  * @param {string} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
+    console.log("Event Info: ", eventInfo);
     const eventDetailsModalProps = {
         img: eventInfo.eventImage,
         title: eventInfo.eventName,
@@ -76,7 +77,13 @@ async function onClickDetailsAsync(eventInfo) {
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
         tags: await formatTags(eventInfo.eventTags),
+        ticketLinks : eventInfo.ticketLinks,
+        venueName: eventInfo.venueName,
+        venuePhoneNumber: eventInfo.venuePhoneNumber,
+        venueRating: eventInfo.venueRating,
+        venueWebsite: eventInfo.venueWebsite
     }
+    
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
@@ -184,7 +191,7 @@ export async function displayEvents(events) {
  * @returns {Promise<void>}
  */
 async function searchForEvents() {
-    console.log("search")
+    // console.log("search")
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
     toggleSearching();

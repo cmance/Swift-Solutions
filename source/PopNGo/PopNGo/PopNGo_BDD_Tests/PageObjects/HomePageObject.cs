@@ -32,6 +32,14 @@ namespace PopNGo_BDD_Tests.PageObjects
             homeLogo.Click();
         }
 
+<<<<<<< HEAD
+        public void ClickExploreLogo()
+        {
+            exploreNavItem.Click();
+        }
+
+=======
+>>>>>>> 38cbe6f2e35377718afec52d456aebcf81f5045e
         public string GetHomeLogoColor()
         {
             return homeLogo.GetCssValue("color");

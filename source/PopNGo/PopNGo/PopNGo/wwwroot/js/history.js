@@ -47,10 +47,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 state: eventInfo.eventLocation.split(',')[2],
                 tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
                 bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
+                ticketLinks : eventInfo.ticketLinks,
+                venueName: eventInfo.venueName,
+                venuePhoneNumber: eventInfo.venuePhoneNumber,
+                venueRating: eventInfo.venueRating,
+                venueWebsite: eventInfo.venueWebsite,
                 onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
                 onPressEvent: () => onClickDetailsAsync(eventInfo),
             };
-            
+            // console.log(eventProps)
             // Clone the template
             const eventCard = template.content.cloneNode(true);
 
@@ -77,6 +82,7 @@ async function fetchEvents() {
         throw new Error('Network response was not ok');
     }
     const data = await response.json();
+    console.log(data);
     return data;
 }
 
@@ -91,7 +97,13 @@ async function onClickDetailsAsync(eventInfo) {
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
-        tags: [], // TODO: tags should be stored on event
+        ticketLinks : eventInfo.ticketLinks,
+        venueName: eventInfo.venueName,
+        venuePhoneNumber: eventInfo.venuePhoneNumber,
+        venueRating: eventInfo.venueRating,
+        venueWebsite: eventInfo.venueWebsite,
+        tags: [] // TODO: tags should be stored on event
+        
     }
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
