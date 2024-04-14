@@ -15,24 +15,12 @@ using OpenQA.Selenium.Firefox;
 using SpecFlow.Actions.Selenium; // Add this line
 
 
-
 namespace PopNGo_BDD_Tests.StepDefinitions
 {
-    // Wrapper for the data we get for each user
-    public class TestUser
-    {
-        public string UserName { get; set; }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Password { get; set; }
-    }
-
     [Binding]
     public sealed class ScheduledNotificationsStepDefinitions
     {
         private readonly AdminPageObject _adminPage;
-        private readonly LoginPageObject _loginPage;
         private readonly NotificationsPageObject _notificationsPage;
         private readonly Drivers.BrowserDriver _webDriver;
         private readonly ScenarioContext _scenarioContext;
@@ -43,48 +31,12 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _scenarioContext = context;
             _webDriver = browserDriver;
             _adminPage = new AdminPageObject(_webDriver.Current);
-            _loginPage = new LoginPageObject(_webDriver.Current);
             _notificationsPage = new NotificationsPageObject(_webDriver.Current);
 
             // Get the configuration
             // we need to keep the admin password secret
             IConfigurationBuilder builder = new ConfigurationBuilder().AddUserSecrets<ScheduledNotificationsStepDefinitions>();
             Configuration = builder.Build();
-        }
-
-        [Given("I am an admin")]
-        public void GivenIAmAnAdmin()
-        {
-            TestUser admin = new TestUser
-            {
-                UserName = "admin@popngo.com",
-                FirstName = "The",
-                LastName = "Admin",
-                Email = "popngo.wou@gmail.com",
-                Password = Configuration["AdminPW"]
-            };
-            if (admin.Password == null)
-            {
-                throw new Exception("Did you forget to set the admin password in user-secrets?");
-            }
-            Debug.WriteLine("Password = " + admin.Password);
-            _scenarioContext["CurrentUser"] = admin;
-
-            // Go to the login page
-            _loginPage.GoTo();
-            //Thread.Sleep(3000);
-            // Now (attempt to) log them in.  Assumes previous steps defined the user
-            TestUser u = (TestUser)_scenarioContext["CurrentUser"];
-            _loginPage.EnterUsername(u.UserName);
-            _loginPage.EnterPassword(u.Password);
-            _loginPage.Login();
-        }
-
-        [Given(@"I am on the ""([^""]*)"" page")]
-        [When(@"I am on the ""([^""]*)"" page")]
-        public void GivenIAmOnThePage(string page)
-        {
-            _webDriver.Current.Navigate().GoToUrl(Common.UrlFor(page));
         }
 
         [When("I am in the Admin area")]

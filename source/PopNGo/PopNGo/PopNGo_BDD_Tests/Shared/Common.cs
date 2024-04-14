@@ -25,7 +25,8 @@ namespace PopNGo_BDD_Tests.Shared
             { "Login", "/Identity/Account/Login" },
             { "SelectGroup", "/MyAccount/SelectGroup" },
             { "AdminQuestions", "/Admin/Questions" },
-            { "AdminQuestionsCreate", "/Admin/Questions/Create" }
+            { "AdminQuestionsCreate", "/Admin/Questions/Create" },
+            { "Favorites", "/Favorites" }
         };
 
         public static string PathFor(string pathName) => Paths[pathName];
