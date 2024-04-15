@@ -21,7 +21,7 @@ namespace PopNGo_BDD_Tests.PageObjects
         protected string _pageName;
 
         //The default wait time in seconds for WaitUntil
-        public int DefaultWaitInSeconds { get; set; } = 5;
+        public int DefaultWaitInSeconds { get; set; } = 10;
         public PageObject(IWebDriver webDriver)
         {
             _webDriver = webDriver;
@@ -87,7 +87,7 @@ namespace PopNGo_BDD_Tests.PageObjects
         /// <param name="getResult">The function to poll the result from the UI</param>
         /// <param name="isResultAccepted">The function to decide if the polled result is accepted</param>
         /// <returns>An accepted result returned from the UI. If the UI does not return an accepted result within the timeout an exception is thrown.</returns>
-        private T WaitUntil<T>(Func<T> getResult, Func<T, bool> isResultAccepted) where T : class
+        public T WaitUntil<T>(Func<T> getResult, Func<T, bool> isResultAccepted) where T : class
         {
             var wait = new WebDriverWait(_webDriver, TimeSpan.FromSeconds(DefaultWaitInSeconds));
             return wait.Until(driver =>

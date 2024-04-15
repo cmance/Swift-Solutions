@@ -52,6 +52,8 @@ namespace PopNGo_BDD_Tests.Drivers
             firefoxOptions.SetPreference("geo.provider.use_corelocation", true);
             firefoxOptions.SetPreference("geo.prompt.testing", true);
             firefoxOptions.SetPreference("geo.prompt.testing.allow", true);
+            firefoxOptions.SetPreference("geo.provider.network.url", 
+                "data:application/json,{\"location\": {\"lat\": 44.8485, \"lng\": -123.234}, \"accuracy\": 100.0}");
 
             FirefoxDriver driver = new FirefoxDriver(firefoxOptions);
 
