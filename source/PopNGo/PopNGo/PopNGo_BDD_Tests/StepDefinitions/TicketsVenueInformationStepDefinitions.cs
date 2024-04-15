@@ -16,10 +16,12 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         private readonly ExplorePageObject _explorePage;
         private readonly HomePageObject _homePage;
         private readonly IWebDriver _webDriver;
+        private readonly BrowserDriver _browserDriver;
 
         public TicketsVenueInformationStepDefinitions(Drivers.BrowserDriver browserDriver)
         {
-            _webDriver = browserDriver.Current;
+            _browserDriver = browserDriver;
+            _webDriver = _browserDriver.Current;
             _explorePage = new ExplorePageObject(_webDriver);
             _homePage = new HomePageObject(_webDriver);
         }
@@ -53,7 +55,14 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         [When(@"the visitor clicks on the ""(.*)"" button")]
         public void WhenTheVisitorClicksOnTheButton(string p0)
         {
-            _explorePage.ViewVenueButton.Click();
+            IWebElement element = null;
+            if(p0 == "View Venue")
+                element = _explorePage.ViewVenueButton;
+            else if(p0 == "Buy Tickets")
+                element = _explorePage.BuyTicketsDropdown;
+            
+            _browserDriver.ScrollToElement(element);
+            element.Click();
         }
 
         [Then(@"the visitor should be shown the venue information modal")]
@@ -71,6 +80,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         [When(@"the visitor hovers over the ""(.*)"" button")]
         public void WhenTheVisitorHoversOverTheButton(string p0)
         {
+            _browserDriver.ScrollToElement(_explorePage.BuyTicketsDropdown);
             Actions actions = new Actions(_webDriver);
             actions.MoveToElement(_explorePage.BuyTicketsDropdown).Perform();
         }

@@ -1,4 +1,3 @@
-using PopNGo.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -17,12 +16,14 @@ namespace PopNGo_BDD_Tests.StepDefinitions
     {
         private readonly FavoritesPageObject _favoritesPage;
         private readonly IWebDriver _webDriver;
+        private readonly Drivers.BrowserDriver _browserDriver;
         private readonly ScenarioContext _scenarioContext;
 
 
         public BookmarkListsStepDefinitions(ScenarioContext context, Drivers.BrowserDriver browserDriver)
         {
-            _webDriver = browserDriver.Current; // Or use another browser driver
+            _browserDriver = browserDriver;
+            _webDriver = _browserDriver.Current; // Or use another browser driver
             _favoritesPage = new FavoritesPageObject(_webDriver);
             _scenarioContext = context;
         }
@@ -56,12 +57,14 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _scenarioContext["newBookmarkListTitle"] = newBookmarkListTitle;
 
             _favoritesPage.NewBookmarkListNameInput.SendKeys(newBookmarkListTitle);
+            _browserDriver.ScrollToElement(_favoritesPage.CreateBookmarkListButton);
             _favoritesPage.CreateBookmarkListButton.Click();
         }
 
         [When("I fill out the new bookmark list name input with an empty value")]
         public void WhenIFillOutTheNewBookmarkListNameInputWithAnEmptyValue()
         {
+            _browserDriver.ScrollToElement(_favoritesPage.NewBookmarkListNameInput);
             // Confirm that the new bookmark list name input is empty
             _favoritesPage.NewBookmarkListNameInput.Clear();
         }

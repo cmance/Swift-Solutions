@@ -19,7 +19,8 @@ namespace PopNGo_BDD_Tests.PageObjects
         }
         
         public IWebElement SchedulesTable => _webDriver.FindElement(By.Name("admin-schedules-table"));
-        public IWebElement ScheduleRow => SchedulesTable.FindElement(By.TagName("tr[data-userId=\"6b6c5d33-e6d7-4d18-a565-a657eaf7a8a5\"]"));
+        public IWebElement ScheduleRow => SchedulesTable.FindElement(By.TagName("tr[data-userid=\"6b6c5d33-e6d7-4d18-a565-a657eaf7a8a5\"]"));
+        
         public IWebElement ScheduleRowButtons { get {
             SetScheduleId();
             return ScheduleRow.FindElement(By.XPath("following-sibling::*"));
@@ -32,7 +33,7 @@ namespace PopNGo_BDD_Tests.PageObjects
 
         public void SetScheduleId()
         {
-            _scheduleId = ScheduleRow.GetAttribute("data-scheduleId");
+            _scheduleId = ScheduleRow.GetAttribute("data-scheduleid");
         }
         public int GetScheduleId()
         {
