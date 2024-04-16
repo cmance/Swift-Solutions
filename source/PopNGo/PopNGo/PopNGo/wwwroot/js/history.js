@@ -29,6 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        if(!events || events.length === 0) {
+            console.log("No events found.");
+        }
+
         // Clear the container
         container.innerHTML = '';
 

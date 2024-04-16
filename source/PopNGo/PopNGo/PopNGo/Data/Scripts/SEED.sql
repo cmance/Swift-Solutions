@@ -19,13 +19,13 @@ WHERE [ASPNETUserID] = 'bb60f066-da0e-46b5-83d0-4d73d306dc64');
 
 -- Insert into Event
 INSERT INTO [Event]
-    ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage])
+    ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
 VALUES
-    ('event1', '2022-01-01T00:00:00', 'Event 1', 'Description 1', 'Location 1', 'https://via.placeholder.com/150');
+    ('event1', '2022-01-01T00:00:00', 'Event 1', 'Description 1', 'Location 1', 'https://via.placeholder.com/150', 1.1, 1.1, '123-456-7890', 'Venue 1', 4.5, 'https://www.example.com');
 INSERT INTO [Event]
-    ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage])
+    ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
 VALUES
-    ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2', 'https://via.placeholder.com/150');
+    ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2', 'https://via.placeholder.com/150', 2.2, 2.2, '456-456-7890', 'Venue 2', 4.6, 'https://www.example2.com');
 
 -- Get the IDs of the events we just inserted
 DECLARE @event1ID int = (SELECT [ID]
@@ -55,14 +55,14 @@ VALUES
     (@bookmarkListId, @event2ID);
 
 -- Insert into EventHistory
-INSERT INTO [EventHistory]
-    ([UserID], [EventID], [ViewedDate])
-VALUES
-    (@user1ID, @event1ID, '2022-01-01T00:00:00');
-INSERT INTO [EventHistory]
-    ([UserID], [EventID], [ViewedDate])
-VALUES
-    (@user2ID, @event2ID, '2022-01-02T00:00:00');
+-- INSERT INTO [EventHistory]
+--     ([UserID], [EventID], [ViewedDate])
+-- VALUES
+--     (@user1ID, @event1ID, '2022-01-01T00:00:00');
+-- INSERT INTO [EventHistory]
+--     ([UserID], [EventID], [ViewedDate])
+-- VALUES
+--     (@user2ID, @event2ID, '2022-01-02T00:00:00');
 
 -- Insert into Tag
 INSERT INTO [Tag]
