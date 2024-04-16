@@ -39,8 +39,8 @@ namespace PopNGo.Services
         public string subtype { get; set; }
         public List<string> subtypes { get; set; }
         public string full_address { get; set; }
-        public double latitude { get; set; }
-        public double longitude { get; set; }
+        public decimal? latitude { get; set; }
+        public decimal? longitude { get; set; }
         public string street_number { get; set; }
         public string street { get; set; }
         public string city { get; set; }
