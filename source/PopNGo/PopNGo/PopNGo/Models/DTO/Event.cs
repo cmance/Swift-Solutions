@@ -13,6 +13,7 @@ namespace PopNGo.Models.DTO
         public string EventDescription { get; set; }
         public string EventLocation { get; set; }
         public string EventImage { get; set; }
+        public string EventOriginalLink { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
         public string VenuePhoneNumber { get; set; }
@@ -38,6 +39,7 @@ namespace PopNGo.ExtensionMethods
                 EventLocation = Event.EventLocation,
                 EventName = Event.EventName,
                 EventImage = Event.EventImage,
+                EventOriginalLink = Event.EventOriginalLink,
                 Latitude = Event.Latitude,
                 Longitude = Event.Longitude,
                 VenueName = Event.VenueName,

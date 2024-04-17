@@ -34,6 +34,7 @@ CREATE TABLE [Event] (
   [EventDescription] NVARCHAR(MAX),
   [EventLocation] NVARCHAR(255),
   [EventImage] NVARCHAR(MAX),
+  [EventOriginalLink] NVARCHAR(MAX),
   [Latitude] DECIMAL(9, 6),
   [Longitude] DECIMAL(9, 6),
   [VenuePhoneNumber] NVARCHAR(255),
