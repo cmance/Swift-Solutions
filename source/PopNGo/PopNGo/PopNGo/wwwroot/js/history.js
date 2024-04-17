@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 date: new Date(eventInfo.eventDate),
                 city: eventInfo.eventLocation.split(',')[1],
                 state: eventInfo.eventLocation.split(',')[2],
+                eventOriginalLink: eventInfo.eventOriginalLink,
                 tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
                 bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
                 ticketLinks : eventInfo.ticketLinks,
