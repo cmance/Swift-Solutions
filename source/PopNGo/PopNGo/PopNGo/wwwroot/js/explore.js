@@ -144,9 +144,10 @@ export function getPaginationIndex() {
  * @param {any} events
  */
 export async function displayEvents(events) {
-    let eventsContainer = document.getElementById('events-container')
+    let eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = ''; // Clear the container
-    let eventCardTemplate = document.getElementById('event-card-template')
+    let eventCardTemplate = document.getElementById('event-card-template');
+    // let paginationDiv = document.getElementById('pagination');
 
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
@@ -182,6 +183,8 @@ export async function displayEvents(events) {
             eventsContainer.appendChild(newEventCard);
         }
     }
+
+    // paginationDiv.style.display = 'flex'; //Display after events are loaded
 }
 
 /**
@@ -192,31 +195,61 @@ export async function displayEvents(events) {
  * @returns {Promise<void>}
  */
 async function searchForEvents() {
+    let paginationDiv = document.getElementById('pagination');
+    paginationDiv.style.display = 'none'; //Hide pagination while searching
+    createPlaceholderCards();
+    addMapLoadingSpinner();
     // console.log("search")
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
     toggleSearching();
 
     const events = await getEvents(getSearchQuery(), getPaginationIndex());
+    removePlaceholderCards(); // Remove the placeholder cards as the API has returned
+
+    console.log(events);
     toggleSearchingEventsSection(false); // Hide the searching events section
     if (!events || events.length === 0) {
+        paginationDiv.style.display = 'none';
         toggleNoEventsSection(true);
+        removeMapLoadingSpinner();
+    } else {
+        displayEvents(events);
+        initMap(events);
+
+        const country = document.getElementById('search-event-country').value;
+        const state = document.getElementById('search-event-state').value;
+        const city = document.getElementById('search-event-city').value;
+        let mapCoords = await getLocationCoords(country, state, city);
+        console.debug("Coords: ", mapCoords);
+        if (map)
+            map.setCenter(mapCoords ?? map.getCenter());
+
+        paginationDiv.style.display = 'flex'; //Display after events are loaded
     }
-    displayEvents(events);
-    initMap(events);
-
-    const country = document.getElementById('search-event-country').value;
-    const state = document.getElementById('search-event-state').value;
-    const city = document.getElementById('search-event-city').value;
-    let mapCoords = await getLocationCoords(country, state, city);
-    console.debug("Coords: ", mapCoords);
-    if (map)
-        map.setCenter(mapCoords ?? map.getCenter());
-
     toggleSearching();
 }
 
+function createPlaceholderCards() {
+    let eventsContainer = document.getElementById('events-container')
+    eventsContainer.innerHTML = ''; // Clear the container
+    let placeholderCardTemplate = document.getElementById('blank-placeholder-event-card-template')
+    for (let i = 0; i < 10; i++) { // Replace 10 with the number of placeholder cards you want to create
+        let newPlaceholderCard = placeholderCardTemplate.content.cloneNode(true);
+        let card = newPlaceholderCard.querySelector('#event-card-container');
+        card.classList.add('placeholder-style');
+        let randomDuration = Math.random() + 1; // Generate a random number between 1 and 2
+        card.style.animationDuration = `${randomDuration}s`;
+        eventsContainer.appendChild(newPlaceholderCard);
+    }
+}
 
+function removePlaceholderCards() {
+    let eventsContainer = document.getElementById('events-container')
+    while (eventsContainer.firstChild) {
+        eventsContainer.removeChild(eventsContainer.firstChild);
+    }
+}
 
 // Function to create the map and display events
 window.initMap = async function (events) {
@@ -247,6 +280,9 @@ window.initMap = async function (events) {
                 title: eventInfo.eventName
             });
 
+            removeMapLoadingSpinner();
+
+
             marker.addListener('click', async function () {
                 onClickDetailsAsync(eventInfo);
             });
@@ -254,9 +290,22 @@ window.initMap = async function (events) {
             google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
         }
     });
+
+}
+
+function addMapLoadingSpinner() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+}
+
+function removeMapLoadingSpinner() {
+    document.getElementById('loading-overlay').style.display = 'none';
 }
 
 window.onload = async function () {
+
+    createPlaceholderCards(); // Create placeholder cards while waiting for the API to return
+    addMapLoadingSpinner();
+
     if (document.getElementById('demo-map-id')) {
         loadMapScript();
     }
