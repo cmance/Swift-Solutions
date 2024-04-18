@@ -25,7 +25,7 @@
 </div>
 
 @* back/next page buttons, and page number *@
-<div class="pagination justify-content-center m-5">
+<div id="pagination" class="pagination justify-content-center m-5" style="display: none;">
     <button disabled id="previous-page-button" class="btn rounded-pill pagination-buttons">0</button>
     <div id="page-number" class="rounded-pill page-number">1</div>
     <button id="next-page-button" class="btn rounded-pill pagination-buttons">2</button>
@@ -44,6 +44,9 @@
 
 @* Loads EventCard template component *@
 <partial name="_EventCard" />
+
+@* Loads PlaceholderEventCard template component*@
+<partial name="_PlaceholderEventCard" />
 
 @section Scripts {
     <script type="module" src="~/js/explore.js" asp-append-version="true"></script>
