@@ -195,6 +195,8 @@ export async function displayEvents(events) {
  * @returns {Promise<void>}
  */
 async function searchForEvents() {
+    createPlaceholderCards();
+    addMapLoadingSpinner();
     // console.log("search")
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
@@ -271,7 +273,7 @@ window.initMap = async function (events) {
                 title: eventInfo.eventName
             });
 
-            document.getElementById('loading-overlay').style.display = 'none';
+            removeMapLoadingSpinner();
 
 
             marker.addListener('click', async function () {
@@ -285,7 +287,7 @@ window.initMap = async function (events) {
 }
 
 function addMapLoadingSpinner() {
-
+    document.getElementById('loading-overlay').style.display = 'flex';
 }
 
 function removeMapLoadingSpinner() {
@@ -295,8 +297,7 @@ function removeMapLoadingSpinner() {
 window.onload = async function () {
 
     createPlaceholderCards(); // Create placeholder cards while waiting for the API to return
-    document.getElementById('loading-overlay').style.display = 'flex';
-
+    addMapLoadingSpinner();
 
     if (document.getElementById('demo-map-id')) {
         loadMapScript();
