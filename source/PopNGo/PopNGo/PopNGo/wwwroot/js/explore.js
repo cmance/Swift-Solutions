@@ -76,6 +76,7 @@ async function onClickDetailsAsync(eventInfo) {
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
+        eventOriginalLink: eventInfo.eventOriginalLink,
         tags: await formatTags(eventInfo.eventTags),
         ticketLinks : eventInfo.ticketLinks,
         venueName: eventInfo.venueName,

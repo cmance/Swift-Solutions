@@ -31,6 +31,8 @@ public partial class Event
 
     public string EventImage { get; set; }
 
+    public string EventOriginalLink { get; set; }
+
     [Column(TypeName = "decimal(9, 6)")]
     public decimal? Latitude { get; set; }
 

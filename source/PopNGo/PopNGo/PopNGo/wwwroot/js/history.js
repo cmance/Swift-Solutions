@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 date: new Date(eventInfo.eventDate),
                 city: eventInfo.eventLocation.split(',')[1],
                 state: eventInfo.eventLocation.split(',')[2],
+                eventOriginalLink: eventInfo.eventOriginalLink,
                 tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
                 bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
                 ticketLinks : eventInfo.ticketLinks,
@@ -81,6 +82,7 @@ async function fetchEvents() {
             throw new Error('Unauthorized');
         } else if (response.status === 404) {
             document.getElementById("no-history-message").style.display = "block";
+            document.getElementById("no-history-img-container").style.display = "block";
             throw new Error('No history found');
         }
         throw new Error('Network response was not ok');
@@ -101,6 +103,7 @@ async function onClickDetailsAsync(eventInfo) {
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
+        eventOriginalLink: eventInfo.eventOriginalLink,
         ticketLinks : eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
