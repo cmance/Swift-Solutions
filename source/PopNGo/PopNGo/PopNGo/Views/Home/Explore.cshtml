@@ -35,35 +35,39 @@
                 <div id="loading-overlay">
                     <div class="spinner"></div>
                 </div>
+                <div id="map-helper-text-container">
+                    <div class="helper-text">
+                        <p id="">Drag the map to find new events!</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-@* back/next page buttons, and page number *@
-<div id="pagination" class="pagination justify-content-center m-5" style="display: none;">
-    <button disabled id="previous-page-button" class="btn rounded-pill pagination-buttons">0</button>
-    <div id="page-number" class="rounded-pill page-number">1</div>
-    <button id="next-page-button" class="btn rounded-pill pagination-buttons">2</button>
-</div>
+    @* back/next page buttons, and page number *@
+    <div id="pagination" class="pagination justify-content-center m-5" style="display: none;">
+        <button disabled id="previous-page-button" class="btn rounded-pill pagination-buttons">0</button>
+        <div id="page-number" class="rounded-pill page-number">1</div>
+        <button id="next-page-button" class="btn rounded-pill pagination-buttons">2</button>
+    </div>
 
-<!-- Add the saved locations container here -->
-@* This is to load the unauthorized modal that can be found in Shared/_LoginUnauthorizedModal.cshtml*@
-<partial name="_LoginUnauthorizedModal" />
+    <!-- Add the saved locations container here -->
+    @* This is to load the unauthorized modal that can be found in Shared/_LoginUnauthorizedModal.cshtml*@
+    <partial name="_LoginUnauthorizedModal" />
 
-<partial name="_EventDetailsModal" />
+    <partial name="_EventDetailsModal" />
 
-<partial name="_ViewVenueModal" />
+    <partial name="_ViewVenueModal" />
 
-@* This is the container for the "toasts" that appear on the side of the screen when favoriting/unfavorating*@
-<div id="toastContainer"></div>
+    @* This is the container for the "toasts" that appear on the side of the screen when favoriting/unfavorating*@
+    <div id="toastContainer"></div>
 
-@* Loads EventCard template component *@
-<partial name="_EventCard" />
+    @* Loads EventCard template component *@
+    <partial name="_EventCard" />
 
-@* Loads PlaceholderEventCard template component*@
-<partial name="_PlaceholderEventCard" />
+    @* Loads PlaceholderEventCard template component*@
+    <partial name="_PlaceholderEventCard" />
 
-@section Scripts {
-    <script type="module" src="~/js/explore.js" asp-append-version="true"></script>
-}
+    @section Scripts {
+        <script type="module" src="~/js/explore.js" asp-append-version="true"></script>
+    }
