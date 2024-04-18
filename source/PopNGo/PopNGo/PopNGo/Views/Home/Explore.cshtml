@@ -9,6 +9,19 @@
 <partial name="EventSearch" />
 <button class="btn btn-warning" id="save-location-button">Save Location</button>
 <div id="saved-locations-container"></div>
+<div id="filter-container">
+    <select id="filter-dropdown" class="btn btn-warning">
+        <option selected="selected" value="" disabled>Filter</option>
+        <option value="">Any</option>
+        <option value="today">Today</option>
+        <option value="tomorrow">Tomorrow</option>
+        <option value="week">This Week</option>
+        <option value="weekend">This Weekend</option>
+        <option value="next_week">Next Week</option>
+        <option value="month">This Month</option>
+        <option value="next_month">Next Month</option>
+    </select>
+</div>
 <div class="container px-5">
     <div class="row">
         <div class="col-7">

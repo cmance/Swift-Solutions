@@ -204,7 +204,9 @@ async function searchForEvents() {
     toggleSearchingEventsSection(true);
     toggleSearching();
 
-    const events = await getEvents(getSearchQuery(), getPaginationIndex());
+    let date = document.getElementById('filter-dropdown').value;
+    
+    const events = await getEvents(getSearchQuery(), getPaginationIndex(), date);
     removePlaceholderCards(); // Remove the placeholder cards as the API has returned
 
     console.log(events);
