@@ -16,6 +16,7 @@ import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 import { UnauthorizedError } from './util/errors.js';
 
 let map = null;
+let mapMarkers = [];
 let page = 0;
 const pageSize = 10;
 
@@ -205,7 +206,7 @@ async function searchForEvents() {
     toggleSearching();
 
     let date = document.getElementById('filter-dropdown').value;
-    
+
     const events = await getEvents(getSearchQuery(), getPaginationIndex(), date);
     removePlaceholderCards(); // Remove the placeholder cards as the API has returned
 
@@ -223,9 +224,17 @@ async function searchForEvents() {
         const state = document.getElementById('search-event-state').value;
         const city = document.getElementById('search-event-city').value;
         let mapCoords = await getLocationCoords(country, state, city);
-        console.debug("Coords: ", mapCoords);
-        if (map)
+
+        if (map) {
+            deleteMarkers(); // Clear markers before adding new ones
             map.setCenter(mapCoords ?? map.getCenter());
+            events.forEach(eventInfo => {
+                const lat = eventInfo.latitude ? eventInfo.latitude : 44.848; //Hardcoded Monmouth, Oregon coordinates for now
+                const lng = eventInfo.longitude ? eventInfo.longitude : -123.229; //Hardcoded Monmouth, Oregon coordinates for now
+                const position = { lat, lng };
+                addMapMarker(position, map, eventInfo);
+            });
+        }
 
         paginationDiv.style.display = 'flex'; //Display after events are loaded
     }
@@ -276,23 +285,43 @@ window.initMap = async function (events) {
             const lat = eventInfo.latitude ? eventInfo.latitude : 44.848; //Hardcoded Monmouth, Oregon coordinates for now
             const lng = eventInfo.longitude ? eventInfo.longitude : -123.229; //Hardcoded Monmouth, Oregon coordinates for now
             const position = { lat, lng };
-            const marker = new google.maps.Marker({
-                position,
-                map,
-                title: eventInfo.eventName
-            });
 
+            addMapMarker(position, map, eventInfo);
             removeMapLoadingSpinner();
-
-
-            marker.addListener('click', async function () {
-                onClickDetailsAsync(eventInfo);
-            });
-
             google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
         }
     });
 
+}
+
+function addMapMarker(position, map, eventInfo) {
+    let mapMarker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: eventInfo.eventName
+    });
+    mapMarker.addListener('click', async function () {
+        onClickDetailsAsync(eventInfo);
+    });
+    mapMarkers.push(mapMarker);
+}
+
+// Function to set map on all markers, if passed null, it will remove the markers
+function setMapOnAll(map) {
+    for (let i = 0; i < mapMarkers.length; i++) {
+        mapMarkers[i].setMap(map);
+    }
+}
+
+// Function to clear markers, but does not remove them from the mapMarkers array
+function clearMarkers() {
+    setMapOnAll(null);
+}
+
+// Function to delete markers
+function deleteMarkers() {
+    clearMarkers();
+    mapMarkers = [];
 }
 
 function addMapLoadingSpinner() {
