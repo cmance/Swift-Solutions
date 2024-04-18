@@ -271,6 +271,9 @@ window.initMap = async function (events) {
                 title: eventInfo.eventName
             });
 
+            document.getElementById('loading-overlay').style.display = 'none';
+
+
             marker.addListener('click', async function () {
                 onClickDetailsAsync(eventInfo);
             });
@@ -278,6 +281,7 @@ window.initMap = async function (events) {
             google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
         }
     });
+
 }
 
 function addMapLoadingSpinner() {
@@ -285,12 +289,14 @@ function addMapLoadingSpinner() {
 }
 
 function removeMapLoadingSpinner() {
-
+    document.getElementById('loading-overlay').style.display = 'none';
 }
 
 window.onload = async function () {
 
     createPlaceholderCards(); // Create placeholder cards while waiting for the API to return
+    document.getElementById('loading-overlay').style.display = 'flex';
+
 
     if (document.getElementById('demo-map-id')) {
         loadMapScript();
