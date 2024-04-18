@@ -273,8 +273,8 @@ body {
 
 .img-fluid {
   max-width: 100%;
-  height: auto;
-  object-fit: cover; 
+  height: 100%;
+  object-fit: contain; 
 }
 
 #no-history-message-container {
@@ -289,5 +289,24 @@ body {
   padding-left: 0;
   padding-right: 0;
   padding-top: 40px;
+}
+
+/* On resize of 1200px width or below change the properties */
+@media screen and (max-width: 1200px) {
+  #no-history-img {
+    display: none;
+  }
+
+  #no-history-message {
+    border-radius: 20px;
+  }
+
+  #no-history-message-container {
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 40px;
+    width: 100%;
+  }
 }
 /* End of History */
