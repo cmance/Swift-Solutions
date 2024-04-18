@@ -147,7 +147,7 @@ export async function displayEvents(events) {
     let eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = ''; // Clear the container
     let eventCardTemplate = document.getElementById('event-card-template');
-    let paginationDiv = document.getElementById('pagination');
+    // let paginationDiv = document.getElementById('pagination');
 
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
@@ -184,7 +184,7 @@ export async function displayEvents(events) {
         }
     }
 
-    paginationDiv.style.display = 'flex'; //Display after events are loaded
+    // paginationDiv.style.display = 'flex'; //Display after events are loaded
 }
 
 /**
@@ -195,6 +195,8 @@ export async function displayEvents(events) {
  * @returns {Promise<void>}
  */
 async function searchForEvents() {
+    let paginationDiv = document.getElementById('pagination');
+    paginationDiv.style.display = 'none'; //Hide pagination while searching
     createPlaceholderCards();
     addMapLoadingSpinner();
     // console.log("search")
@@ -205,21 +207,26 @@ async function searchForEvents() {
     const events = await getEvents(getSearchQuery(), getPaginationIndex());
     removePlaceholderCards(); // Remove the placeholder cards as the API has returned
 
+    console.log(events);
     toggleSearchingEventsSection(false); // Hide the searching events section
     if (!events || events.length === 0) {
+        paginationDiv.style.display = 'none';
         toggleNoEventsSection(true);
+        removeMapLoadingSpinner();
+    } else {
+        displayEvents(events);
+        initMap(events);
+
+        const country = document.getElementById('search-event-country').value;
+        const state = document.getElementById('search-event-state').value;
+        const city = document.getElementById('search-event-city').value;
+        let mapCoords = await getLocationCoords(country, state, city);
+        console.debug("Coords: ", mapCoords);
+        if (map)
+            map.setCenter(mapCoords ?? map.getCenter());
+
+        paginationDiv.style.display = 'flex'; //Display after events are loaded
     }
-    displayEvents(events);
-    initMap(events);
-
-    const country = document.getElementById('search-event-country').value;
-    const state = document.getElementById('search-event-state').value;
-    const city = document.getElementById('search-event-city').value;
-    let mapCoords = await getLocationCoords(country, state, city);
-    console.debug("Coords: ", mapCoords);
-    if (map)
-        map.setCenter(mapCoords ?? map.getCenter());
-
     toggleSearching();
 }
 
