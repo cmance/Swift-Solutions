@@ -132,8 +132,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             venueWebsite: eventInfo.venueWebsite,
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         };
-        // console.log("Favorites Event Props");
-        // console.log(eventProps);
+
         // Clone the template
         const eventCard = eventCardTemplate.content.cloneNode(true);
     
@@ -157,6 +156,7 @@ async function onClickDetailsAsync(eventInfo) {
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
+        eventOriginalLink: eventInfo.eventOriginalLink,
         ticketLinks : eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
