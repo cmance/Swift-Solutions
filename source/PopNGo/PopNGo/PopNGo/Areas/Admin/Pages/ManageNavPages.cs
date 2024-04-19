@@ -24,6 +24,9 @@ namespace  PopNGo.Areas.Admin.Pages
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public static string Users => "Users";
+
+        public static string ScheduledNotifications => "ScheduledNotifications";
+
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace  PopNGo.Areas.Admin.Pages
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public static string UsersNavClass(ViewContext viewContext) => PageNavClass(viewContext, Users);
+        public static string ScheduledNotificationsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ScheduledNotifications);
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

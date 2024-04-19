@@ -72,7 +72,7 @@ export const buildAdminUserDetailsModal = (adminDetailsModalElement, props) => {
                 dayBefore: dayBeforeElement.checked,
                 dayOf: dayOfElement.checked,
                 userName: userNameElement.value,
-                id: props.id,
+                id: getUserId(),
             });
             console.log(data);
         } catch (error) {

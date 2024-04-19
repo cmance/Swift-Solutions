@@ -11,12 +11,12 @@ public class ApplicationDbContext : IdentityDbContext<PopNGoUser>
     {
     }
 
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    // {
-    //     if (!optionsBuilder.IsConfigured)
-    //     {
-    //         optionsBuilder.UseSqlServer("Name=AppConnection");
-    //     }
-    //     optionsBuilder.UseLazyLoadingProxies();
-    // }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer("Name=AppConnection");
+        }
+        optionsBuilder.UseLazyLoadingProxies();
+    }
 }

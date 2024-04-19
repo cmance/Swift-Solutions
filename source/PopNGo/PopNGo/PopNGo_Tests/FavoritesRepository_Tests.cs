@@ -85,9 +85,10 @@ public class FavoritesRepositoryTests
     {
         // Arrange
         var userId = 1;
+        var bookmarkListId = 1;
         var apiEventId = "testEventId";
         var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
-        var favoriteEvent = new FavoriteEvent { UserId = userId, EventId = eventEntity.Id, Event = eventEntity };
+        var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkListId, EventId = eventEntity.Id, Event = eventEntity };
 
         var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
 
@@ -102,7 +103,7 @@ public class FavoritesRepositoryTests
         _favoritesRepository = new FavoritesRepository(_mockContext.Object);
 
         // Act
-        _favoritesRepository.RemoveFavorite(userId, apiEventId);
+        _favoritesRepository.RemoveFavorite(bookmarkListId, apiEventId);
 
         // Assert
         _mockSet.Verify(m => m.Remove(It.IsAny<FavoriteEvent>()), Times.Once);
@@ -135,10 +136,11 @@ public class FavoritesRepositoryTests
     public void GetUserFavorites_ShouldReturnUserFavorites()
     {
         // Arrange
-        var userId = 1;
+        var bookmarkListId = 1;
         var apiEventId = "testEventId";
         var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
-        var favoriteEvent = new FavoriteEvent { UserId = userId, EventId = eventEntity.Id, Event = eventEntity };
+        var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkListId, EventId = eventEntity.Id, Event = eventEntity };
+        
 
         var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
 
@@ -153,7 +155,7 @@ public class FavoritesRepositoryTests
         _favoritesRepository = new FavoritesRepository(_mockContext.Object);
 
         // Act
-        var result = _favoritesRepository.GetUserFavorites(userId);
+        var result = _favoritesRepository.GetUserFavorites(bookmarkListId);
 
         // Assert
         Assert.That(result.Count, Is.EqualTo(1));
@@ -215,13 +217,15 @@ public class FavoritesRepositoryTests
     }
 
     [Test]
-    public void IsFavorite_WhenEventIsFavorite_ShouldReturnTrue()
+    public void IsFavorite_WhenEventIsInUsersBookmarkList_ShouldReturnTrue()
     {
         // Arrange
         var userId = 1;
+        var bookmarkListId = 1;
         var apiEventId = "testEventId";
         var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
-        var favoriteEvent = new FavoriteEvent { UserId = userId, EventId = eventEntity.Id, Event = eventEntity };
+        var bookmarkList = new BookmarkList { Id = bookmarkListId, UserId = userId };
+        var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkListId, EventId = eventEntity.Id, Event = eventEntity, BookmarkList = bookmarkList };
 
         var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
 
@@ -243,13 +247,18 @@ public class FavoritesRepositoryTests
     }
 
     [Test]
-    public void IsFavorite_WhenEventIsNotFavorite_ShouldReturnFalse()
+    public void IsFavorite_WhenEventIsInAnotherUsersBookmarkList_ShouldReturnFalse()
     {
         // Arrange
         var userId = 1;
+        var otherUserId = 2;
+        var bookmarkListId = 1;
         var apiEventId = "testEventId";
         var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
-        var favoriteEvent = new FavoriteEvent { UserId = userId + 1, EventId = eventEntity.Id, Event = eventEntity }; // Different user
+        // Bookmark list is owned by another user
+        var bookmarkList = new BookmarkList { Id = bookmarkListId, UserId = otherUserId };
+        // Favorite event is in another user's bookmark list
+        var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkListId, EventId = eventEntity.Id, Event = eventEntity, BookmarkList = bookmarkList };
 
         var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
 
@@ -265,6 +274,110 @@ public class FavoritesRepositoryTests
 
         // Act
         var result = _favoritesRepository.IsFavorite(userId, apiEventId);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [Test]
+    public void IsFavorite_WhenEventIsNotInAnyUsersBookmarkList_ShouldReturnFalse()
+    {
+        // Arrange
+        var userId = 1;
+        var apiEventId = "testEventId";
+        var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
+
+        _mockContext.Setup(c => c.Set<FavoriteEvent>()).Returns(_mockSet.Object);
+        _favoritesRepository = new FavoritesRepository(_mockContext.Object);
+
+        // Act
+        var result = _favoritesRepository.IsFavorite(userId, apiEventId);
+
+        // Assert
+        Assert.IsFalse(result);
+    }
+
+    [Test]
+    public void IsInBookmarkList_WhenBookmarkListNameIsNull_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var bookmarkListName = "";
+        var apiEventId = "testEventId";
+
+        // Assuming _favoritesRepository is created like this:
+        _favoritesRepository = new FavoritesRepository(_mockContext.Object);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _favoritesRepository.IsInBookmarkList(bookmarkListName, apiEventId));
+    }
+
+    [Test]
+    public void IsInBookmarkList_WhenApiEventIdIsNull_ShouldThrowArgumentException()
+    {
+        // Arrange
+        var bookmarkListName = "testBookmarkList";
+        string? apiEventId = null;
+
+        // Assuming _favoritesRepository is created like this:
+        _favoritesRepository = new FavoritesRepository(_mockContext.Object);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _favoritesRepository.IsInBookmarkList(bookmarkListName, apiEventId));
+    }
+
+    [Test]
+    public void IsInBookmarkList_WhenEventIsInBookmarkList_ShouldReturnTrue()
+    {
+        // Arrange
+        var bookmarkListName = "testBookmarkList";
+        var apiEventId = "testEventId";
+        var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
+        var bookmarkList = new BookmarkList { Id = 1, Title = bookmarkListName };
+        var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkList.Id, EventId = eventEntity.Id, Event = eventEntity, BookmarkList = bookmarkList };
+
+        var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
+
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.Provider).Returns(data.Provider);
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.Expression).Returns(data.Expression);
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        _mockContext.Setup(c => c.Set<FavoriteEvent>()).Returns(_mockSet.Object);
+
+        // Assuming _favoritesRepository is created like this:
+        _favoritesRepository = new FavoritesRepository(_mockContext.Object);
+
+        // Act
+        var result = _favoritesRepository.IsInBookmarkList(bookmarkListName, apiEventId);
+
+        // Assert
+        Assert.IsTrue(result);
+    }
+
+    [Test]
+    public void IsInBookmarkList_WhenEventIsNotInBookmarkList_ShouldReturnFalse()
+    {
+        // Arrange
+        var bookmarkListName = "testBookmarkList";
+        var apiEventId = "testEventId";
+        var eventEntity = new Event { Id = 2, ApiEventId = apiEventId };
+        var bookmarkList = new BookmarkList { Id = 1, Title = bookmarkListName };
+        var favoriteEvent = new FavoriteEvent { BookmarkListId = bookmarkList.Id, EventId = eventEntity.Id, Event = eventEntity, BookmarkList = bookmarkList };
+
+        var data = new List<FavoriteEvent> { favoriteEvent }.AsQueryable();
+
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.Provider).Returns(data.Provider);
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.Expression).Returns(data.Expression);
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.ElementType).Returns(data.ElementType);
+        _mockSet.As<IQueryable<FavoriteEvent>>().Setup(m => m.GetEnumerator()).Returns(data.GetEnumerator());
+
+        _mockContext.Setup(c => c.Set<FavoriteEvent>()).Returns(_mockSet.Object);
+
+        // Assuming _favoritesRepository is created like this:
+        _favoritesRepository = new FavoritesRepository(_mockContext.Object);
+
+        // Act
+        var result = _favoritesRepository.IsInBookmarkList(bookmarkListName, "anotherEventId");
 
         // Assert
         Assert.IsFalse(result);

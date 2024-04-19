@@ -1,0 +1,183 @@
+/* Event Tickets Venue Modal */
+
+#buy-tickets-modal {
+    position: fixed;
+    z-index: 2000;
+    /* Higher than the existing modal */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    /* Make sure this is set to none */
+    align-items: center;
+    justify-content: center;
+    padding-top: 60px;
+}
+
+/* View Venue Modal */
+#view-venue-modal {
+    position: fixed;
+    z-index: 2000;
+    /* Higher than the existing modal */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    /* Make sure this is set to none */
+    align-items: center;
+    justify-content: center;
+    padding-top: 60px;
+}
+
+/* /////////////////////////////// */
+
+.modal-content-2 {
+    background-color: #fefefe;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 7px;
+
+    /* Borders */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top: 0.5px solid #888;
+    border-left: 1px solid #888;
+    border-right: 1px solid #888;
+    border-bottom: 1px solid #888;
+
+    max-height: 50vh;
+    max-width: 50vw;
+    /* Set a maximum height */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    background-color: #ff9800;
+}
+
+#view-venue-modal,
+#ticket-links-container {
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+        background-color: white;
+
+        /* Borders */
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-bottom: 0.5px solid #888;
+        border-top: 1px solid #888;
+        border-left: 1px solid #888;
+        border-right: 1px solid #888;
+    }
+
+    .modal-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .venue-modal-body {
+        position: absolute;
+        /* Changed from relative to absolute */
+        top: 50%;
+        /* Position at 50% from the top */
+        left: 50%;
+        /* Position at 50% from the left */
+        transform: translate(-50%, -50%);
+        /* Centers the element */
+        max-width: 50vw;
+        width: auto;
+    }
+
+    #venue-modal-rating {
+        display: flex;
+        align-items: center;
+    }
+
+    #venue-modal-rating span:last-child {
+        padding-right: 20px;
+    }
+
+
+    #venue-modal-rating span:first-child {
+        padding-right: 5px;
+    }
+
+    #ticket-links-container {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .prepend-image-phone::before {
+        content: "";
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        background-image: url('../../media/images/telephone.png');
+        background-size: cover;
+        margin-right: 5px;
+        margin-left: 2px;
+    }
+
+    .prepend-image-website::before {
+        content: "";
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        background-image: url('../../media/images/website.png');
+        background-size: cover;
+        margin-right: 5px;
+        margin-left: 2px;
+    }
+
+    .prepend-image-address::before {
+        content: "";
+        display: inline-block;
+        height: 22px;
+        width: 22px;
+        background-image: url('../../media/images/marker.png');
+        background-size: cover;
+        margin-right: 5px;
+    }
+
+    .venue-website-link {
+        position: relative;
+        top: -3px;
+        color: #212529;
+        text-decoration: none;
+    }
+
+    .venue-website-link:hover {
+        color: #FFF;
+    }
+
+    .dropdown-menu {
+        /* Add styles for the dropdown menu here */
+        background-color: #f8f9fa;
+        border: none;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .dropdown-item {
+        /* Add styles for the dropdown items here */
+        color: #212529;
+        padding: 0.25rem 1.5rem;
+        text-decoration: none;
+    }
+
+    .dropdown-item:hover {
+        background-color: #ff9800;
+    }
+}

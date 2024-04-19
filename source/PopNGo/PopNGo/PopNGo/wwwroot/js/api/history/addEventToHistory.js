@@ -1,22 +1,14 @@
-// Adds event to user's history
-
-/*  Event:
-    public int id
-    public string apiEventID
-    public DateTime eventDate
-    public string eventName
-    public string eventDescription
-    public string eventLocation
-}*/
-
-export async function addEventToHistory(event) {
-    let url = "/api/EventHistoryApi/EventHistory";
+/**
+ * Adds event to user's history
+ * @param {string} apiEventId 
+ */
+export async function addEventToHistory(apiEventId) {
+    let url = `/api/EventHistoryApi/EventHistory?apiEventId=${apiEventId}`;
     const res = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(event)
     })
 
     if (!res.ok) {

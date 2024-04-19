@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a8b10345-c8b2-48ab-9fbc-1367cdd59713</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="features\PG-125.feature" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Reqnroll.NUnit" Version="1.0.1" />
+    <PackageReference Include="nunit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="FluentAssertions" Version="6.12.0" />
+    <!-- <PackageReference Include="Selenium.WebDriver" Version="4.19.0" /> -->
+    <PackageReference Include="Selenium.WebDriver.GeckoDriver" Version="0.34.0" />
+    <PackageReference Include="SpecFlow.Actions.Selenium" Version="0.1.332" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PopNGo\PopNGo.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Drivers\" />
+    <Folder Include="Support\" />
+  </ItemGroup>
+
+</Project>

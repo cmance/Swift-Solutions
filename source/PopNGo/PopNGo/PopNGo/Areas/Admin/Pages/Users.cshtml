@@ -38,23 +38,14 @@
                             <td>@string.Join(", ", user.Roles)</td>
                         </tr>
                         <tr data-id="@user.Id">
-                            <td>
-                                @* <button class="btn btn-primary" type="button" id="resend-verification-email">Send Verification Email</button> *@
-                                <button class="btn btn-outline-primary" type="button" id="resend-verification-email">Send Verification Email</button>
-                            </td>
-                            <td>
-                                @* <button class="btn btn-primary" type="button" id="send-password-reset">Send Password Reset</button> *@
-                                <button class="btn btn-outline-primary" type="button" id="send-password-reset">Send Password Reset</button>
-                            </td>
-                            <td>
-                                @* <button class="btn btn-success" type="button" id="confirm-account">Confirm Account</button> *@
-                                <button class="btn btn-outline-success" type="button" id="confirm-account">Confirm Account</button>
-                            </td>
-                            <td>
-                                @* <button class="btn btn-warning" type="button" id="edit-user">Edit Account</button>
-                                <button class="btn btn-danger" type="button" id="delete-user">Delete Account</button> *@
-                                <button class="btn btn-outline-warning" type="button" id="edit-user">Edit Account</button>
-                                <button class="btn btn-outline-danger" type="button" id="delete-user">Delete Account</button>
+                            <td colspan="4">
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-outline-primary" type="button" id="resend-verification-email">Send Verification Email</button>
+                                    <button class="btn btn-outline-primary" type="button" id="send-password-reset">Send Password Reset</button>
+                                    <button class="btn btn-outline-success" type="button" id="confirm-account">Confirm Account</button>
+                                    <button class="btn btn-outline-warning" type="button" id="edit-user">Edit Account</button>
+                                    <button class="btn btn-outline-danger" type="button" id="delete-user">Delete Account</button>
+                                </div>
                             </td>
                         </tr>
                     }
