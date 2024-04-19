@@ -1,6 +1,7 @@
 import { getNearestCityAndState } from './getNearestCityAndState.js';
 import { getEvents } from '../api/events/getEvents.js';
 import { isCurrentlySearching } from './searchBarEvents.js';
+import { addMapLoadingSpinner } from '../explore.js';
 
 let lastLocation = null;
 let isWaiting = false;
@@ -14,6 +15,7 @@ let isWaiting = false;
 
 export function updateLocationAndFetch(map, start = 0) {
     if (isWaiting || isCurrentlySearching()) return;
+    // addMapLoadingSpinner();
     isWaiting = true;
 
     var center = map.getCenter();
@@ -21,6 +23,8 @@ export function updateLocationAndFetch(map, start = 0) {
     var longitude = center.lng();
     getNearestCityAndState(latitude, longitude).then(async location => {
         if (location && (!lastLocation || location.city !== lastLocation.city || location.state !== lastLocation.state)) {
+            addMapLoadingSpinner();
+
             getEvents(`Events in ${location.city}, ${location.state}`, start)
                 .then(events => {
                     initMap(events);
@@ -33,6 +37,7 @@ export function updateLocationAndFetch(map, start = 0) {
             console.log('Could not find city and state for the provided latitude and longitude');
         }
         isWaiting = false;
+        // removeMapLoadingSpinner();
     });
 }
 

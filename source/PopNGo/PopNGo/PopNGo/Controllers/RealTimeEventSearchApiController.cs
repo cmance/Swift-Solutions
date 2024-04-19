@@ -22,11 +22,11 @@ namespace PopNGo.Controllers
         // GET: api/search/events/?q=Q&start=0
         [HttpGet("search/events")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<EventDetail>))]
-        public async Task<ActionResult<IEnumerable<PopNGo.Models.DTO.Event>>> GetRealTimeAPIEvents(string q, int start)
+        public async Task<ActionResult<IEnumerable<PopNGo.Models.DTO.Event>>> GetRealTimeAPIEvents(string q, int start, string date)
         {
             try
             {
-                IEnumerable<EventDetail> eventsDetails = await _realTimeEventSearchService.SearchEventAsync(q, start);
+                IEnumerable<EventDetail> eventsDetails = await _realTimeEventSearchService.SearchEventAsync(q, start, date);
                 // Save events to database
                 for (int i = 0; i < eventsDetails.Count(); i++)
                 {
