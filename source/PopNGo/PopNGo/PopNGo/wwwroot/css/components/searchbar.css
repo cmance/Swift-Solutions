@@ -1,21 +1,8 @@
 .search-event {
     input,
-    input:focus,
-    select,
-    button,
-    > div > label {
-        background-color: #313030 !important;
-        color: #d38100 !important;
-    }
-
-    hr {
-        background-color: #d38100;
-    }
-
-    input,
     select,
     label {
-        border-radius: 0px;
+        border-radius: 5px;
         border-color:transparent;
     }
 
@@ -28,36 +15,28 @@
         outline: none !important;
         box-shadow: none !important;
         border-color: #d38100 !important;
+
     }
 
     #search-event-input {
         border-color: #313030;
-        border-radius: unset;
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
         border-right-color: gray;
         border-right-style: dashed;
     }
 
-    .text-search-label {
-        color: #ffb641 !important;
-    }
-
-    .form-floating > .form-control:focus, 
+    /* .form-floating > .form-control:focus, 
     .form-floating > .form-control:not(:placeholder-shown) {
         ~ label.text-search-label {
             opacity: 0.75;
         }
-    }
+    } */
 
     .onhover i {
         filter: invert(38%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
     }
     .onhover :hover {
         opacity: 0.75;
-        /* filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%); */
-        /* transform: scale(1.2); Adjust scale as needed */
-        transition: opacity 0.5s ease-in-out; /* Optional: smooth transition */
+        transition: opacity 0.5s ease-in-out;
     }
 
     .onhover :active {
@@ -68,8 +47,144 @@
     #no-events-section,
     #searching-events-section {
         background-color: rgba(93, 57, 0, 0.5);
-        border-radius: 10px;
         border-color: #d38100 !important;
         color: #d38100;
     }
+}
+
+.highlight {
+    color: #ff9800;
+    text-align: center;
+}
+
+.search-text {
+    color: white;
+}
+
+#search-text-container {
+    height: 58px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+}
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;;
+}
+
+#search-bar-container, #country-state-city-select-container {
+    flex: 1;
+}
+
+#country-state-city-select-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 30px;
+}
+
+#search-bar-container {
+    margin: 0 auto;
+    width: 90%;
+    border-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#search-event-input {
+    /* margin-right: 5px; */
+    border-width: 0;
+}
+
+#search-event-button {
+    background-color: #ff9800;
+    margin-left: 5px;
+    border-radius: 5px;
+    border-width: 0;
+    border-color: none;
+    width: 50px;
+    /* max-width: 50px; */
+    /* height: 58px; */
+    /* max-height: 58px; */
+    margin-top: 10px;
+    margin-right: 8px;
+    font-size: 20px;
+    /* Add these lines */
+    border: none;
+    padding: 0;
+    overflow: hidden;
+}
+
+#search-event-button:hover {
+    background-color: #ffca2c; /* Change this to the color you want */
+}
+
+#search-event-button i {
+    color: white;
+}
+
+#location-select {
+    width: 276px;
+    max-width: 276px;
+    /* min-width: 276px; */
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 10px;
+    height: 58px;
+    
+}
+
+.form-select {
+    border-width: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='orange' stroke-width='0.75' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'></path></svg>") no-repeat right center;
+    background-size: contain;
+}
+
+#search-bar-buttons-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center; /* Adjust as needed */
+    height: 58px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#save-location-button, #view-saved-locations-button, #filter-dropdown {
+    height: 58px;
+    min-height: 58px;
+    margin: 5px;
+}
+
+#country-select,
+#state-select,
+#city-select,
+#filter-select {
+    width: 280px;
+    max-width: 280px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top: 10px;
+    height: 58px;
+}
+
+#filter-dropdown {
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 30px 0 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='orange' stroke-width='0.75' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'></path></svg>") no-repeat right center;
+    background-size: contain;
+    text-align: left;
 }

@@ -1,24 +1,54 @@
 #map-container {
-    width: 25%;
+    width: 100%;
     height: 100%;
     /* Round edges */
-    position: fixed;
+    position: sticky;
 }
 
 #demo-map-id {
     position: relative; /* Add this line */
+    left: -10px;
+    top: 20px;
     width: 100%;
-    height: 65vh;
+    height: 63vh;
     padding: 0;
     border-radius: 15px;
     /* Round edges */
     transition: width 0.025s linear;
 }
 
+#events-container {
+    position: relative;
+    left: -24px;
+    max-height: 65vh; /* Adjust as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    /* border-top: 10px solid black;
+    border-left: 10px solid black;
+    border-bottom: 10px solid black; */
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#events-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+#events-container::-webkit-scrollbar-track {
+    background: #1E1E1E; /* Adjust as needed */
+}
+
+#events-container::-webkit-scrollbar-thumb {
+    background: #ff9800; /* Adjust as needed */
+}
+
+#events-container::-webkit-scrollbar-thumb:hover {
+    background: #ffca2c; /* Adjust as needed */
+}
+
 .pagination-buttons {
     background-color: #1e1e1e;
     color: white;
-    padding: 15px;
+    padding: 100px;
 }
 
 #back-page {
@@ -45,7 +75,7 @@
 #loading-overlay {
     position: absolute;
     top: 0;
-    left: 0;
+    left: -10px;
     width: 100%;
     height: 65vh;
     background: rgba(128, 128, 128, 0.5); /* Gray overlay */

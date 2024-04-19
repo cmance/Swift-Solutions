@@ -1,4 +1,8 @@
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
@@ -15,10 +19,10 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
-    background-color: #3F3F3F;
-    /* background-color: #FEAF48; */
-    font-family: 'Outfit', sans-serif;
+  margin-bottom: 60px;
+  background-color: #3F3F3F;
+  /* background-color: #FEAF48; */
+  font-family: 'Outfit', sans-serif;
 }
 
 /* Favorites Page */
@@ -33,7 +37,8 @@ body {
   text-align: center;
   margin: auto;
   margin-top: 5vh;
-  width: 80vw; /* or any desired width */
+  width: 80vw;
+  /* or any desired width */
   font-size: 1.2em;
 }
 
@@ -41,7 +46,8 @@ body {
   color: #FEAF48;
 }
 
-#no-favorites-message p a { /* Link color */
+#no-favorites-message p a {
+  /* Link color */
   color: #FEAF48;
 }
 
@@ -55,7 +61,8 @@ body {
   text-align: center;
   margin: auto;
   margin-top: 5vh;
-  width: 80vw; /* or any desired width */
+  width: 80vw;
+  /* or any desired width */
 }
 
 #login-prompt h1 {
@@ -83,8 +90,10 @@ body {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  width: 20px; /* Adjust as needed */
-  height: 20px; /* Adjust as needed */
+  width: 20px;
+  /* Adjust as needed */
+  height: 20px;
+  /* Adjust as needed */
   filter: invert(1);
 }
 
@@ -96,16 +105,17 @@ body {
 
 /* Modal */
 .pop-in {
-  animation: popIn 0.3s ease-out forwards; 
+  animation: popIn 0.3s ease-out forwards;
 }
 
 /* Animation Keyframes */
 @keyframes popIn {
-  0% { 
-    opacity: 0; 
+  0% {
+    opacity: 0;
   }
-  100% { 
-    opacity: 1; 
+
+  100% {
+    opacity: 1;
   }
 }
 
@@ -115,25 +125,26 @@ body {
 
 
 .modal-backdrop {
-    z-index: -1;
+  z-index: -1;
 }
 
 .modal-body .form-control {
- background-color: #ff9b58; 
- color: #d35400;           
- border-color: #ffab74;    
- border-radius: 10px;      
+  background-color: #ff9b58;
+  color: #d35400;
+  border-color: #ffab74;
+  border-radius: 10px;
 }
 
-.modal-body .btn-primary { 
- background-color: #d35400; 
- border-color: #ffab74;     
- border-radius: 10px;      
- color: #fff;              
+.modal-body .btn-primary {
+  background-color: #d35400;
+  border-color: #ffab74;
+  border-radius: 10px;
+  color: #fff;
 }
 
 .modal-body .btn-primary:hover {
-    background-color: #b54600; /* Slightly darker on hover */
+  background-color: #b54600;
+  /* Slightly darker on hover */
 }
 
 .close {
@@ -153,16 +164,20 @@ body {
 /* Toast */
 #toastContainer {
   position: fixed;
-  top: 20px; /* Adjust this value to change the vertical position */
-  right: 20px; /* Adjust this value to change the horizontal position */
-  z-index: 1000; /* This ensures the toast container is above other elements */
+  top: 20px;
+  /* Adjust this value to change the vertical position */
+  right: 20px;
+  /* Adjust this value to change the horizontal position */
+  z-index: 1000;
+  /* This ensures the toast container is above other elements */
 }
 
 .toast {
   position: fixed;
   right: 20px;
   top: 20px;
-  max-height: fit-content; /* Set a maximum width for the toast */
+  max-height: fit-content;
+  /* Set a maximum width for the toast */
   background-color: #1E1E1E;
   color: #FFFFFF;
   padding: 10px 20px;
@@ -174,25 +189,31 @@ body {
 
 @keyframes slide-up-fade-out {
   0% {
-    transform: translateY(-100%); /* Change from positive to negative */
+    transform: translateY(-100%);
+    /* Change from positive to negative */
     opacity: 0;
   }
+
   20% {
     transform: translateY(0);
     opacity: 1;
   }
+
   80% {
     transform: translateY(0);
     opacity: 1;
   }
+
   100% {
-    transform: translateY(100%); /* Change from negative to positive */
+    transform: translateY(100%);
+    /* Change from negative to positive */
     opacity: 0;
   }
 }
 
 .toast.show {
-  bottom: 20px; /* Move it up on-screen */
+  bottom: 20px;
+  /* Move it up on-screen */
   opacity: 1;
   visibility: visible;
 }
@@ -200,34 +221,34 @@ body {
 /* Cards */
 /*Event Card Styles*/
 .postcard-bar {
-    width: 60px;
-    height: 5px;
-    margin: 10px 0;
-    border-radius: 5px;
-    background-color: white;
-    transition: width 0.2s ease;
+  width: 60px;
+  height: 5px;
+  margin: 10px 0;
+  border-radius: 5px;
+  background-color: white;
+  transition: width 0.2s ease;
 }
 
 #event-card:hover .postcard-bar {
-    width: 100px;
+  width: 100px;
 }
 
 #event-card {
-    width: 50vw;
-    background-color: #1E1E1E;
-    border-radius: 20px;
-    position: relative;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  width: 50vw;
+  background-color: #1E1E1E;
+  border-radius: 20px;
+  position: relative;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 0 20px 20px 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 0 20px 20px 0;
 }
 
 #event-img {
-    border-radius: 20px;
+  border-radius: 20px;
 }
 
 .bg-none {
@@ -235,11 +256,14 @@ body {
 }
 
 .custom-nav-item {
+
   a.onhover:hover,
   button.onhover:hover {
     filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
-    transform: scale(1.2); /* Adjust scale as needed */
-    transition: transform 0.3s ease-in-out; /* Optional: smooth transition */
+    transform: scale(1.2);
+    /* Adjust scale as needed */
+    transition: transform 0.3s ease-in-out;
+    /* Optional: smooth transition */
   }
 
   a.onhover:active,
@@ -274,7 +298,7 @@ body {
 .img-fluid {
   max-width: 100%;
   height: 100%;
-  object-fit: contain; 
+  object-fit: contain;
 }
 
 #no-history-message-container {
@@ -309,4 +333,11 @@ body {
     width: 100%;
   }
 }
+
 /* End of History */
+
+.btn,
+.btn-caution {
+  background-color: #ff9800;
+  border-width: 0;
+}

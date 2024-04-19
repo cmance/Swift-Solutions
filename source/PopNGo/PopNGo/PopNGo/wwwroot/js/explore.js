@@ -20,6 +20,11 @@ let mapMarkers = [];
 let page = 0;
 const pageSize = 10;
 
+//TODO: 
+// 1. Style the search bar, dropdown filter, and save location button
+// 2. Create the filters for history and favorites page
+// 3. Fix bug where the map has an infinite loading spinner if you scroll the map but dont make the center near a new city
+
 // Fetch event data and display it
 // Call getLocation when the script is loaded
 document.addEventListener("DOMContentLoaded", async function () {
