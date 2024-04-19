@@ -12,7 +12,9 @@ export async function loadSearchBar() {
     // Load up the countries, states, and cities for the search input
     const countries = await getCountries();
     const countrySelect = document.getElementById('search-event-country');
+    if (!countrySelect) return;
     const stateSelect = document.getElementById('search-event-state');
+    if (!stateSelect) return;
 
     // Populate the country select
     countrySelect.innerHTML = '';
@@ -66,6 +68,7 @@ export function toggleSearchingEventsSection(show) {
 export async function setCountry(country) {
     if(!country) return;
     const countrySelect = document.getElementById('search-event-country');
+    if (!countrySelect) return;
     const optionExists = Array.from(countrySelect.options).some(option => option.value === country);
     if(!optionExists) return;
     
@@ -84,6 +87,7 @@ export async function setCountry(country) {
 export async function setState(state) {
     if(!state) return;
     const stateSelect = document.getElementById('search-event-state');
+    if (!stateSelect) return;
     const optionExists = Array.from(stateSelect.options).some(option => option.value === state);
     if(!optionExists) return;
     
@@ -99,9 +103,10 @@ export async function setState(state) {
  * @param {string} city
  */
 export function setCity(city) {
-    document.getElementById('search-event-city').value = city;
+    let searchEventCity = document.getElementById('search-event-city');
+    if (!searchEventCity) return; // If the element doesn't exist, exit the function
+    searchEventCity.value = city;
 }
-
 /**
  * Purpose: Update the states in the search bar.
  * @returns {Promise<void>}

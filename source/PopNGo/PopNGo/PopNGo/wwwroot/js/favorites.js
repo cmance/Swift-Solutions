@@ -7,6 +7,9 @@ import { buildEventCard, validateBuildEventCardProps } from './ui/buildEventCard
 import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './ui/buildEventDetailsModal.js';
 import { formatTags } from './util/tags.js';
 import { showToast } from './util/toast.js';
+import { applyFiltersAndSortEvents } from './util/filter.js';
+
+let currentBookmarkList = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     initPage();
@@ -23,6 +26,9 @@ function initPage() {
         // If the user is not logged in, display a login prompt
         displayLoginPrompt();
     });
+
+    // Get the apply filters button
+
 }
 
 function displayLoginPrompt() {
@@ -50,6 +56,7 @@ function createBookmarkListCard(name, eventQuantity) {
         onClick: () => {
             // If the user clicks on the bookmark list, display the events from that list
             displayEventsFromBookmarkList(name);
+            currentBookmarkList = name;
         }
     };
 
@@ -103,7 +110,15 @@ function createNewBookmarkList(bookmarkListName) {
 
 /// Displaying events from a bookmark list
 async function displayEventsFromBookmarkList(bookmarkList) {
-    const favoriteEvents = await getFavoriteEvents(bookmarkList);
+    let favoriteEvents = await getFavoriteEvents(bookmarkList);
+    document.getElementById("no-events-found-filter-message").style.display = "none";
+    document.getElementById('filter-dropdown-container').style.display = 'flex';
+
+    // Apply filters and sort the events
+    favoriteEvents = applyFiltersAndSortEvents(favoriteEvents);
+    if (favoriteEvents.length === 0) {
+        document.getElementById("no-events-found-filter-message").style.display = "block";
+    }
 
     // Set title of page to the bookmark list name and number of events
     document.getElementById('favorite-events-title').innerText = `${bookmarkList} (${favoriteEvents.length} events)`;
@@ -125,7 +140,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             state: eventInfo.eventLocation.split(',')[2],
             eventOriginalLink: eventInfo.eventOriginalLink,
             tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
-            ticketLinks : eventInfo.ticketLinks,
+            ticketLinks: eventInfo.ticketLinks,
             venueName: eventInfo.venueName,
             venuePhoneNumber: eventInfo.venuePhoneNumber,
             venueRating: eventInfo.venueRating,
@@ -135,7 +150,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
 
         // Clone the template
         const eventCard = eventCardTemplate.content.cloneNode(true);
-    
+
         if (validateBuildEventCardProps(eventProps)) {
             buildEventCard(eventCard, eventProps);
             favoriteEventsContainer.appendChild(eventCard);
@@ -157,7 +172,7 @@ async function onClickDetailsAsync(eventInfo) {
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
         eventOriginalLink: eventInfo.eventOriginalLink,
-        ticketLinks : eventInfo.ticketLinks,
+        ticketLinks: eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
@@ -171,4 +186,9 @@ async function onClickDetailsAsync(eventInfo) {
         modal.show();
     };
 }
+
+// Listener for filter button
+document.getElementById('filter-button').addEventListener('click', function () {
+    displayEventsFromBookmarkList(currentBookmarkList);
+});
 

@@ -1,38 +1,90 @@
 #map-container {
-    width: 25%;
+    width: 100%;
     height: 100%;
     /* Round edges */
-    position: fixed;
+    position: sticky;
 }
 
 #demo-map-id {
     position: relative; /* Add this line */
+    left: -10px;
+    top: 20px;
     width: 100%;
-    height: 65vh;
+    height: 63vh;
     padding: 0;
     border-radius: 15px;
     /* Round edges */
     transition: width 0.025s linear;
 }
 
+#events-container {
+    position: relative;
+    left: -24px;
+    max-height: 65vh; /* Adjust as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+    /* border-top: 10px solid black;
+    border-left: 10px solid black;
+    border-bottom: 10px solid black; */
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#events-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+#events-container::-webkit-scrollbar-track {
+    background: #1E1E1E; /* Adjust as needed */
+}
+
+#events-container::-webkit-scrollbar-thumb {
+    background: #ff9800; /* Adjust as needed */
+}
+
+#events-container::-webkit-scrollbar-thumb:hover {
+    background: #ffca2c; /* Adjust as needed */
+}
+
+#pagination {
+    margin-right: 605px !important;
+}
+
 .pagination-buttons {
     background-color: #1e1e1e;
     color: white;
-    padding: 15px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-buttons:hover {
+    background-color: #ff9800;
 }
 
 #back-page {
     background-color: #1e1e1e;
     color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
+#back-page:hover {
+    background-color: #404040;
 }
 
 .page-number {
     background-color: white;
     color: #1e1e1e;
-    padding: 15px 50px 15px 50px;
+    padding: 10px 20px;
     margin-left: 5px;
     margin-right: 5px;
+    border-radius: 5px;
+    border: 1px solid #1e1e1e;
 }
 
 .original-post-link-container {
@@ -44,10 +96,10 @@
 
 #loading-overlay {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 20px;
+    left: -10px;
     width: 100%;
-    height: 65vh;
+    height: 63vh;
     background: rgba(128, 128, 128, 0.5); /* Gray overlay */
     border-radius: 15px;
     display: flex;
@@ -56,8 +108,6 @@
     z-index: 1; /* Add this line */
 }
 
-
-
 .spinner {
     border: 16px solid #f3f3f3;
     border-top: 16px solid #ff9800;
@@ -65,6 +115,30 @@
     width: 120px;
     height: 120px;
     animation: spin 2s linear infinite;
+}
+
+#map-helper-text-container {
+    position: absolute;
+    top: 20px;
+    left: -10px;
+    width: 100%;
+    height: 65vh;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: left;
+    padding: 10px;
+    padding-top: 60px;
+    pointer-events: none;
+    z-index: 1; /* Add this line */
+}
+
+#map-helper-text-container p {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 15px;
+    border-radius: 15px;
+    display: none;
 }
 
 @keyframes spin {

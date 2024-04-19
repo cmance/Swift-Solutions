@@ -4,6 +4,6 @@ namespace PopNGo.Services
 {
     public interface IRealTimeEventSearchService
     {
-        Task<IEnumerable<EventDetail>> SearchEventAsync(string query, int start);
+        Task<IEnumerable<EventDetail>> SearchEventAsync(string query, int start, string date);
     }
 }

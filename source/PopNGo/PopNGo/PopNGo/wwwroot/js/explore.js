@@ -16,8 +16,10 @@ import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 import { UnauthorizedError } from './util/errors.js';
 
 let map = null;
+let mapMarkers = [];
 let page = 0;
 const pageSize = 10;
+
 
 // Fetch event data and display it
 // Call getLocation when the script is loaded
@@ -46,20 +48,37 @@ async function loadSearchBarAndEvents(city, state, country) {
         setCity(city);
     });
 
-    document.getElementById('next-page-button').addEventListener('click', nextPage);
-    document.getElementById('previous-page-button').addEventListener('click', previousPage);
+    let nextPageButton = document.getElementById('next-page-button');
+    if (nextPageButton) {
+        nextPageButton.addEventListener('click', nextPage);
+    }
+
+    let previousPageButton = document.getElementById('previous-page-button');
+    if (previousPageButton) {
+        previousPageButton.addEventListener('click', previousPage);
+    }
 
     if (document.getElementById('events-container')) {
         await searchForEvents();
     }
 
-    document.getElementById('search-event-button').addEventListener('click', async function () { await searchForEvents(); });
-
-    document.getElementById('search-event-input').addEventListener('keyup', async function (event) {
-        if (event.key === 'Enter') {
+    let searchEventButton = document.getElementById('search-event-button');
+    if (searchEventButton) {
+        searchEventButton.addEventListener('click', async function () {
+            page = 0; // Reset page number when searching 
             await searchForEvents();
-        }
-    });
+        });
+    }
+
+    let searchEventInput = document.getElementById('search-event-input');
+    if (searchEventInput) {
+        searchEventInput.addEventListener('keyup', async function (event) {
+            if (event.key === 'Enter') {
+                await searchForEvents();
+            }
+        });
+    }
+
 }
 
 /**
@@ -78,13 +97,13 @@ async function onClickDetailsAsync(eventInfo) {
         fullAddress: eventInfo.eventLocation,
         eventOriginalLink: eventInfo.eventOriginalLink,
         tags: await formatTags(eventInfo.eventTags),
-        ticketLinks : eventInfo.ticketLinks,
+        ticketLinks: eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
         venueWebsite: eventInfo.venueWebsite
     }
-    
+
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
@@ -104,13 +123,7 @@ async function onClickDetailsAsync(eventInfo) {
 async function nextPage() {
     window.scrollTo(0, 0);
     page++;
-    searchForEvents();
-
-    document.getElementById('page-number').innerHTML = page + 1
-
-    document.getElementById('previous-page-button').innerHTML = page;
-    document.getElementById('next-page-button').innerHTML = page + 2;
-    document.getElementById('previous-page-button').disabled = false;
+    await searchForEvents();
 }
 
 /**
@@ -123,14 +136,7 @@ async function previousPage() {
     if (page > 0) {
         window.scrollTo(0, 0);
         page--;
-        searchForEvents();
-        // set page number
-        document.getElementById('page-number').innerHTML = page + 1;
-        document.getElementById('previous-page-button').innerHTML = page;
-        document.getElementById('next-page-button').innerHTML = page + 2;
-        if (page === 0) {
-            document.getElementById('previous-page-button').disabled = true;
-        }
+        await searchForEvents();
     }
 }
 
@@ -148,6 +154,12 @@ export async function displayEvents(events) {
     eventsContainer.innerHTML = ''; // Clear the container
     let eventCardTemplate = document.getElementById('event-card-template');
     // let paginationDiv = document.getElementById('pagination');
+
+    // Update the page number
+    document.getElementById('page-number').innerHTML = page + 1;
+    document.getElementById('previous-page-button').innerHTML = page;
+    document.getElementById('next-page-button').innerHTML = page + 2;
+    document.getElementById('previous-page-button').disabled = page === 0;
 
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
@@ -198,13 +210,15 @@ async function searchForEvents() {
     let paginationDiv = document.getElementById('pagination');
     paginationDiv.style.display = 'none'; //Hide pagination while searching
     createPlaceholderCards();
-    addMapLoadingSpinner();
+    // addMapLoadingSpinner();
     // console.log("search")
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
     toggleSearching();
 
-    const events = await getEvents(getSearchQuery(), getPaginationIndex());
+    let date = document.getElementById('filter-dropdown').value;
+
+    const events = await getEvents(getSearchQuery(), getPaginationIndex(), date);
     removePlaceholderCards(); // Remove the placeholder cards as the API has returned
 
     console.log(events);
@@ -221,9 +235,17 @@ async function searchForEvents() {
         const state = document.getElementById('search-event-state').value;
         const city = document.getElementById('search-event-city').value;
         let mapCoords = await getLocationCoords(country, state, city);
-        console.debug("Coords: ", mapCoords);
-        if (map)
+
+        if (map) {
+            deleteMarkers(); // Clear markers before adding new ones
             map.setCenter(mapCoords ?? map.getCenter());
+            events.forEach(eventInfo => {
+                const lat = eventInfo.latitude ? eventInfo.latitude : 44.848; //Hardcoded Monmouth, Oregon coordinates for now
+                const lng = eventInfo.longitude ? eventInfo.longitude : -123.229; //Hardcoded Monmouth, Oregon coordinates for now
+                const position = { lat, lng };
+                addMapMarker(position, map, eventInfo);
+            });
+        }
 
         paginationDiv.style.display = 'flex'; //Display after events are loaded
     }
@@ -232,6 +254,7 @@ async function searchForEvents() {
 
 function createPlaceholderCards() {
     let eventsContainer = document.getElementById('events-container')
+    if (!eventsContainer) return; // If the element doesn't exist, exit the function
     eventsContainer.innerHTML = ''; // Clear the container
     let placeholderCardTemplate = document.getElementById('blank-placeholder-event-card-template')
     for (let i = 0; i < 10; i++) { // Replace 10 with the number of placeholder cards you want to create
@@ -265,6 +288,10 @@ window.initMap = async function (events) {
             maxZoom: 15
         });
 
+        map.addListener('drag', function () {
+            document.getElementById("map-helper-text-container").style.display = 'none';
+        });
+
         google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map, getPaginationIndex()));
     }
 
@@ -274,31 +301,61 @@ window.initMap = async function (events) {
             const lat = eventInfo.latitude ? eventInfo.latitude : 44.848; //Hardcoded Monmouth, Oregon coordinates for now
             const lng = eventInfo.longitude ? eventInfo.longitude : -123.229; //Hardcoded Monmouth, Oregon coordinates for now
             const position = { lat, lng };
-            const marker = new google.maps.Marker({
-                position,
-                map,
-                title: eventInfo.eventName
+
+            addMapMarker(position, map, eventInfo);
+            // removeMapLoadingSpinner();
+            google.maps.event.addListener(map, 'idle', () => {
+                debounceUpdateLocationAndFetch(map);
             });
-
-            removeMapLoadingSpinner();
-
-
-            marker.addListener('click', async function () {
-                onClickDetailsAsync(eventInfo);
-            });
-
-            google.maps.event.addListener(map, 'idle', () => debounceUpdateLocationAndFetch(map));
         }
+        removeMapLoadingSpinner();
+        revealHelperText();
     });
 
 }
 
-function addMapLoadingSpinner() {
-    document.getElementById('loading-overlay').style.display = 'flex';
+function addMapMarker(position, map, eventInfo) {
+    let mapMarker = new google.maps.Marker({
+        position: position,
+        map: map,
+        title: eventInfo.eventName
+    });
+    mapMarker.addListener('click', async function () {
+        onClickDetailsAsync(eventInfo);
+    });
+    mapMarkers.push(mapMarker);
 }
 
-function removeMapLoadingSpinner() {
+// Function to set map on all markers, if passed null, it will remove the markers
+function setMapOnAll(map) {
+    for (let i = 0; i < mapMarkers.length; i++) {
+        mapMarkers[i].setMap(map);
+    }
+}
+
+// Function to clear markers, but does not remove them from the mapMarkers array
+function clearMarkers() {
+    setMapOnAll(null);
+}
+
+// Function to delete markers
+function deleteMarkers() {
+    clearMarkers();
+    mapMarkers = [];
+}
+
+export function addMapLoadingSpinner() {
+    let loadingOverlay = document.getElementById('loading-overlay');
+    if (!loadingOverlay) return; // If the element doesn't exist, exit the function
+    loadingOverlay.style.display = 'flex';
+}
+
+export function removeMapLoadingSpinner() {
     document.getElementById('loading-overlay').style.display = 'none';
+}
+
+function revealHelperText() {
+    document.querySelector('#map-helper-text-container .helper-text p').style.display = 'block';
 }
 
 window.onload = async function () {
@@ -312,65 +369,65 @@ window.onload = async function () {
 }
 
 // Save Location, Remove Location, Use Location
-let savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
-function displaySavedLocations() {
-    const savedLocationsContainer = document.getElementById('saved-locations-container');
-    savedLocationsContainer.innerHTML = '';
+// let savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
+// function displaySavedLocations() {
+//     const savedLocationsContainer = document.getElementById('saved-locations-container');
+//     savedLocationsContainer.innerHTML = '';
 
-    savedLocations.forEach((location, index) => {
-        const locationElement = document.createElement('div');
-        locationElement.textContent = `${location.city}, ${location.state}, ${location.country}`;
+//     savedLocations.forEach((location, index) => {
+//         const locationElement = document.createElement('div');
+//         locationElement.textContent = `${location.city}, ${location.state}, ${location.country}`;
 
-        const removeButton = document.createElement('button');
-        removeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                      <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                                      <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                                  </svg>`;
-        removeButton.classList.add('btn', 'btn-outline-warning', 'remove-button');
-        removeButton.addEventListener('click', function () {
-            removeLocation(index);
-            displaySavedLocations();
-        });
+//         const removeButton = document.createElement('button');
+//         removeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+//                                       <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+//                                       <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+//                                   </svg>`;
+//         removeButton.classList.add('btn', 'btn-outline-warning', 'remove-button');
+//         removeButton.addEventListener('click', function () {
+//             removeLocation(index);
+//             displaySavedLocations();
+//         });
 
-        const useLocationButton = document.createElement('button');
-        useLocationButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
-                                           <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
-                                       </svg>`;
-        useLocationButton.classList.add('btn', 'btn-outline-primary', 'use-button');
-        useLocationButton.addEventListener('click', async function () {
-            document.getElementById('search-event-country').value = location.country;
-            document.getElementById('search-event-state').value = location.state;
-            document.getElementById('search-event-city').value = location.city;
+//         const useLocationButton = document.createElement('button');
+//         useLocationButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+//                                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+//                                        </svg>`;
+//         useLocationButton.classList.add('btn', 'btn-outline-primary', 'use-button');
+//         useLocationButton.addEventListener('click', async function () {
+//             document.getElementById('search-event-country').value = location.country;
+//             document.getElementById('search-event-state').value = location.state;
+//             document.getElementById('search-event-city').value = location.city;
 
-            await loadSearchBar();
-            await setCountry("United States");
-            await setState(location.state);
-            setCity(location.city);
+//             await loadSearchBar();
+//             await setCountry("United States");
+//             await setState(location.state);
+//             setCity(location.city);
 
-            searchForEvents();
-        });
+//             searchForEvents();
+//         });
 
-        locationElement.appendChild(removeButton);
-        locationElement.appendChild(useLocationButton);
-        savedLocationsContainer.appendChild(locationElement);
-    });
-}
+//         locationElement.appendChild(removeButton);
+//         locationElement.appendChild(useLocationButton);
+//         savedLocationsContainer.appendChild(locationElement);
+//     });
+// }
 
-displaySavedLocations();
-document.getElementById('save-location-button').addEventListener('click', function () {
-    saveLocation();
-});
-function saveLocation() {
-    const country = document.getElementById('search-event-country').value;
-    const state = document.getElementById('search-event-state').value;
-    const city = document.getElementById('search-event-city').value;
+// displaySavedLocations();
+// document.getElementById('save-location-button').addEventListener('click', function () {
+//     saveLocation();
+// });
+// function saveLocation() {
+//     const country = document.getElementById('search-event-country').value;
+//     const state = document.getElementById('search-event-state').value;
+//     const city = document.getElementById('search-event-city').value;
 
-    savedLocations.push({ city, state, country });
-    localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-    displaySavedLocations();
-}
-function removeLocation(index) {
-    savedLocations.splice(index, 1);
-    localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-    displaySavedLocations();
-}
+//     savedLocations.push({ city, state, country });
+//     localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
+//     displaySavedLocations();
+// }
+// function removeLocation(index) {
+//     savedLocations.splice(index, 1);
+//     localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
+//     displaySavedLocations();
+// }

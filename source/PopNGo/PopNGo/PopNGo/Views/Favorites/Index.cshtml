@@ -1,5 +1,7 @@
 <h1 id="favorite-events-title" class="text-light" style="text-align: center;">Bookmarks</h1>
 
+<partial name="_FilterDropdown" />
+
 @*Favorite events go here*@
 <div id="favorite-events-container"></div>
 
@@ -30,6 +32,12 @@
 <div class="container">
     <div id="favorite-events-container" class="row">
     </div>
+</div>
+
+<div id="no-events-found-filter-message" style="display: none;">
+    <h3>
+        No events found matching the selected filters.
+    </h3>
 </div>
 
 @section Scripts {
