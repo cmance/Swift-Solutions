@@ -49,17 +49,27 @@
         </div>
     </div>
 
-    @* <div id="search-bar-buttons-container">
-        <button class="btn btn-warning" id="save-location-button">Save Location</button>
-        <button class="btn btn-warning" id="view-saved-locations-button">View Saved Locations</button>
-        <div id="saved-locations-container"></div>
-    </div> *@
 
-    @* <hr /> *@
     <div id="no-events-section" class="rounded-pill border text-center py-2 hidden">
         <p class="notification">No events found</p>
     </div>
     @* <div id="searching-events-section" class="rounded-pill border text-center py-2 hidden">
     <p class="notification">Searching...</p>
     </div> *@
+</div>
+
+
+@* If we want the saved locations feature back we can remove the style attribute here *@
+<div id="flex-container" style="display: none;">
+    <div class="col-12 offset-md-2 mx-2 search-event">
+        <!-- Rest of your search bar code -->
+    </div>
+
+    <div id="right-align-container">
+        <div id="search-bar-buttons-container">
+            <button class="btn btn-warning" id="save-location-button">Save Location</button>
+            <button class="btn btn-warning" id="view-saved-locations-button">View Saved Locations</button>
+        </div>
+        <div id="saved-locations-container"></div>
+    </div>
 </div>

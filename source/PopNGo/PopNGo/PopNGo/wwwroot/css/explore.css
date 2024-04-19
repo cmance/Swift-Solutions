@@ -74,10 +74,10 @@
 
 #loading-overlay {
     position: absolute;
-    top: 0;
+    top: 20px;
     left: -10px;
     width: 100%;
-    height: 65vh;
+    height: 63vh;
     background: rgba(128, 128, 128, 0.5); /* Gray overlay */
     border-radius: 15px;
     display: flex;
@@ -97,8 +97,8 @@
 
 #map-helper-text-container {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 20px;
+    left: -10px;
     width: 100%;
     height: 65vh;
     border-radius: 15px;

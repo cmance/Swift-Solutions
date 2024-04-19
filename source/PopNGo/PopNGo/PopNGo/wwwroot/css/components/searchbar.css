@@ -163,6 +163,38 @@
     margin: 5px;
 }
 
+#save-location-button {
+    display: block;
+}
+
+#flex-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#right-align-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    position: fixed;
+    top: 144px;
+    right: 20px;
+}
+
+@media (max-width: 1669px) {
+    #right-align-container {
+        display: none;
+    }
+}
+
+#search-bar-buttons-container {
+    order: 1;
+}
+
+#saved-locations-container {
+    order: 2;
+}
+
 #country-select,
 #state-select,
 #city-select,

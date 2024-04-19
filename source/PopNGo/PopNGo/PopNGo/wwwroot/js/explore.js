@@ -20,10 +20,6 @@ let mapMarkers = [];
 let page = 0;
 const pageSize = 10;
 
-//TODO: 
-// 1. Style the search bar, dropdown filter, and save location button
-// 2. Create the filters for history and favorites page
-// 3. Fix bug where the map has an infinite loading spinner if you scroll the map but dont make the center near a new city
 
 // Fetch event data and display it
 // Call getLocation when the script is loaded
@@ -59,13 +55,17 @@ async function loadSearchBarAndEvents(city, state, country) {
         await searchForEvents();
     }
 
-    document.getElementById('search-event-button').addEventListener('click', async function () { await searchForEvents(); });
+    document.getElementById('search-event-button').addEventListener('click', async function () {
+        page = 0; // Reset page number when searching 
+        await searchForEvents();
+    });
 
     document.getElementById('search-event-input').addEventListener('keyup', async function (event) {
         if (event.key === 'Enter') {
             await searchForEvents();
         }
     });
+
 }
 
 /**
@@ -84,13 +84,13 @@ async function onClickDetailsAsync(eventInfo) {
         fullAddress: eventInfo.eventLocation,
         eventOriginalLink: eventInfo.eventOriginalLink,
         tags: await formatTags(eventInfo.eventTags),
-        ticketLinks : eventInfo.ticketLinks,
+        ticketLinks: eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
         venueWebsite: eventInfo.venueWebsite
     }
-    
+
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
@@ -110,13 +110,7 @@ async function onClickDetailsAsync(eventInfo) {
 async function nextPage() {
     window.scrollTo(0, 0);
     page++;
-    searchForEvents();
-
-    document.getElementById('page-number').innerHTML = page + 1
-
-    document.getElementById('previous-page-button').innerHTML = page;
-    document.getElementById('next-page-button').innerHTML = page + 2;
-    document.getElementById('previous-page-button').disabled = false;
+    await searchForEvents();
 }
 
 /**
@@ -129,14 +123,7 @@ async function previousPage() {
     if (page > 0) {
         window.scrollTo(0, 0);
         page--;
-        searchForEvents();
-        // set page number
-        document.getElementById('page-number').innerHTML = page + 1;
-        document.getElementById('previous-page-button').innerHTML = page;
-        document.getElementById('next-page-button').innerHTML = page + 2;
-        if (page === 0) {
-            document.getElementById('previous-page-button').disabled = true;
-        }
+        await searchForEvents();
     }
 }
 
@@ -154,6 +141,12 @@ export async function displayEvents(events) {
     eventsContainer.innerHTML = ''; // Clear the container
     let eventCardTemplate = document.getElementById('event-card-template');
     // let paginationDiv = document.getElementById('pagination');
+    
+    // Update the page number
+    document.getElementById('page-number').innerHTML = page + 1;
+    document.getElementById('previous-page-button').innerHTML = page;
+    document.getElementById('next-page-button').innerHTML = page + 2;
+    document.getElementById('previous-page-button').disabled = page === 0;
 
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
