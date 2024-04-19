@@ -123,6 +123,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             date: new Date(eventInfo.eventDate),
             city: eventInfo.eventLocation.split(',')[1],
             state: eventInfo.eventLocation.split(',')[2],
+            eventOriginalLink: eventInfo.eventOriginalLink,
             tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
             ticketLinks : eventInfo.ticketLinks,
             venueName: eventInfo.venueName,
@@ -131,8 +132,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             venueWebsite: eventInfo.venueWebsite,
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         };
-        // console.log("Favorites Event Props");
-        // console.log(eventProps);
+
         // Clone the template
         const eventCard = eventCardTemplate.content.cloneNode(true);
     
@@ -156,6 +156,7 @@ async function onClickDetailsAsync(eventInfo) {
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
+        eventOriginalLink: eventInfo.eventOriginalLink,
         ticketLinks : eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,

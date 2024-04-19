@@ -38,17 +38,17 @@ public partial class PopNGoDB : DbContext
     {
         modelBuilder.Entity<BookmarkList>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bookmark__3214EC279FC7E8BA");
+            entity.HasKey(e => e.Id).HasName("PK__Bookmark__3214EC27876F2852");
         });
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Event__3214EC27ED3E79DC");
+            entity.HasKey(e => e.Id).HasName("PK__Event__3214EC274F5E0AEF");
         });
 
         modelBuilder.Entity<EventHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC27FF66CD7B");
+            entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC2772CBE534");
 
             entity.HasOne(d => d.Event).WithMany(p => p.EventHistories)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -61,7 +61,7 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<FavoriteEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC27747DCC93");
+            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC27C6D82406");
 
             entity.HasOne(d => d.BookmarkList).WithMany(p => p.FavoriteEvents)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -74,12 +74,12 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<PgUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PG_User__3214EC279DED8B11");
+            entity.HasKey(e => e.Id).HasName("PK__PG_User__3214EC27749F95C0");
         });
 
         modelBuilder.Entity<ScheduledNotification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC275E60BD46");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC27A9685EE2");
 
             entity.HasOne(d => d.User).WithMany(p => p.ScheduledNotifications)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -88,12 +88,12 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC27AD0223CA");
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC27D8A357C6");
         });
 
         modelBuilder.Entity<TicketLink>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TicketLi__3214EC27A59A429E");
+            entity.HasKey(e => e.Id).HasName("PK__TicketLi__3214EC2744537107");
 
             entity.HasOne(d => d.Event).WithMany(p => p.TicketLinks)
                 .OnDelete(DeleteBehavior.ClientSetNull)

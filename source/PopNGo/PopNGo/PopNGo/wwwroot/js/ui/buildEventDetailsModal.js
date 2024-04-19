@@ -72,6 +72,17 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     // View Venue Btn
     buildVenueDetailsModal(eventDetailsModalElement, props);
 
+    // Populate view original post link
+    if (!props.eventOriginalLink) {
+        eventDetailsModalElement.querySelector('#original-post-link').disabled = true;
+    }
+    else {
+        const viewOriginalPostLink = eventDetailsModalElement.querySelector('#original-post-link');
+        viewOriginalPostLink.href = props.eventOriginalLink;
+        viewOriginalPostLink.target = '_blank';
+    }
+
+
 }
 
 /**

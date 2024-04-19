@@ -249,3 +249,64 @@ body {
     filter: invert(58%) sepia(62%) saturate(3783%) hue-rotate(14deg) brightness(92%) contrast(89%);
   }
 }
+
+/* History Page */
+#no-history-message {
+  background-color: white;
+  text-align: center;
+  border-radius: 20px 0px 0px 20px;
+  padding: 80px;
+}
+
+#no-history-message h3 {
+  font-size: 40px;
+}
+
+#no-history-message a {
+  color: #FEAF48;
+  text-decoration: none;
+}
+
+#no-history-img {
+  border-radius: 0px 20px 20px 0px;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain; 
+}
+
+#no-history-message-container {
+  display: flex;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 40px;
+}
+
+#no-history-img-container {
+  display: flex;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 40px;
+}
+
+/* On resize of 1200px width or below change the properties */
+@media screen and (max-width: 1200px) {
+  #no-history-img {
+    display: none;
+  }
+
+  #no-history-message {
+    border-radius: 20px;
+  }
+
+  #no-history-message-container {
+    display: flex;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 40px;
+    width: 100%;
+  }
+}
+/* End of History */

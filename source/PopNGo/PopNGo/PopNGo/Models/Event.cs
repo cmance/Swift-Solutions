@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace PopNGo.Models;
 
@@ -25,14 +24,20 @@ public partial class Event
     [StringLength(255)]
     public string EventName { get; set; }
 
-    [StringLength(1000)]
     public string EventDescription { get; set; }
 
     [StringLength(255)]
     public string EventLocation { get; set; }
 
-    [StringLength(255)]
     public string EventImage { get; set; }
+
+    public string EventOriginalLink { get; set; }
+
+    [Column(TypeName = "decimal(9, 6)")]
+    public decimal? Latitude { get; set; }
+
+    [Column(TypeName = "decimal(9, 6)")]
+    public decimal? Longitude { get; set; }
 
     [StringLength(255)]
     public string VenuePhoneNumber { get; set; }
