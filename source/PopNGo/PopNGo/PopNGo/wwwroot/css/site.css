@@ -341,3 +341,9 @@ body {
   background-color: #ff9800;
   border-width: 0;
 }
+
+#filter-icon {
+  filter: invert(1);
+  width: 24px;
+  height: 24px;
+}
