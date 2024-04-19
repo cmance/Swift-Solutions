@@ -1,7 +1,7 @@
 
 
 /**
- * Helper function
+ * Helper export function
  * Purpose: Get the filter values.
  * @returns {Object}
  */
@@ -48,12 +48,12 @@ function getFilterValues() {
 }
 
 /**
- * Helper function
+ * Helper export function
  * Purpose: Validate the filter values.
  * @param {Object} filterValues
  * @returns {boolean}
  */
-function validateFilterValues(filterValues) {
+export function validateFilterValues(filterValues) {
     // Check if the date range is valid
     let startDate = validateAndReturnDate(filterValues['start-date']);
     let endDate = validateAndReturnDate(filterValues['end-date']);
@@ -84,12 +84,12 @@ function validateFilterValues(filterValues) {
 }
 
 /**
- * Helper function
+ * Helper export function
  * Purpose: Validate the date range.
  * @param {string} dateRange
  * @returns {boolean|string}
  */
-function validateAndReturnDate(date) {
+export function validateAndReturnDate(date) {
     if(date) {
         let dateObj = new Date(date);
         if(dateObj instanceof Date && !isNaN(dateObj)) {
@@ -103,7 +103,7 @@ function validateAndReturnDate(date) {
     return date;
 }
 
-function checkForValidDateRange(startDate, endDate) {
+export function checkForValidDateRange(startDate, endDate) {
     if(startDate && endDate) {
         let startDateObj = new Date(startDate);
         let endDateObj = new Date(endDate);
@@ -115,7 +115,7 @@ function checkForValidDateRange(startDate, endDate) {
 }
 
 /**
- * Purpose: Combine the getFilterValues and validateFilterValues functions into one function that returns the filter values.
+ * Purpose: Combine the getFilterValues and validateFilterValues export functions into one export function that returns the filter values.
  * @returns {Object}
  */
 function getAndValidateFilterValues() {
@@ -135,11 +135,10 @@ function getAndValidateFilterValues() {
     }
 
     validateFilterValues(filterValues);
-    console.log(filterValues);
     return filterValues;
 }
 
-function sortByAlphabeticalAscDesc(events, ascDesc) {
+export function sortByAlphabeticalAscDesc(events, ascDesc) {
     if(ascDesc === 'asc') {
         events.sort((a, b) => a.eventName.localeCompare(b.eventName));
     } else {
@@ -148,7 +147,7 @@ function sortByAlphabeticalAscDesc(events, ascDesc) {
     return events;
 }
 
-function sortByDateAscDesc(events, ascDesc) {
+export function sortByDateAscDesc(events, ascDesc) {
     if(ascDesc === 'asc') {
         events.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
     } else {
@@ -157,14 +156,14 @@ function sortByDateAscDesc(events, ascDesc) {
     return events;
 }
 
-function sortByDateRange(events, startDate, endDate) {
+export function sortByDateRange(events, startDate, endDate) {
     return events.filter(event => {
         let eventDate = new Date(event.eventDate);
         return eventDate >= new Date(startDate) && eventDate <= new Date(endDate);
     });
 }
 
-function sortByVenueRatingAscDesc(events, ascDesc) {
+export function sortByVenueRatingAscDesc(events, ascDesc) {
     if(ascDesc === 'asc') {
         events.sort((a, b) => a.venueRating - b.venueRating);
     } else {
@@ -173,7 +172,7 @@ function sortByVenueRatingAscDesc(events, ascDesc) {
     return events;
 }
 
-function returnSortedEvents(events, filterValues) {
+export function returnSortedEvents(events, filterValues) {
     let sortedEvents = events;
 
     if(filterValues['event-alphabetical-asc-desc']) {
@@ -209,7 +208,7 @@ export function applyFiltersAndSortEvents(events) {
     }
 
     let sortedEvents = returnSortedEvents(events, filterValues);
-    
+
     console.log(sortedEvents);
     return sortedEvents;
 }
