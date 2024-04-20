@@ -16,7 +16,7 @@
                 <h3>You have no previously viewed events. Go to the <a href="/Home/Explore">explore</a> page to find some!</h3>
             </div>
         </div>
-        <div id="no-history-img-container" class="col-4">
+        <div id="no-history-img-container" class="col-4" style="display: none;">
             <img src="~/media/images/placeholder_event_card_image.png" id="no-history-img" class="img-fluid" alt="No history events image">
         </div>
     </div>
@@ -30,10 +30,17 @@
                 <p>Here's a list of all the events you've viewed.</p>
             </div>
         </div>
+        <partial name="_FilterDropdown" />
 
         <div id="event-history-card-container">
         </div>
     </div>
+</div>
+
+<div id="no-events-found-filter-message" style="display: none;">
+    <h3>
+        No events found matching the selected filters.
+    </h3>
 </div>
 
 <div id="toastContainer"></div>

@@ -36,6 +36,19 @@ public class Program
             return new RealTimeEventSearchService(httpClient, services.GetRequiredService<ILogger<RealTimeEventSearchService>>());
         });
 
+        // REST API setup for the Distance Calculator API
+        string distanceCalculatorApiKey = builder.Configuration["DistanceAndWeatherRapidAPIKey"];
+        string distanceCalculatorUrl = "https://distance-calculator.p.rapidapi.com/v1/";
+
+        builder.Services.AddHttpClient<IDistanceCalculatorService, DistanceCalculatorService>((httpClient, services) =>
+        {
+            httpClient.BaseAddress = new Uri(distanceCalculatorUrl);
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", distanceCalculatorApiKey); // Set API key
+            httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", "distance-calculator.p.rapidapi.com");
+            return new DistanceCalculatorService(httpClient, services.GetRequiredService<ILogger<DistanceCalculatorService>>());
+        });
+
 
         // Add services to the container.
         // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection string 'IdentityConnection' not found.");

@@ -62,6 +62,7 @@ namespace  PopNGo.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
         public static string Notifications => "Notifications";
+        public static string Settings => "Settings";
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -112,6 +113,7 @@ namespace  PopNGo.Areas.Identity.Pages.Account.Manage
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
 
         public static string NotificationsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Notifications);
+        public static string SettingsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Settings);
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used

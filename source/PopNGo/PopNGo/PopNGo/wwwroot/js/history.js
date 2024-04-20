@@ -3,6 +3,7 @@ import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './u
 import { formatTags } from "./util/tags.js";
 import { getBookmarkLists } from "./api/bookmarkLists/getBookmarkLists.js";
 import { onPressSaveToBookmarkList } from "./util/onPressSaveToBookmarkList.js";
+import { applyFiltersAndSortEvents } from './util/filter.js';
 
 // Fetch event data and display it on page load
 document.addEventListener('DOMContentLoaded', function () {
@@ -21,6 +22,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        document.getElementById('filter-dropdown-container').style.display = 'flex';
+        document.getElementById('filter-button').addEventListener('click', function() {
+            fetchEvents()
+                .then(data => {
+                    let sortedEvents = applyFiltersAndSortEvents(data);
+                    displayEvents(sortedEvents);
+                })
+                .catch(error => {
+                    if (error.message === 'Unauthorized') {
+                        // Handle 401 error here
+                        console.error('Unauthorized: ', error);
+                    } else {
+                        console.error('Error fetching event data:', error);
+                    }
+                });
+        });
     // Append event cards to the container element
     async function displayEvents(events) {
         const container = document.getElementById('event-history-card-container');
@@ -28,13 +45,17 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Container element #event-history-card-container not found.');
             return;
         }
+        document.getElementById("no-events-found-filter-message").style.display = "none";
 
-        if(!events || events.length === 0) {
-            console.log("No events found.");
+        if (!events || events.length === 0) { // If there are no events
+            document.getElementById("no-events-found-filter-message").style.display = "block";
         }
 
         // Clear the container
         container.innerHTML = '';
+
+        // Get filter values
+        // const filterValues = getAndValidateFilterValues();
 
         // Append event cards to the container
         for (const eventInfo of events) {
@@ -49,9 +70,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 date: new Date(eventInfo.eventDate),
                 city: eventInfo.eventLocation.split(',')[1],
                 state: eventInfo.eventLocation.split(',')[2],
+                eventOriginalLink: eventInfo.eventOriginalLink,
                 tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
                 bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
-                ticketLinks : eventInfo.ticketLinks,
+                ticketLinks: eventInfo.ticketLinks,
                 venueName: eventInfo.venueName,
                 venuePhoneNumber: eventInfo.venuePhoneNumber,
                 venueRating: eventInfo.venueRating,
@@ -81,6 +103,7 @@ async function fetchEvents() {
             throw new Error('Unauthorized');
         } else if (response.status === 404) {
             document.getElementById("no-history-message").style.display = "block";
+            document.getElementById("no-history-img-container").style.display = "block";
             throw new Error('No history found');
         }
         throw new Error('Network response was not ok');
@@ -101,13 +124,14 @@ async function onClickDetailsAsync(eventInfo) {
         description: (eventInfo.eventDescription ?? 'No description') + '...',
         date: new Date(eventInfo.eventDate),
         fullAddress: eventInfo.eventLocation,
-        ticketLinks : eventInfo.ticketLinks,
+        eventOriginalLink: eventInfo.eventOriginalLink,
+        ticketLinks: eventInfo.ticketLinks,
         venueName: eventInfo.venueName,
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
         venueWebsite: eventInfo.venueWebsite,
         tags: [] // TODO: tags should be stored on event
-        
+
     }
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {

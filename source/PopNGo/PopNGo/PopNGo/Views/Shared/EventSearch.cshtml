@@ -1,34 +1,90 @@
 @* Search bar, with results *@
 <div class="col-12 offset-md-2 mx-2 search-event">
-    <div class="input-group text-swipe justify-content-center">
-        <div class="form-floating">
-            <input type="text" class="form-control" id="search-event-input" placeholder="What events are you looking for?" aria-label="Search for..." aria-describedby="search-event-button">
-            <label for="search-event-input" class="input-group-text bg-none text-search-label">What events are you looking for?</label>
-        </div>
-        <label class="input-group-text text-light"> in </label>
-        <div class="form-floating">
-            <select class="form-select" id="search-event-country">
-            </select>
-            <label for="search-event-country" class="input-group-text bg-none text-search-label">Country</label>
-        </div>
-        <div class="form-floating">
-            <select class="form-select" id="search-event-state">
-            </select>
-            <label for="search-event-country" class="input-group-text bg-none text-search-label">State / Province</label>
-        </div>
-        <div class="form-floating">
-            <select class="form-select" id="search-event-city">
-            </select>
-            <label for="search-event-country" class="input-group-text bg-none text-search-label">City</label>
-        </div>
-        <button class="btn text-light rounded-end onhover" id="search-event-button" type="button"><i class="fas fa-search"></i></button>
+    <div id="search-text-container">
+        <h3 class="search-text"><span class="highlight">Search</span> new events by location</h3>
     </div>
-    <hr/>
+    <div class="search-container">
+        <div id="search-bar-container">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="search-event-input"
+                    placeholder="What events are you looking for?" aria-label="Search for..."
+                    aria-describedby="search-event-button">
+                <label for="search-event-input" class="input-group-text bg-none text-search-label">What events are you
+                    looking for?</label>
+            </div>
+        </div>
+
+        <div id="country-state-city-select-container" class="input-group text-swipe justify-content-between">
+            <div class="form-floating" id="country-select">
+                <select class="form-select" id="search-event-country">
+                </select>
+                <label for="search-event-country" class="input-group-text bg-none text-search-label">Country</label>
+            </div>
+            <div class="form-floating" id="state-select">
+                <select class="form-select" id="search-event-state">
+                </select>
+                <label for="search-event-state" class="input-group-text bg-none text-search-label">State /
+                    Province</label>
+            </div>
+            <div class="form-floating" id="city-select">
+                <select class="form-select" id="search-event-city">
+                </select>
+                <label for="search-event-city" class="input-group-text bg-none text-search-label">City</label>
+            </div>
+            <div class="form-floating" id="filter-select">
+                <select id="filter-dropdown" class="btn">
+                    <option selected="selected" value="" disabled>Date Filter</option>
+                    <option value="">Any</option>
+                    <option value="today">Today</option>
+                    <option value="tomorrow">Tomorrow</option>
+                    <option value="week">This Week</option>
+                    <option value="weekend">This Weekend</option>
+                    <option value="next_week">Next Week</option>
+                    <option value="month">This Month</option>
+                    <option value="next_month">Next Month</option>
+                </select>
+            </div>
+            <div class="form-floating" id="distance-container">
+            @* <div class="form" id="distance-container"> *@
+                <select id="distance-select" class="form-select">
+                    <option value="miles">Mi</option>
+                    <option value="kilometers">Km</option>
+                </select>
+                @* <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round" id="distance-checkbox"></span>
+                    <br/>
+                    <span id="distance-label">Km or Mi</span>
+                </label> *@
+                <label for="distance-select" class="input-group-text bg-none text-search-label">Distance Units</label>
+            </div>
+            <button class="btn text-light rounded-end onhover" id="search-event-button" type="button">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </div>
+
+
     <div id="no-events-section" class="rounded-pill border text-center py-2 hidden">
         <p class="notification">No events found</p>
     </div>
-    <div id="searching-events-section" class="rounded-pill border text-center py-2 hidden">
-        <p class="notification">Searching...</p>
-    </div>
+    @* <div id="searching-events-section" class="rounded-pill border text-center py-2 hidden">
+    <p class="notification">Searching...</p>
+    </div> *@
 </div>
 
+
+@* If we want the saved locations feature back we can remove the style attribute here *@
+<div id="flex-container" style="display: none;">
+    <div class="col-12 offset-md-2 mx-2 search-event">
+        <!-- Rest of your search bar code -->
+    </div>
+
+    <div id="right-align-container">
+        <div id="search-bar-buttons-container">
+            <button class="btn btn-warning" id="save-location-button">Save Location</button>
+            <button class="btn btn-warning" id="view-saved-locations-button">View Saved Locations</button>
+        </div>
+        <div id="saved-locations-container"></div>
+    </div>
+</div>

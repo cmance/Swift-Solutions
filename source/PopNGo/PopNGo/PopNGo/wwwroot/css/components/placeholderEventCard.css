@@ -1,0 +1,12 @@
+.placeholder-style { /*#1e1e1e*/
+    background: linear-gradient(110deg, #1e1e1e 8%, #2e2e2e 18%, #1e1e1e 33%);
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+    height: 300px; 
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
