@@ -14,11 +14,15 @@ import { getNearestCityAndStateAndCountry } from './util/getNearestCityAndStateA
 import { getBookmarkLists } from './api/bookmarkLists/getBookmarkLists.js';
 import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 import { UnauthorizedError } from './util/errors.js';
+import { getDistancesForEvents, getDistanceUnit, convertDistance } from './api/distance/getDistances.js';
+import { capitalizeFirstLetter } from './util/capitalizeFirstLetter.js';
 
 let map = null;
 let mapMarkers = [];
 let page = 0;
 const pageSize = 10;
+let userLocation = {};
+let distanceUnit = "miles"
 
 
 // Fetch event data and display it
@@ -26,6 +30,16 @@ const pageSize = 10;
 document.addEventListener("DOMContentLoaded", async function () {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async function (position) {
+            distanceUnit = await getDistanceUnit();
+
+            document.getElementById('distance-select').value = distanceUnit;
+            document.getElementById('distance-select').toggleAttribute('disabled', true);
+
+            // document.getElementById('distance-checkbox').checked = distanceUnit === 'miles';
+
+            userLocation["lat"] = position.coords.latitude;
+            userLocation["long"] = position.coords.longitude;
+
             const { city, state, country } = await getNearestCityAndStateAndCountry(position.coords.latitude, position.coords.longitude);
             await loadSearchBarAndEvents(city, state, country);
         }, async function (error) {
@@ -79,6 +93,22 @@ async function loadSearchBarAndEvents(city, state, country) {
         });
     }
 
+
+    let distanceSelect = document.getElementById('distance-select');
+    if (distanceSelect) {
+        distanceSelect.addEventListener('change', async function () {
+            let oldUnit = distanceUnit;
+            distanceUnit = distanceSelect.value.toLowerCase();
+            const events = document.getElementById('events-container').children;
+            for (let event of events) {
+                let distance = event.querySelector('#distance-number').textContent;
+                let convertedDistance = convertDistance(+distance, distanceUnit, oldUnit);
+
+                event.querySelector('#distance-number').textContent = convertedDistance;
+                event.querySelector('#distance-unit').textContent = distanceUnit === 'miles' ? 'mi' : 'km';
+            }
+        });
+    }
 }
 
 /**
@@ -140,7 +170,7 @@ async function previousPage() {
     }
 }
 
-export function getPaginationIndex() {
+function getPaginationIndex() {
     return (page * pageSize);
 }
 
@@ -149,7 +179,7 @@ export function getPaginationIndex() {
  * Events is an array of event objects returned from the API
  * @param {any} events
  */
-export async function displayEvents(events) {
+async function displayEvents(events) {
     let eventsContainer = document.getElementById('events-container');
     eventsContainer.innerHTML = ''; // Clear the container
     let eventCardTemplate = document.getElementById('event-card-template');
@@ -163,6 +193,18 @@ export async function displayEvents(events) {
 
     const eventTags = events.map(event => event.eventTags).flat().filter(tag => tag)
     await createTags(eventTags);
+
+    events = events.map(event => { event.distance = null; event.distanceUnit = null; return event; });
+
+    // Populate event data with distances
+    const eventDistances = await getDistancesForEvents(userLocation.lat, userLocation.long, events, distanceUnit);
+    if(eventDistances.distances.length > 0) {
+        events = events.map((event, index) => {
+            event.distance = eventDistances.distances[index];
+            event.distanceUnit = eventDistances.unit;
+            return event;
+        });
+    }
 
     // TODO: BUG this errors when not logged in
     let bookmarkLists = [];
@@ -187,6 +229,8 @@ export async function displayEvents(events) {
             state: eventInfo.eventLocation.split(',')[2],
             tags: await formatTags(eventInfo.eventTags),
             bookmarkListNames: bookmarkLists.map(bookmarkList => bookmarkList.title),
+            distance: eventInfo.distance,
+            distanceUnit: eventInfo.distanceUnit,
             onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         }
@@ -215,6 +259,7 @@ async function searchForEvents() {
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
     toggleSearching();
+    document.getElementById('distance-select').toggleAttribute('disabled', true);
 
     let date = document.getElementById('filter-dropdown').value;
 
@@ -250,6 +295,7 @@ async function searchForEvents() {
         paginationDiv.style.display = 'flex'; //Display after events are loaded
     }
     toggleSearching();
+    document.getElementById('distance-select').toggleAttribute('disabled', false);
 }
 
 function createPlaceholderCards() {
