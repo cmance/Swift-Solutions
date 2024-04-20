@@ -89,7 +89,7 @@
 
 #search-bar-container {
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
     border-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -112,7 +112,7 @@
     /* height: 58px; */
     /* max-height: 58px; */
     margin-top: 10px;
-    margin-right: 8px;
+    /* margin-right: 8px; */
     font-size: 20px;
     /* Add these lines */
     border: none;
@@ -198,13 +198,28 @@
 #country-select,
 #state-select,
 #city-select,
-#filter-select {
+#filter-select,
+#distance-container {
     width: 280px;
     max-width: 280px;
-    padding-left: 5px;
-    padding-right: 5px;
     margin-top: 10px;
     height: 58px;
+}
+
+#country-select {
+    padding-right: 5px;
+}
+
+#state-select,
+#city-select,
+#filter-select,
+#distance-container {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#distance-container {
+    width: 115px;
 }
 
 #filter-dropdown {

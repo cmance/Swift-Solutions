@@ -20,6 +20,8 @@ import { validateObject } from "../validation.js";
      city: String,
      state: String,
      tags: Array[Tag],
+     distance: Number,
+     distanceUnit: String,
      bookmarkListNames: Array[String]
      onPressBookmarkList: (bookmarkListName: String) => void (optional),
      onPressEvent: Function
@@ -55,6 +57,14 @@ export const buildEventCard = (eventCardElement, props) => {
     // Set the date
     eventCardElement.querySelector('#day-number').textContent = props.date.getDate();
     eventCardElement.querySelector('#month').textContent = props.date.toLocaleString('default', { month: 'short' });
+
+    // Set the distance
+    if (props.distance !== null) {
+        eventCardElement.querySelector('#distance-number').textContent = props.distance;
+        eventCardElement.querySelector('#distance-unit').textContent = props.distanceUnit;
+    } else {
+        eventCardElement.querySelector('#distance').remove();
+    }
 
     // Set the location
     eventCardElement.querySelector('#event-card-location').textContent = props.state
@@ -119,6 +129,8 @@ export function validateBuildEventCardProps(data) {
         city: x => typeof x === 'string',
         state: x => typeof x === 'string',
         tags: x => Array.isArray(x),
+        distance: x => typeof x === 'number' || x === null,
+        distanceUnit: x => typeof x === 'string' || x === null,
         bookmarkListNames: x => Array.isArray(x) || x === undefined || x === null,
         onPressBookmarkList: x => (typeof x === 'function' || x === undefined || x === null),
         onPressEvent: x => (typeof x === 'function' || x === undefined || x === null),
