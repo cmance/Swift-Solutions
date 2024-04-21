@@ -228,10 +228,22 @@
     align-items: center;
     justify-content: center;
     margin: 0;
-    padding: 0 30px 0 10px;
+    /* padding: 0 30px 0 10px; */
     appearance: none;
     -webkit-appearance: none;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='orange' stroke-width='0.75' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'></path></svg>") no-repeat right center;
     background-size: contain;
     text-align: left;
+}
+
+#filter-select {
+    position: relative;
+}
+
+#label-filter-select {
+    z-index: 2;
+    text-align: left;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
