@@ -16,6 +16,7 @@ import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 import { UnauthorizedError } from './util/errors.js';
 import { getDistancesForEvents, getDistanceUnit, convertDistance } from './api/distance/getDistances.js';
 import { capitalizeFirstLetter } from './util/capitalizeFirstLetter.js';
+import { addMapLoadingSpinner, removeMapLoadingSpinner } from './util/mapLoadingSpinners.js';
 
 let map = null;
 let mapMarkers = [];
@@ -390,15 +391,15 @@ function deleteMarkers() {
     mapMarkers = [];
 }
 
-export function addMapLoadingSpinner() {
-    let loadingOverlay = document.getElementById('loading-overlay');
-    if (!loadingOverlay) return; // If the element doesn't exist, exit the function
-    loadingOverlay.style.display = 'flex';
-}
+// export function addMapLoadingSpinner() {
+//     let loadingOverlay = document.getElementById('loading-overlay');
+//     if (!loadingOverlay) return; // If the element doesn't exist, exit the function
+//     loadingOverlay.style.display = 'flex';
+// }
 
-export function removeMapLoadingSpinner() {
-    document.getElementById('loading-overlay').style.display = 'none';
-}
+// export function removeMapLoadingSpinner() {
+//     document.getElementById('loading-overlay').style.display = 'none';
+// }
 
 function revealHelperText() {
     document.querySelector('#map-helper-text-container .helper-text p').style.display = 'block';
@@ -477,3 +478,5 @@ window.onload = async function () {
 //     localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
 //     displaySavedLocations();
 // }
+
+

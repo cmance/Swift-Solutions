@@ -10,6 +10,13 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log("History page loaded.")
     fetchEvents()
         .then(data => {
+            if (!data || data.length === 0) {
+                console.log('No data returned');
+                document.getElementById("no-history-message").style.display = "block";
+                document.getElementById("no-history-img-container").style.display = "block";
+                // Handle no data case here
+            }
+
             displayEvents(data);
             document.getElementById("history-container").style.display = "block";
         })
@@ -22,24 +29,48 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        document.getElementById('filter-dropdown-container').style.display = 'flex';
-        document.getElementById('filter-button').addEventListener('click', function() {
-            fetchEvents()
-                .then(data => {
-                    let sortedEvents = applyFiltersAndSortEvents(data);
-                    displayEvents(sortedEvents);
-                })
-                .catch(error => {
-                    if (error.message === 'Unauthorized') {
-                        // Handle 401 error here
-                        console.error('Unauthorized: ', error);
-                    } else {
-                        console.error('Error fetching event data:', error);
+    document.getElementById('filter-dropdown-container').style.display = 'flex';
+    document.getElementById('filter-button').addEventListener('click', function () {
+        fetchEvents()
+            .then(data => {
+                if (!data || data.length === 0) {
+                    console.log('No data returned');
+                    document.getElementById("no-history-message").style.display = "block";
+                    document.getElementById("no-history-img-container").style.display = "block";
+                    // Handle no data case here
+                } else {
+                    try {
+                        let sortedEvents = applyFiltersAndSortEvents(data);
+                        if (sortedEvents === false) {
+                            document.getElementById('invalid-feedback').style.display = 'block';
+                        }
+                        else {
+                            document.getElementById('invalid-feedback').style.display = 'none';
+                        }
+                        displayEvents(sortedEvents);
+                    } catch (error) {
+                        if (error.message === 'Invalid date range. Start date cannot be after end date.') {
+                            // Reveal the div
+                            document.getElementById('invalid-feedback').style.display = 'block';
+                        } else {
+                            // Handle other errors
+                            console.error(error);
+                        }
                     }
-                });
-        });
+                }
+            })
+            .catch(error => {
+                if (error.message === 'Unauthorized') {
+                    // Handle 401 error here
+                    console.log("error caught");
+                } else {
+                    console.error('Error fetching event data:', error);
+                }
+            });
+    });
     // Append event cards to the container element
     async function displayEvents(events) {
+
         const container = document.getElementById('event-history-card-container');
         if (!container) {
             console.error('Container element #event-history-card-container not found.');
@@ -47,15 +78,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         document.getElementById("no-events-found-filter-message").style.display = "none";
 
-        if (!events || events.length === 0) { // If there are no events
-            document.getElementById("no-events-found-filter-message").style.display = "block";
-        }
-
         // Clear the container
         container.innerHTML = '';
 
-        // Get filter values
-        // const filterValues = getAndValidateFilterValues();
+        // Check if there are any events
+        if (!events || events.length === 0) {
+            document.getElementById("no-events-found-filter-message").style.display = "block";
+            return;
+        }
 
         // Append event cards to the container
         for (const eventInfo of events) {
@@ -78,6 +108,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 venuePhoneNumber: eventInfo.venuePhoneNumber,
                 venueRating: eventInfo.venueRating,
                 venueWebsite: eventInfo.venueWebsite,
+                distanceUnit: null,
+                distance: null,
                 onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
                 onPressEvent: () => onClickDetailsAsync(eventInfo),
             };

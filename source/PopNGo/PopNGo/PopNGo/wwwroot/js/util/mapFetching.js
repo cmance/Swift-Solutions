@@ -1,7 +1,7 @@
 import { getNearestCityAndState } from './getNearestCityAndState.js';
 import { getEvents } from '../api/events/getEvents.js';
 import { isCurrentlySearching } from './searchBarEvents.js';
-import { addMapLoadingSpinner } from '../explore.js';
+import { addMapLoadingSpinner } from './mapLoadingSpinners.js';
 
 let lastLocation = null;
 let isWaiting = false;
