@@ -145,6 +145,8 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             venuePhoneNumber: eventInfo.venuePhoneNumber,
             venueRating: eventInfo.venueRating,
             venueWebsite: eventInfo.venueWebsite,
+            distanceUnit: null,
+            distance: null,
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         };
 

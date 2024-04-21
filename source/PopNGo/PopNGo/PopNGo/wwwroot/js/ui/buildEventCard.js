@@ -135,6 +135,5 @@ export function validateBuildEventCardProps(data) {
         onPressBookmarkList: x => (typeof x === 'function' || x === undefined || x === null),
         onPressEvent: x => (typeof x === 'function' || x === undefined || x === null),
     }
-
     return validateObject(data, schema).length === 0;
 }

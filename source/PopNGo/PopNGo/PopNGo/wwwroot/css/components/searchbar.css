@@ -247,7 +247,7 @@
 }
 
 #label-filter-select {
-    z-index: 2;
+    z-index: 4;
     text-align: left;
     position: absolute;
     top: 0;

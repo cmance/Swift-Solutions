@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 venuePhoneNumber: eventInfo.venuePhoneNumber,
                 venueRating: eventInfo.venueRating,
                 venueWebsite: eventInfo.venueWebsite,
+                distanceUnit: null,
+                distance: null,
                 onPressBookmarkList: (bookmarkListName) => onPressSaveToBookmarkList(eventInfo.apiEventID, bookmarkListName),
                 onPressEvent: () => onClickDetailsAsync(eventInfo),
             };
