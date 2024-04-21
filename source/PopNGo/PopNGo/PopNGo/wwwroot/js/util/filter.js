@@ -204,7 +204,7 @@ export function applyFiltersAndSortEvents(events) {
 
     // If getAndValidateFilterValues returned false, stop execution
     if(filterValues === false) {
-        return;
+        return false;
     }
 
     let sortedEvents = returnSortedEvents(events, filterValues);

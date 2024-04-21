@@ -2,7 +2,11 @@
     @* Date Range Component *@
     <div id="date-range-container">
         <h3 id="date-range-text">Date Range</h3>
+
         <div>
+            <div id="invalid-feedback" class="invalid-feedback">
+                Start date cannot be before end date.
+            </div>
             <input type="date" id="start-date" name="start-date">
             <span> to </span>
             <input type="date" id="end-date" name="end-date">

@@ -105,3 +105,30 @@
 #filter-button {
     margin-left: 10px;
 }
+
+#no-events-found-filter-message h3 {
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+}
+#date-range-container {
+    position: relative;
+}
+
+#invalid-feedback {
+    visibility: visible; /* Set to visible for testing */
+    background-color: #f44336;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 999;
+    bottom: -40px; /* Adjust as needed */
+    left: 0%;
+    
+}
+
+#date-range-container:hover #invalid-feedback {
+    opacity: 1;
+}
