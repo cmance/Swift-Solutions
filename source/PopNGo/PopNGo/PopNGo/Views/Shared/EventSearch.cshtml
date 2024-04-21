@@ -32,8 +32,7 @@
                 <label for="search-event-city" class="input-group-text bg-none text-search-label">City</label>
             </div>
             <div class="form-floating" id="filter-select">
-                <select id="filter-dropdown" class="btn">
-                    <option selected="selected" value="" disabled>Date Filter</option>
+                <select id="filter-dropdown" class="form-select btn">
                     <option value="">Any</option>
                     <option value="today">Today</option>
                     <option value="tomorrow">Tomorrow</option>
@@ -43,6 +42,7 @@
                     <option value="month">This Month</option>
                     <option value="next_month">Next Month</option>
                 </select>
+                <label id="label-filter-select" for="filter-dropdown" class="input-group-text bg-none text-search-label">Date Filter</label>
             </div>
             <div class="form-floating" id="distance-container">
             @* <div class="form" id="distance-container"> *@
