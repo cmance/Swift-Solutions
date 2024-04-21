@@ -14,6 +14,7 @@
     button:focus {
         outline: none !important;
         box-shadow: none !important;
+        border-width: 2px;
         border-color: #d38100 !important;
 
     }
@@ -21,8 +22,13 @@
     #search-event-input {
         border-color: #313030;
         border-right-color: gray;
-        border-right-style: dashed;
     }
+
+    #search-event-input:focus {
+        border-color: #d38100; /* Change to the color you want */
+        border-width: 2px; /* Change to the color you want */
+    }
+
 
     /* .form-floating > .form-control:focus, 
     .form-floating > .form-control:not(:placeholder-shown) {
