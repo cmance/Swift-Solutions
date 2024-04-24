@@ -145,3 +145,19 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+#weather-preview {
+    background-color: #313030;
+    border-radius: 15px;
+    margin-top: 20px;
+    padding: 10px 5px 10px 5px;
+
+    h6 {
+        margin-bottom: 0;
+    }
+
+    hr {
+        color: #ff9800;
+        margin-top: 0;
+    }
+}

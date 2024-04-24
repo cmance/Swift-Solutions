@@ -19,5 +19,6 @@ namespace PopNGo_BDD_Tests.PageObjects
 
         // Select the "Notifications" navigation item by id="scheduled-notifications"
         public IWebElement scheduledNotificationsNavItem => _webDriver.FindElement(By.Id("scheduled-notifications"));
+        public IWebElement metricsNavItem => _webDriver.FindElement(By.Id("metrics"));
     }
 }

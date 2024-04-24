@@ -111,22 +111,30 @@ function createNewBookmarkList(bookmarkListName) {
 /// Displaying events from a bookmark list
 async function displayEventsFromBookmarkList(bookmarkList) {
     let favoriteEvents = await getFavoriteEvents(bookmarkList);
+    document.getElementById('invalid-feedback').style.display = 'none';
     document.getElementById("no-events-found-filter-message").style.display = "none";
     document.getElementById('filter-dropdown-container').style.display = 'flex';
 
     // Apply filters and sort the events
     favoriteEvents = applyFiltersAndSortEvents(favoriteEvents);
-    if (favoriteEvents.length === 0) {
-        document.getElementById("no-events-found-filter-message").style.display = "block";
-    }
+
 
     // Set title of page to the bookmark list name and number of events
-    document.getElementById('favorite-events-title').innerText = `${bookmarkList} (${favoriteEvents.length} events)`;
+    document.getElementById('favorite-events-title').innerText = `${bookmarkList} (${favoriteEvents.length ?? "0"} events)`;
 
     // Clear the favorites and the bookmark list cards containers
     document.getElementById('favorite-events-container').innerHTML = '';
     document.getElementById('bookmark-list-cards-container').innerHTML = '';
 
+    if (favoriteEvents.length === 0) {
+        document.getElementById("no-events-found-filter-message").style.display = "block";
+        return;
+    }
+
+    if (!favoriteEvents) { // Validation failed
+        document.getElementById('invalid-feedback').style.display = 'block';
+        return;
+    } 
     // Display the favorite events
     const eventCardTemplate = document.getElementById('event-card-template');
     const favoriteEventsContainer = document.getElementById('favorite-events-container');
@@ -145,6 +153,8 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             venuePhoneNumber: eventInfo.venuePhoneNumber,
             venueRating: eventInfo.venueRating,
             venueWebsite: eventInfo.venueWebsite,
+            distanceUnit: null,
+            distance: null,
             onPressEvent: () => onClickDetailsAsync(eventInfo),
         };
 

@@ -37,6 +37,14 @@
         <button id="next-page-button" class="btn rounded-pill pagination-buttons">2</button>
     </div>
 
+    <div class="row weather-preview" id="weather-preview">
+        <h6 class="text-light">Weather Preview</h6>
+        <hr />
+        <div id="weather-preview-container" class="d-flex">
+            <!-- Weather cards go here -->
+        </div>
+    </div>
+
     <!-- Add the saved locations container here -->
     @* This is to load the unauthorized modal that can be found in Shared/_LoginUnauthorizedModal.cshtml*@
     <partial name="_LoginUnauthorizedModal" />
@@ -54,6 +62,13 @@
     @* Loads PlaceholderEventCard template component*@
     <partial name="_PlaceholderEventCard" />
 
-    @section Scripts {
-        <script type="module" src="~/js/explore.js" asp-append-version="true"></script>
-    }
+    @* Loads WeatherCard template component *@
+    <partial name="_WeatherCard" />
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/explore.js" asp-append-version="true"></script>
+    <script type="module" src="~/js/util/mapFetching.js"></script>
+    <script type="module" src="~/js/util/loadMapScript.js"></script>
+    <script type="module" src="~/js/util/mapLoadingSpinners.js"></script>
+}
