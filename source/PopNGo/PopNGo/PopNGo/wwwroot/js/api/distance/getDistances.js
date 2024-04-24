@@ -15,14 +15,17 @@ export async function getDistancesForEvents(lat, long, eventDetails, unit) {
     try {
         const response = await fetch(`/api/distances/calculate/startingLat=${lat}&startingLong=${long}&events=${events}&unit=${unit}`);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            if(response.status === 400) {
+                return [];
+            }
+            throw new Error(`Network response was not ok: ${response.status}`);
         }
 
         const data = await response.json();
         console.log(data);
         return data;
     } catch (error) {
-        console.error('There was a problem with the fetching distances to events:', error);
+        console.error(`There was a problem with the fetching distances to events: ${error}`);
         return [];
     }
 }
@@ -31,13 +34,17 @@ export async function getDistanceUnit() {
     try {
         const response = await fetch('/api/distances/unit');
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            if(response.status === 401) {
+                return 'miles';
+            }
+            
+            throw new Error(`Network response was not ok: ${response.status}`);
         }
 
         const data = await response.text();
         return data;
     } catch (error) {
-        console.error('There was a problem with the fetching distance unit:', error);
+        console.error(`There was a problem with the fetching distance unit: ${error}`);
         return 'miles';
     }
 }

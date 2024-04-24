@@ -36,15 +36,16 @@ public class DistanceCalculatorApiController : Controller
 
     [HttpGet("calculate/startingLat={startingLat}&startingLong={startingLong}&events={events}&unit={unit}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DistanceReturn))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<DistanceReturn>> GetDistancesToEvents(double startingLat, double startingLong, [FromRoute]List<string> events, [FromRoute] string unit)
+    public async Task<ActionResult<DistanceReturn>> GetDistancesToEvents(double? startingLat, double? startingLong, [FromRoute]List<string> events, [FromRoute] string unit)
     {
         PopNGoUser user = await _userManager.GetUserAsync(User);
-        // if (user == null)
-        // {
-        //     return StatusCode(StatusCodes.Status401Unauthorized);
-        // }
+        if(startingLat == null || startingLong == null)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest);
+        }
 
         try
         {
