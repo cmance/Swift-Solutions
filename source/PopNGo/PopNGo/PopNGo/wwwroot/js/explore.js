@@ -16,6 +16,8 @@ import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 import { UnauthorizedError } from './util/errors.js';
 import { getDistancesForEvents, getDistanceUnit, convertDistance } from './api/distance/getDistances.js';
 import { capitalizeFirstLetter } from './util/capitalizeFirstLetter.js';
+import { getForecastForLocation } from './api/weather/getForecast.js';
+import { buildWeatherCard, validateBuildWeatherCardProps } from './ui/buildWeatherCard.js';
 import { addMapLoadingSpinner, removeMapLoadingSpinner } from './util/mapLoadingSpinners.js';
 
 let map = null;
@@ -244,6 +246,38 @@ async function displayEvents(events) {
     // paginationDiv.style.display = 'flex'; //Display after events are loaded
 }
 
+function displayWeatherForecast(weatherData) {
+    let weatherForecastContainer = document.getElementById('weather-preview-container');
+    weatherForecastContainer.innerHTML = ''; // Clear the container
+    const weatherForecastTemplate = document.getElementById('weather-card-template');
+
+    for (let forecast of weatherData.weatherForecasts) {
+        console.log(forecast);
+        let newForecastCard = weatherForecastTemplate.content.cloneNode(true);
+
+        let forecastCardProps = {
+            date: new Date(forecast.date),
+            condition: forecast.condition,
+            minTemp: +forecast.minTemp.toFixed(1),
+            maxTemp: +forecast.maxTemp.toFixed(1),
+            humidity: forecast.humidity,
+            cloudCover: forecast.cloudCover,
+            precipitationType: forecast.precipitationType,
+            precipitationAmount: forecast.precipitationAmount.toFixed(2),
+            precipitationChance: forecast.precipitationChance,
+            temperatureUnit: weatherData.temperatureUnit,
+            measurementUnit: weatherData.measurementUnit
+        };
+
+        if (validateBuildWeatherCardProps(forecastCardProps)) {
+            buildWeatherCard(newForecastCard, forecastCardProps);
+            weatherForecastContainer.appendChild(newForecastCard);
+        } else {
+            console.error("Invalid forecast card props", forecastCardProps);
+        }
+    }
+}
+
 /**
  * Run a search for events and display them
  * 
@@ -269,6 +303,11 @@ async function searchForEvents() {
 
     console.log(events);
     toggleSearchingEventsSection(false); // Hide the searching events section
+    const country = document.getElementById('search-event-country').value;
+    const state = document.getElementById('search-event-state').value;
+    const city = document.getElementById('search-event-city').value;
+    let mapCoords = await getLocationCoords(country, state, city);
+
     if (!events || events.length === 0) {
         paginationDiv.style.display = 'none';
         toggleNoEventsSection(true);
@@ -276,11 +315,6 @@ async function searchForEvents() {
     } else {
         displayEvents(events);
         initMap(events);
-
-        const country = document.getElementById('search-event-country').value;
-        const state = document.getElementById('search-event-state').value;
-        const city = document.getElementById('search-event-city').value;
-        let mapCoords = await getLocationCoords(country, state, city);
 
         if (map) {
             deleteMarkers(); // Clear markers before adding new ones
@@ -295,6 +329,11 @@ async function searchForEvents() {
 
         paginationDiv.style.display = 'flex'; //Display after events are loaded
     }
+
+    const weatherForecast = await getForecastForLocation(mapCoords.lat, mapCoords.lng);
+    console.log(weatherForecast);
+    displayWeatherForecast(weatherForecast);
+    
     toggleSearching();
     document.getElementById('distance-select').toggleAttribute('disabled', false);
 }

@@ -21,6 +21,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
     {
         private readonly AdminPageObject _adminPage;
         private readonly NotificationsPageObject _notificationsPage;
+        private readonly MetricsPageObject _metricsPage;
         private readonly Drivers.BrowserDriver _webDriver;
         private readonly ScenarioContext _scenarioContext;
         private IConfigurationRoot Configuration { get; set; }
@@ -31,6 +32,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _webDriver = browserDriver;
             _adminPage = new AdminPageObject(_webDriver.Current);
             _notificationsPage = new NotificationsPageObject(_webDriver.Current);
+            _metricsPage = new MetricsPageObject(_webDriver.Current);
 
             // Get the configuration
             // we need to keep the admin password secret
@@ -44,11 +46,17 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _adminPage.GoTo();
         }
 
-        [Then("I should see a way to navigate to Notifications")]
-        public void ThenTheUserShouldSeeTheNavigationToNotifications()
+        [Then(@"I should see a way to navigate to the '([^']*)' page")]
+        public void ThenTheUserShouldSeeTheNavigationToNotifications(string page)
         {
-            _adminPage.scheduledNotificationsNavItem.Displayed.Should().BeTrue();
+            IWebElement webElement = null;
+            if(page == "Notifications") { webElement = _adminPage.scheduledNotificationsNavItem; }
+            else if(page == "Metrics") { webElement = _adminPage.metricsNavItem; }
+
+            webElement.Displayed.Should().BeTrue();
         }
+
+// ==================================================================================================================
 
         [Then("I should see all of the scheduled notifications")]
         public void ThenTheUserShouldSeeTheScheduledNotifications()
@@ -111,6 +119,17 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _notificationsPage.SetScheduleId();
             int newId = _notificationsPage.GetScheduleId();
             newId.Should().NotBe(id);
+        }
+// ==================================================================================================================
+
+        [Then(@"I should see a graph of metrics with the id '([^']*)'")]
+        public void ThenIShouldSeeAGraphOfMetricsWithTheIdBlank(string id) {
+            IWebElement webElement = null;
+            if(id == "email-activity-metrics-chart") { webElement = _metricsPage.EmailActivityChart; }
+            if(id == "user-account-metrics-chart") { webElement = _metricsPage.UserAccountChart; }
+            if(id == "event-activity-metrics-chart") { webElement = _metricsPage.EventActivityChart; }
+
+            webElement.Displayed.Should().BeTrue();
         }
     }
 }

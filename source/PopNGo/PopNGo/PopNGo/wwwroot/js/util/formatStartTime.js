@@ -8,6 +8,11 @@ export function formatDateWithWeekday(startTime) {
     return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 }
 
+export function formatDate(startTime) {
+    const date = new Date(startTime);
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
 export function formatHourMinute(startTime) {
     const date = new Date(startTime);
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });

@@ -8,8 +8,8 @@ Sometimes the site may go down or be unresponsive at midnight when the notificat
 @scheduledNotifications
 Scenario: Find the Scheduled Notifications area
 Given I am an admin
-When I am in the Admin area
-Then I should see a way to navigate to Notifications
+When I am on the "Admin" page
+Then I should see a way to navigate to the 'Notifications' page
 
 @scheduledNotifications
 Scenario: See the Scheduled Notifications area

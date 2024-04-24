@@ -30,12 +30,6 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -59,18 +53,33 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             [Required]
             [Display(Name = "Distance - Unit of Measurement")]
             public string DistanceUnit { get; set; }
+
+            /// <summary>
+            ///   This property is used to specify a user's preference for measuring Temperature (Fahrenheit, Celsius).
+            /// </summary>
+            [Required]
+            [Display(Name = "Temperature - Unit of Measurement")]
+            public string TemperatureUnit { get; set; }
+
+            /// <summary>
+            ///  This property is used to specify a user's preference for measuring Length/Depth (Inches, Millimeters).
+            [Required]
+            [Display(Name = "Length/Depth - Unit of Measurement")]
+            public string MeasurementUnit { get; set; }
         }
 
         private async Task LoadAsync(PopNGoUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var distanceUnit = user.DistanceUnit;
-
-            Username = userName;
+            var temperatureUnit = user.TemperatureUnit;
+            var measurementUnit = user.MeasurementUnit;
 
             Input = new SettingModel
             {
-                DistanceUnit = distanceUnit
+                DistanceUnit = distanceUnit,
+                TemperatureUnit = temperatureUnit,
+                MeasurementUnit = measurementUnit
             };
         }
 
@@ -101,12 +110,26 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             }
 
             var distanceUnit = user.DistanceUnit;
-            var inputUnit = Input.DistanceUnit.ToLower();
+            var temperatureUnit = user.TemperatureUnit;
+            var measurementUnit = user.MeasurementUnit;
+            var inputUnit = Input.DistanceUnit;
+            var inputTemp = Input.TemperatureUnit;
+            var inputMeasure = Input.MeasurementUnit;
 
             bool changes = false;
             if (inputUnit != distanceUnit)
             {
                 user.DistanceUnit = inputUnit;
+                changes = true;
+            }
+            if (inputTemp != temperatureUnit)
+            {
+                user.TemperatureUnit = inputTemp;
+                changes = true;
+            }
+            if (inputMeasure != measurementUnit)
+            {
+                user.MeasurementUnit = inputMeasure;
                 changes = true;
             }
 

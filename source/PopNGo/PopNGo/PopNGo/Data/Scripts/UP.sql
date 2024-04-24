@@ -64,6 +64,27 @@ CREATE TABLE [ScheduledNotification] (
   [Type] NVARCHAR(255) NOT NULL
 );
 
+CREATE TABLE [WeatherForecast] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [WeatherId] INTEGER NOT NULL,
+  [Date] DATETIME NOT NULL,
+  [Condition] NVARCHAR(255) NOT NULL,
+  [MinTemp] FLOAT NOT NULL,
+  [MaxTemp] FLOAT NOT NULL,
+  [CloudCover] FLOAT NOT NULL,
+  [PrecipitationType] NVARCHAR(255) NOT NULL,
+  [PrecipitationAmount] FLOAT NOT NULL,
+  [PrecipitationChance] FLOAT NOT NULL,
+  [Humidity] FLOAT NOT NULL,
+);
+
+CREATE TABLE [Weather] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [Latitude] DECIMAL(9, 6) NOT NULL,
+  [Longitude] DECIMAL(9, 6) NOT NULL,
+  [DateCached] DATETIME NOT NULL,
+)
+
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 
@@ -73,3 +94,5 @@ ALTER TABLE [FavoriteEvents] ADD CONSTRAINT FK_FavoriteEvents_BookmarkListID FOR
 ALTER TABLE [TicketLink] ADD CONSTRAINT FK_TicketLink_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 
 ALTER TABLE [ScheduledNotification] ADD CONSTRAINT FK_ScheduledNotification_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
+
+ALTER TABLE [WeatherForecast] ADD CONSTRAINT FK_WeatherForecast_WeatherId FOREIGN KEY ([WeatherId]) REFERENCES [Weather] ([ID]);
