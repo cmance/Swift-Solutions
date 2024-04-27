@@ -22,26 +22,20 @@ public partial class WeatherForecast
     [StringLength(255)]
     public string Condition { get; set; }
 
-    [Column(TypeName = "float")]
     public double MinTemp { get; set; }
 
-    [Column(TypeName = "float")]
     public double MaxTemp { get; set; }
 
-    [Column(TypeName = "float")]
     public double CloudCover { get; set; }
 
     [Required]
     [StringLength(255)]
     public string PrecipitationType { get; set; }
 
-    [Column(TypeName = "float")]
     public double PrecipitationAmount { get; set; }
 
-    [Column(TypeName = "float")]
     public double PrecipitationChance { get; set; }
 
-    [Column(TypeName = "float")]
     public double Humidity { get; set; }
 
     [ForeignKey("WeatherId")]

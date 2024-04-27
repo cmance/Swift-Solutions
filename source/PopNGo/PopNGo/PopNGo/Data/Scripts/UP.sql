@@ -83,7 +83,28 @@ CREATE TABLE [Weather] (
   [Latitude] DECIMAL(9, 6) NOT NULL,
   [Longitude] DECIMAL(9, 6) NOT NULL,
   [DateCached] DATETIME NOT NULL,
-)
+);
+
+CREATE TABLE [EmailHistory] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [UserID] INTEGER NOT NULL,
+  [TimeSent] DATETIME NOT NULL,
+  [Type] NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE [SearchRecord] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [UserID] INTEGER NOT NULL,
+  [SearchQuery] NVARCHAR(255) NOT NULL,
+  [Time] DATETIME NOT NULL
+);
+
+CREATE TABLE [AccountRecord] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [Day] DATETIME NOT NULL,
+  [AccountsCreated] INTEGER NOT NULL,
+  [AccountsDeleted] INTEGER NOT NULL
+);
 
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
@@ -96,3 +117,5 @@ ALTER TABLE [TicketLink] ADD CONSTRAINT FK_TicketLink_EventID FOREIGN KEY ([Even
 ALTER TABLE [ScheduledNotification] ADD CONSTRAINT FK_ScheduledNotification_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 
 ALTER TABLE [WeatherForecast] ADD CONSTRAINT FK_WeatherForecast_WeatherId FOREIGN KEY ([WeatherId]) REFERENCES [Weather] ([ID]);
+
+ALTER TABLE [EmailHistory] ADD CONSTRAINT FK_EmailHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);

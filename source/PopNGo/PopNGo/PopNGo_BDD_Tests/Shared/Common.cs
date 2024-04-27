@@ -25,6 +25,7 @@ namespace PopNGo_BDD_Tests.Shared
             { "Login", "/Identity/Account/Login" },
             { "Admin", "/Admin" },
             { "Notifications", "/Admin/ScheduledNotifications" },
+            { "Metrics", "/Admin/Metrics" },
         };
 
         public static string PathFor(string pathName) => Paths[pathName];
