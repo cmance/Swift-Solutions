@@ -13,6 +13,14 @@ INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription],
 VALUES ('event1', '2022-01-01T00:00:00', 'Event 1', 'Description 1', 'Location 1', 'https://via.placeholder.com/150');
 INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage]) 
 VALUES ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2', 'https://via.placeholder.com/150');
+INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
+VALUES ('event3', '2028-01-02T00:00:00', 'Event 3', 'Description 3', 'Location 3', null, 2.2, 2.2, '456-456-7890', 'Venue 3', 1.5, 'https://www.example3.com');
+INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
+VALUES ('event4', '2010-01-02T00:00:00', 'Event 4', 'Description 4', 'Location 4', 'https://via.placeholder.com/200', 2.2, 2.2, '456-456-7890', 'Venue 4', 1.5, 'https://www.example4.com');
+INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
+VALUES ('event5', '2027-01-02T00:00:00', 'Event 5', 'Description 5', 'Location 5', 'event5.jpg', 2.2, 2.2, '456-456-7890', 'Venue 5', 1.5, 'https://www.example5.com');
+INSERT INTO [Event] ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
+VALUES ('event6', '2029-01-02T00:00:00', 'Event 6', 'Description 6', 'Location 6', 'event6.jpg', 2.2, 2.2, '456-456-7890', 'Venue 6', 1.5, 'https://www.example6.com');
 
 -- Insert into BookmarkList
 INSERT INTO [BookmarkList] ([UserID], [Title]) VALUES (1, 'Wishlist events :)');

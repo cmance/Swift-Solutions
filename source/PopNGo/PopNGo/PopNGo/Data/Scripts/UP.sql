@@ -17,6 +17,7 @@ CREATE TABLE [BookmarkList] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [UserID] INTEGER NOT NULL,
   [Title] NVARCHAR(128) NOT NULL,
+  [Image] NVARCHAR(MAX),
 )
 
 CREATE TABLE [EventHistory] (

@@ -477,6 +477,17 @@ describe('validateBuildBookmarkListCardProps', () => {
 
         expect(validateBuildBookmarkListCardProps(props)).toBe(true);
     });
+
+    test('image not a string should return false', () => {
+        const props = {
+            bookmarkListName: "bookmarkListName",
+            eventQuantity: 1,
+            image: 1,
+            onClick: () => { }
+        }
+
+        expect(validateBuildBookmarkListCardProps(props)).toBe(false);
+    });
 });
 
 describe("validateNewBuildBookmarkListCardProps", () => {

@@ -16,7 +16,30 @@ namespace PopNGo.DAL.Concrete
 
         public List<PopNGo.Models.DTO.BookmarkList> GetBookmarkLists(int userId)
         {
-            return _bookmarkLists.Where(bl => bl.UserId == userId).Select(bl => bl.ToDTO()).ToList();
+            // Get all bookmark lists for the user and set the image 
+            return _bookmarkLists
+                .Where(bl => bl.UserId == userId)
+                .Select(bl => new PopNGo.Models.DTO.BookmarkList
+                {
+                    Id = bl.Id,
+                    Title = bl.Title,
+                    UserId = bl.UserId,
+                    // Query the favorite events to get the event image
+                    // Prioritize the image from the event that is happening the soonest, but has not passed yet.
+                    // If there are no events that have not passed, get the image from the event happened the latest.
+                    // If there are no events at all, set the image to null.
+                    Image = bl.FavoriteEvents
+                        .Where(fe => fe.Event.EventDate > System.DateTime.Now)
+                        .OrderBy(fe => fe.Event.EventDate)
+                        .Select(fe => fe.Event.EventImage)
+                        .FirstOrDefault() ?? bl.FavoriteEvents
+                        .OrderByDescending(fe => fe.Event.EventDate)
+                        .Select(fe => fe.Event.EventImage)
+                        .FirstOrDefault(),
+                    FavoriteEventQuantity = bl.FavoriteEvents.Count
+                })
+                .ToList();
+            
         }
 
         public void AddBookmarkList(int userId, string listName)
