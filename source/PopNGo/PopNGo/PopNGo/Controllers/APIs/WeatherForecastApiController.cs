@@ -38,8 +38,8 @@ public class WeatherForecastAPIController : Controller
     public async Task<ActionResult<WeatherDTO>> GetForecastForLocation(double latitude, double longitude)
     {
         PopNGoUser user = await _userManager.GetUserAsync(User);
-        string temperatureUnit = user.TemperatureUnit ?? "f";
-        string measurementUnit = user.MeasurementUnit ?? "inches";
+        string temperatureUnit = user?.TemperatureUnit ?? "f";
+        string measurementUnit = user?.MeasurementUnit ?? "inches";
 
         Weather cachedForecast = await _weatherRepository.GetForecastForLocation(latitude, longitude);
         // If the forecast hasn't been cached before or it's older than seven days, fetch the forecast and store it.

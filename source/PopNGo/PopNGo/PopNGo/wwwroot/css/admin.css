@@ -4,7 +4,7 @@
 }
 
 .spacer {
-    height: 100vh;
+    /* height: 100vh; */
     border-right-style: double;
     border-right-color: #d38100;
 }
@@ -19,7 +19,9 @@ th {
 
 table[name="admin-schedules-table"] button,
 table[name="admin-users-table"] button {
-    font-size: 0.7rem !important
+    font-size: 0.7rem !important;
+    background-color: transparent;
+    border-width: 2px;
 }
 
 button:active,
@@ -79,4 +81,11 @@ table tr:nth-child(even) {
         background-color: #d38100 !important;
         
     }
+}
+
+.admin-chart {
+    background-color: #313030;
+    color: #d9d9d9;
+    max-height: 500px;
+    width: 50%;
 }

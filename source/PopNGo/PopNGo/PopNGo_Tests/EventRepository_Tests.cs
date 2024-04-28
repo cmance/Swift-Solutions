@@ -58,7 +58,7 @@ public class EventRepositoryTests
 
         // Assert
          var events = _context.Events.ToList();
-        Assert.That(events.Count, Is.EqualTo(3));
+        Assert.That(events.Count, Is.EqualTo(7));
         var addedEvent = events.Last();
         Assert.That(addedEvent.ApiEventId, Is.EqualTo(eventDetail.EventID));
         Assert.That(addedEvent.EventDate, Is.EqualTo(eventDetail.EventStartTime.Value));

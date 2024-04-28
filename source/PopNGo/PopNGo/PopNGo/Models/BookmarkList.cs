@@ -20,6 +20,8 @@ public partial class BookmarkList
     [StringLength(128)]
     public string Title { get; set; }
 
+    public string Image { get; set; }
+
     [InverseProperty("BookmarkList")]
     public virtual ICollection<FavoriteEvent> FavoriteEvents { get; set; } = new List<FavoriteEvent>();
 }

@@ -9,6 +9,7 @@ namespace PopNGo.Models.DTO
         public int Id { get; set; }
         public int UserId { get; set; }
         public string Title { get; set; }
+        public string Image { get; set; }
         public int FavoriteEventQuantity { get; set; }
     }
 }
@@ -24,6 +25,7 @@ namespace PopNGo.ExtensionMethods
                 Id = BookmarkList.Id,
                 Title = BookmarkList.Title,
                 UserId = BookmarkList.UserId,
+                Image = BookmarkList.Image,
                 FavoriteEventQuantity = BookmarkList.FavoriteEvents.Count
             };
         }

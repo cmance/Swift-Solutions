@@ -47,12 +47,14 @@ function displayNoBookmarkListsMessage() {
  * Returns populated bookmark list card element. Element partial must be defined in the HTML file.
  * @param {String} name
  * @param {Number} eventQuantity
+ * @param {String | null | undefined} image
  * @returns {HTMLElement}
  */
-function createBookmarkListCard(name, eventQuantity) {
+function createBookmarkListCard(name, eventQuantity, image) {
     const props = {
         bookmarkListName: name,
         eventQuantity: eventQuantity,
+        image: image,
         onClick: () => {
             // If the user clicks on the bookmark list, display the events from that list
             displayEventsFromBookmarkList(name);
@@ -84,7 +86,7 @@ function displayBookmarkLists(bookmarkLists) {
     // Create a card for each bookmark list
     bookmarkLists.forEach(bookmarkList => {
         try {
-            const card = createBookmarkListCard(bookmarkList.title, bookmarkList.favoriteEventQuantity);
+            const card = createBookmarkListCard(bookmarkList.title, bookmarkList.favoriteEventQuantity, bookmarkList.image);
             bookmarkListContainer.appendChild(card);
         } catch (error) {
             console.error("Props for bookmark list card was invalid, skipping...")

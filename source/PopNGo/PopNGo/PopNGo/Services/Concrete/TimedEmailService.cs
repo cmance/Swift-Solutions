@@ -99,8 +99,6 @@ public static class ScheduleTasking
 }
 public class TimedEmailService : IHostedService, IDisposable
 {
-    private static int executionCount = 0;
-    
     private readonly ILogger<TimedEmailService> _logger;
     // private readonly string _logoBase64 = null;
 
@@ -175,6 +173,7 @@ public class TimedEmailService : IHostedService, IDisposable
         {
             IPgUserRepository _userRepo = scope.ServiceProvider.GetRequiredService<IPgUserRepository>();
             IFavoritesRepository _favoritesRepo = scope.ServiceProvider.GetRequiredService<IFavoritesRepository>();
+            IEmailHistoryRepository _emailHistoryRepo = scope.ServiceProvider.GetRequiredService<IEmailHistoryRepository>();
             UserManager<PopNGoUser> _userManager = scope.ServiceProvider.GetRequiredService<UserManager<PopNGoUser>>();
             EmailBuilder _emailBuilder = scope.ServiceProvider.GetRequiredService<EmailBuilder>();
             IEmailSender _emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
@@ -189,6 +188,7 @@ public class TimedEmailService : IHostedService, IDisposable
                 if(emailBody != "")
                 {
                     await _emailSender.SendEmailAsync(popNGoUser.NotificationEmail, "Your Event Reminders", emailBody);
+                    _emailHistoryRepo.AddOrUpdate(new EmailHistory { UserId = userId, TimeSent = DateTime.Now, Type = "Upcoming Events" });
                 }
             }
 

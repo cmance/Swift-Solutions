@@ -20,7 +20,7 @@ namespace PopNGo_Tests;
  * data + anything else you do to it.  No other tests will modify the db for that test.  Every test gets a brand new seeded db.
  * 
  */
-public class Admin_Tests
+public class ScheduledNotifications_Tests
 {
     private static readonly string _seedFile = @"..\..\..\..\PopNGo\Data\Scripts\Testing\SEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
 

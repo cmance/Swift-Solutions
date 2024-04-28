@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PopNGo.Areas.Identity.Data;
 using PopNGo.DAL.Abstract;
+using PopNGo.DAL.Concrete;
 using PopNGo.Models;
 using PopNGo.Services;
 
@@ -12,12 +15,24 @@ namespace PopNGo.Controllers
     {
         private readonly IRealTimeEventSearchService _realTimeEventSearchService;
         private readonly IEventRepository _eventRepository;
+        private readonly ISearchRecordRepository _searchRecordRepository;
+        private readonly IPgUserRepository _pgUserRepository;
         private readonly ILogger<RealTimeEventSearchApiController> _logger;
-        public RealTimeEventSearchApiController(IRealTimeEventSearchService realTimeEventSearchService, IEventRepository eventRepository, ILogger<RealTimeEventSearchApiController> logger)
+        private readonly UserManager<PopNGoUser> _userManager;
+        public RealTimeEventSearchApiController(
+            IRealTimeEventSearchService realTimeEventSearchService,
+            IEventRepository eventRepository,
+            ISearchRecordRepository searchRecordRepository,
+            IPgUserRepository pgUserRepository,
+            ILogger<RealTimeEventSearchApiController> logger,
+            UserManager<PopNGoUser> userManager)
         {
             _realTimeEventSearchService = realTimeEventSearchService;
             _eventRepository = eventRepository;
+            _searchRecordRepository = searchRecordRepository;
+            _pgUserRepository = pgUserRepository;
             _logger = logger;
+            _userManager = userManager;
         }
         // GET: api/search/events/?q=Q&start=0
         [HttpGet("search/events")]
@@ -26,6 +41,15 @@ namespace PopNGo.Controllers
         {
             try
             {
+                PgUser user = _pgUserRepository.GetPgUserFromIdentityId(_userManager.GetUserId(User));
+
+                _searchRecordRepository.AddOrUpdate(new SearchRecord
+                {
+                    SearchQuery = q,
+                    Time = DateTime.Now,
+                    UserId = user?.Id ?? 0
+                });
+
                 IEnumerable<EventDetail> eventsDetails = await _realTimeEventSearchService.SearchEventAsync(q, start, date);
                 // Save events to database
                 for (int i = 0; i < eventsDetails.Count(); i++)

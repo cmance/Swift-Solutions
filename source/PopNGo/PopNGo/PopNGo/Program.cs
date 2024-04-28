@@ -96,7 +96,11 @@ public class Program
         builder.Services.AddScoped<IBookmarkListRepository, BookmarkListRepository>();
         builder.Services.AddScoped<IScheduledNotificationRepository, ScheduledNotificationRepository>();
         builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+        builder.Services.AddScoped<ISearchRecordRepository, SearchRecordRepository>();
+        builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
+        builder.Services.AddScoped<IAccountRecordRepository, AccountRecordRepository>();
 
+        
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddDefaultIdentity<PopNGoUser>(options =>
