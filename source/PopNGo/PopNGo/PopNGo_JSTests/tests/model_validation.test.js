@@ -25,6 +25,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -41,6 +43,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -57,6 +61,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -73,6 +79,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -89,6 +97,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -105,6 +115,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -121,6 +133,8 @@ describe('validateBuildEventCardProps', () => {
             city: 1,
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -137,6 +151,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: 1,
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -153,8 +169,10 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: 1,
-            favorited: false,
-            onPressFavorite: () => { },
+            distance: 1.5,
+            distanceUnit: "mi",
+            bookmarkListNames: [],
+            onPressBookmarkList: () => { },
             onPressEvent: () => { }
         }
 
@@ -169,6 +187,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: 'bookmarkListNames',
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -185,6 +205,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: 'WRONG',
             onPressEvent: () => { }
@@ -201,6 +223,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: null,
             onPressEvent: () => { }
@@ -217,6 +241,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: undefined,
             onPressEvent: () => { }
@@ -233,6 +259,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: 1
@@ -249,6 +277,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: null
@@ -265,6 +295,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: undefined
