@@ -9,6 +9,7 @@ BookmarkListCardProps:
     eventQuantity: Number,
     image: String | null,
     onClick: Function,
+    onClickDelete: Function,
  }
  * @function buildEventCard
  * @param {HTMLElement} bookmarkListCardElement 
@@ -19,7 +20,7 @@ export const buildBookmarkListCard = (bookmarkListCardElement, props) => {
         throw new Error('Invalid props');
     }
 
-    const { bookmarkListName, eventQuantity, image, onClick } = props;
+    const { bookmarkListName, eventQuantity, image, onClick, onClickDelete } = props;
 
     // Set the bookmark list name
     bookmarkListCardElement.querySelector('.bookmarkListCardTitleText').textContent = bookmarkListName;
@@ -34,6 +35,9 @@ export const buildBookmarkListCard = (bookmarkListCardElement, props) => {
 
     // Add the event listener
     bookmarkListCardElement.querySelector('.bookmarkListCard').addEventListener('click', onClick);
+
+    // Add the delete button event listener
+    bookmarkListCardElement.querySelector('.bookmarkListCardDeleteButton').addEventListener('click', onClickDelete);
 }
 
 
@@ -52,6 +56,7 @@ export function validateBuildBookmarkListCardProps(data) {
         eventQuantity: x => typeof x === 'number',
         image: x => (typeof x === 'string' || x === null || x === undefined),
         onClick: x => (typeof x === 'function' || x === undefined || x === null),
+        onClickDelete: x => (typeof x === 'function' || x === undefined || x === null),
     }
 
     return validateObject(data, schema).length === 0;

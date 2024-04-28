@@ -89,4 +89,38 @@ public class BookmarkListApiController : Controller
             return StatusCode(500);
         }
     }
+
+    // BookmarkList?listName="My List Name"
+    [HttpDelete("BookmarkList")]
+    public async Task<IActionResult> DeleteBookmarkList([FromQuery] string listName)
+    {
+        try
+        {
+            PopNGoUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            PgUser pgUser = _pgUserRepository.GetPgUserFromIdentityId(user.Id);
+            if (pgUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (string.IsNullOrEmpty(listName))
+            {
+                return BadRequest("List name cannot be null or empty.");
+            }
+            var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, listName);
+            _bookmarkListRepository.DeleteBookmarkList(pgUser.Id, bookmarkListId);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting bookmark list");
+            return StatusCode(500);
+        }
+    }
+
 }

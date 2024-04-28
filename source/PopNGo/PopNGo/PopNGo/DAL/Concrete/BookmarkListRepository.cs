@@ -8,10 +8,12 @@ namespace PopNGo.DAL.Concrete
     public class BookmarkListRepository : Repository<BookmarkList>, IBookmarkListRepository
     {
         private readonly DbSet<BookmarkList> _bookmarkLists;
+        private readonly DbSet<FavoriteEvent> _favoriteEvents;
 
         public BookmarkListRepository(PopNGoDB context) : base(context)
         {
             _bookmarkLists = context.BookmarkLists;
+            _favoriteEvents = context.FavoriteEvents;
         }
 
         public List<PopNGo.Models.DTO.BookmarkList> GetBookmarkLists(int userId)
@@ -64,6 +66,31 @@ namespace PopNGo.DAL.Concrete
             {
                 // Log the exception, rethrow it, or handle it in some other way
                 throw new Exception("Error adding or updating bookmark list", ex);
+            }
+        }
+
+        public void DeleteBookmarkList(int userId, int listId)
+        {
+            var bookmarkList = _bookmarkLists.FirstOrDefault(bl => bl.UserId == userId && bl.Id == listId);
+            if (bookmarkList == null)
+            {
+                throw new ArgumentException($"No bookmark list found for user {userId} with the id {listId}", nameof(listId));
+            }
+
+            try
+            {
+                // Delete all favorite events associated with the bookmark list
+                foreach(var favoriteEvent in bookmarkList.FavoriteEvents.ToList())
+                {
+                    // Couldn't get cascade delete to work, so have to delete each favorite event manually
+                    _favoriteEvents.Remove(favoriteEvent);
+                }
+                Delete(bookmarkList);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception, rethrow it, or handle it in some other way
+                throw new Exception("Error deleting bookmark list", ex);
             }
         }
 

@@ -6,6 +6,7 @@ namespace PopNGo.DAL.Abstract
     {
         public List<PopNGo.Models.DTO.BookmarkList> GetBookmarkLists(int userId);
         public void AddBookmarkList(int userId, string listName);
+        public void DeleteBookmarkList(int userId, int bookmarkListId);
         public int GetBookmarkListIdFromName(int userId, string listName);
         public bool IsBookmarkListNameUnique(int userId, string listName);
     }

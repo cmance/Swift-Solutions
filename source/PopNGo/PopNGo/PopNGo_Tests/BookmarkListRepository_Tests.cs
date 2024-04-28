@@ -157,6 +157,53 @@ public class BookMarkRepositoryTests
     }
 
     [Test]
+    public void DeleteBookmarkList_ShouldDeleteBookmarkList()
+    {
+        // Arrange
+        var userId = 3;
+        var listName = "Test List";
+
+        // Act
+        _bookmarkListRepository.AddBookmarkList(userId, listName);
+        var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(userId, listName);
+        _bookmarkListRepository.DeleteBookmarkList(userId, bookmarkListId);
+
+        // Assert
+        Assert.That(_bookmarkListRepository.GetBookmarkLists(userId).Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void DeleteBookmarkList_ShouldDeleteFavorites()
+    {
+        // Arrange
+        var userId = 1;
+        var listName = "Test List";
+
+        // Act
+        _bookmarkListRepository.AddBookmarkList(userId, listName);
+        var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(userId, listName);
+        _favoritesRepository.AddFavorite(bookmarkListId, "event3");
+        _favoritesRepository.AddFavorite(bookmarkListId, "event4");
+        _favoritesRepository.AddFavorite(bookmarkListId, "event5");
+        _favoritesRepository.AddFavorite(bookmarkListId, "event6");
+        _bookmarkListRepository.DeleteBookmarkList(userId, bookmarkListId);
+
+        // Assert
+        Assert.That(_favoritesRepository.GetUserFavorites(bookmarkListId).Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void DeleteBookmarkList_ShouldThrowExceptionWhenListIdIsNotFound()
+    {
+        // Arrange
+        var userId = 1;
+        var listId = 2;
+
+        // // Assert
+        Assert.Throws<ArgumentException>(() => _bookmarkListRepository.DeleteBookmarkList(userId, listId));
+    }
+
+    [Test]
     public void GetBookmarkListIdFromName_ShouldReturnListId()
     {
         // Arrange

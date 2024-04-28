@@ -18,6 +18,10 @@ namespace PopNGo_BDD_Tests.PageObjects
         public IWebElement GetBookmarkListFromTitle(string title) {
             return BookmarkLists.FirstOrDefault(e => e.FindElement(By.ClassName("bookmarkListCardTitleText")).Text == title);
         }
+        public IWebElement GetDeleteButtonFromBookmarkList(string title) {
+            return GetBookmarkListFromTitle(title).FindElement(By.ClassName("bookmarkListCardDeleteButton"));
+        }
+        public IWebElement DeleteBookmarkListConfirmationModal => _webDriver.FindElement(By.Id("delete-bookmark-list-confirmation-modal"));
         public IReadOnlyList<IWebElement> BookmarkListTitles => _webDriver.FindElements(By.ClassName("bookmarkListCardTitleText"));
         public IWebElement CreateBookmarkListButton => _webDriver.FindElement(By.ClassName("saveNewBookmarkListButton"));
         public IWebElement NewBookmarkListNameInput => _webDriver.FindElement(By.Id("new-bookmark-list-card-title-input"));

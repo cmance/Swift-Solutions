@@ -8,6 +8,8 @@ import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './u
 import { formatTags } from './util/tags.js';
 import { showToast } from './util/toast.js';
 import { applyFiltersAndSortEvents } from './util/filter.js';
+import { showDeleteBookmarkListConfirmationModal } from './util/showDeleteBookmarkListConfirmationModal.js';
+import { deleteBookmarkList } from './api/bookmarkLists/deleteBookmarkList.js';
 
 let currentBookmarkList = null;
 
@@ -59,6 +61,18 @@ function createBookmarkListCard(name, eventQuantity, image) {
             // If the user clicks on the bookmark list, display the events from that list
             displayEventsFromBookmarkList(name);
             currentBookmarkList = name;
+        },
+        onClickDelete: (event) => {
+            event.stopPropagation();
+            showDeleteBookmarkListConfirmationModal(name, (listName) => {
+                deleteBookmarkList(listName).then(() => {
+                    initPage();
+                    showToast(`Bookmark list "${name}" deleted`);
+                }).catch((error) => {
+                    console.error('Failed to delete bookmark list, ', error);
+                    showToast('Failed to delete bookmark list');
+                });
+            });
         }
     };
 
