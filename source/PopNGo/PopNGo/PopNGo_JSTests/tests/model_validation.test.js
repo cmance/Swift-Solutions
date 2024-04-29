@@ -304,6 +304,25 @@ describe('validateBuildEventCardProps', () => {
 
         expect(validateBuildEventCardProps(props)).toBe(true);
     });
+
+    test('onPressDelete not a function should return false', () => {
+        const props = {
+            img: "img",
+            title: "title",
+            date: new Date(),
+            city: "city",
+            state: "state",
+            tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
+            bookmarkListNames: [],
+            onPressBookmarkList: () => { },
+            onPressEvent: () => { },
+            onPressDelete: 1
+        }
+
+        expect(validateBuildEventCardProps(props)).toBe(false);
+    });
 });
 
 describe('validateBuildEventDetailsModalProps', () => {

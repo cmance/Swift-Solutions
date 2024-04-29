@@ -25,6 +25,7 @@ import { validateObject } from "../validation.js";
      bookmarkListNames: Array[String]
      onPressBookmarkList: (bookmarkListName: String) => void (optional),
      onPressEvent: Function
+     onPressDelete: Function (optional) If not provided, the delete button will be removed
  }
 
  Tag: {
@@ -97,6 +98,16 @@ export const buildEventCard = (eventCardElement, props) => {
         });
     }
 
+    // Set the delete button click event
+    if (props.onPressDelete) {
+        eventCardElement.querySelector('.event-card-delete-icon-container').addEventListener('click', (event) => {
+            event.stopPropagation();
+            props.onPressDelete();
+        });
+    } else {
+        eventCardElement.querySelector('.event-card-delete-icon-container').remove();
+    }
+
     // Set the tags:
     const tagsElement = eventCardElement.querySelector('#event-card-tags-container');
     tagsElement.innerHTML = '';
@@ -134,6 +145,7 @@ export function validateBuildEventCardProps(data) {
         bookmarkListNames: x => Array.isArray(x) || x === undefined || x === null,
         onPressBookmarkList: x => (typeof x === 'function' || x === undefined || x === null),
         onPressEvent: x => (typeof x === 'function' || x === undefined || x === null),
+        onPressDelete: x => (typeof x === 'function' || x === undefined || x === null),
     }
     return validateObject(data, schema).length === 0;
 }
