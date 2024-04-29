@@ -38,6 +38,7 @@ namespace PopNGo_BDD_Tests.PageObjects
         public void GoTo(string pageName)
         {
             _webDriver.Navigate().GoToUrl(Common.UrlFor(pageName));
+            Thread.Sleep(3000);
         }
 
         public string GetTitle() => _webDriver.Title;
