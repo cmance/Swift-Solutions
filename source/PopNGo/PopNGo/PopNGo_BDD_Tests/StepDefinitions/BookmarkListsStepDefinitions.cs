@@ -120,12 +120,16 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _favoritesPage.DeleteBookmarkListConfirmationModal.Displayed.Should().BeTrue();
         }
 
-        [Given("I have created a new bookmark list")]
+        [Given("I have created a new bookmark list"), When("I have created a new bookmark list")]
         public void GivenIHaveCreatedANewBookmarkList()
         {
             // Fill out the new bookmark list form with a unique title and put the title in the scenario context
             string newBookmarkListTitle = "New Bookmark List " + DateTime.Now.ToString("yyyyMMddHHmmss");
             _scenarioContext["newBookmarkListTitle"] = newBookmarkListTitle;
+            if (!_scenarioContext.ContainsKey("oldBookmarkListTitle"))
+            {
+                _scenarioContext["oldBookmarkListTitle"] = newBookmarkListTitle;
+            }
 
             _favoritesPage.NewBookmarkListNameInput.SendKeys(newBookmarkListTitle);
             _browserDriver.ScrollToElement(_favoritesPage.CreateBookmarkListButton);
@@ -181,6 +185,117 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         {
             // Click the confirm button in the delete bookmark list confirmation dialog
             _favoritesPage.DeleteBookmarkListConfirmationModal.FindElement(By.Id("delete-bookmark-list-confirmation-button")).Click();
+        }
+
+        [Then("I should see a button to edit the bookmark list")]
+        public void ThenIShouldSeeAButtonToEditTheBookmarkList()
+        {
+            // Get the bookmark list from scenario context
+            string newBookmarkListTitle = _scenarioContext["newBookmarkListTitle"].ToString();
+            // Check that the new bookmark list has an edit button
+            _favoritesPage.GetEditButtonFromBookmarkList(newBookmarkListTitle).Displayed.Should().BeTrue();
+        }
+
+        [When("I click the edit button")]
+        public void WhenIClickTheEditButton()
+        {
+            // Get the bookmark list from scenario context
+            string newBookmarkListTitle = _scenarioContext["newBookmarkListTitle"].ToString();
+            // Click the edit button for the new bookmark list
+            _favoritesPage.GetEditButtonFromBookmarkList(newBookmarkListTitle).Click();
+        }
+
+        [When("I click the edit button on the new bookmark list"), Given("I click the edit button on the new bookmark list")]
+        public void WhenIClickTheEditButtonOnTheNewBookmarkList()
+        {
+            // Get the bookmark list from scenario context
+            string newBookmarkListTitle = _scenarioContext["newBookmarkListTitle"].ToString();
+            // Click the edit button for the new bookmark list
+            _favoritesPage.GetEditButtonFromBookmarkList(newBookmarkListTitle).Click();
+        }
+
+        [Then("I should see a form to edit the bookmark list name")]
+        public void ThenIShouldSeeAFormToEditTheBookmarkListName()
+        {
+            // Check that the edit bookmark list modal is displayed
+            _favoritesPage.EditBookmarkListModal.Displayed.Should().BeTrue();
+            // Check that the new bookmark list name input is displayed
+            _favoritesPage.EditBookmarkListNameInput.Displayed.Should().BeTrue();
+        }
+
+        [When("I fill in the form with a new name")]
+        public void WhenIFillInTheFormWithANewName()
+        {
+            // Fill in the form with a new name
+            string newBookmarkListTitle = "New Bookmark List " + DateTime.Now.ToString("yyyyMMddHHmmss");
+            _scenarioContext["oldBookmarkListTitle"] = _scenarioContext["newBookmarkListTitle"];
+            _scenarioContext["newBookmarkListTitle"] = newBookmarkListTitle;
+
+            _favoritesPage.EditBookmarkListNameInput.Clear();
+            _favoritesPage.EditBookmarkListNameInput.SendKeys(newBookmarkListTitle);
+        }
+
+        [When("I click the save button in the edit bookmark list form")]
+        public void WhenIClickTheSaveButtonInTheEditBookmarkListForm()
+        {
+            // Click the save button in the edit bookmark list form
+            _favoritesPage.EditBookmarkListModalSaveButton.Click();
+        }
+
+        [Then("I should see the new name on the bookmark list")]
+        public void ThenIShouldSeeTheNewNameOnTheBookmarkList()
+        {
+            // Check that the new bookmark list is displayed and has title matching newBookmarkListTitle key
+            _favoritesPage.BookmarkListTitles.Should().ContainSingle(e => e.Text == _scenarioContext["newBookmarkListTitle"].ToString());
+
+            // Check that the old bookmark list is not displayed
+            _favoritesPage.BookmarkListTitles.Should().NotContain(e => e.Text == _scenarioContext["oldBookmarkListTitle"].ToString());
+        }
+
+        [When("I click the cancel button in the edit bookmark list form")]
+        public void WhenIClickTheCancelButtonInTheEditBookmarkListForm()
+        {
+            // Click the cancel button in the edit bookmark list form
+            _favoritesPage.CancelEditBookmarkListButton.Click();
+        }
+
+        [Then("I should see the original name on the bookmark list")]
+        public void ThenIShouldSeeTheOriginalNameOnTheBookmarkList()
+        {
+            // Check that the old bookmark list is displayed and has title matching oldBookmarkListTitle key
+            _favoritesPage.BookmarkListTitles.Should().ContainSingle(e => e.Text == _scenarioContext["oldBookmarkListTitle"].ToString());
+        }
+
+        [Then("I should not see the edit bookmark list form")]
+        public void ThenIShouldNotSeeTheEditBookmarkListForm()
+        {
+            // Check that the edit bookmark list modal is not displayed
+            _favoritesPage.EditBookmarkListModal.Displayed.Should().BeFalse();
+        }
+
+        [When("I fill in the update bookmark list name form with a blank name")]
+        public void WhenIFillInTheUpdateBookmarkListNameFormWithABlankName()
+        {
+            // Fill in the form with a blank name
+            _favoritesPage.EditBookmarkListNameInput.Clear();
+
+            // Confirm that the new bookmark list name input is empty
+            _favoritesPage.EditBookmarkListNameInput.Text.Should().BeEmpty();
+        }
+
+        [Then("The save edit button should be disabled")]
+        public void ThenTheSaveEditButtonShouldBeDisabled()
+        {
+            // Check that the save edit button is disabled
+            _favoritesPage.EditBookmarkListModalSaveButton.Enabled.Should().BeFalse();
+        }
+
+        [When("I fill in the update bookmark list name form with the same name")]
+        public void WhenIFillInTheUpdateBookmarkListNameFormWithTheSameName()
+        {
+            // Fill in the form with the same name
+            _favoritesPage.EditBookmarkListNameInput.Clear();
+            _favoritesPage.EditBookmarkListNameInput.SendKeys(_scenarioContext["newBookmarkListTitle"].ToString());
         }
     }
 }

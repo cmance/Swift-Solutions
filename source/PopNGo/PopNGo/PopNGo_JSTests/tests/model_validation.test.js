@@ -550,6 +550,17 @@ describe('validateBuildBookmarkListCardProps', () => {
 
         expect(validateBuildBookmarkListCardProps(props)).toBe(false);
     });
+
+    test('on click edit not a function should return false', () => {
+        const props = {
+            bookmarkListName: "bookmarkListName",
+            eventQuantity: 1,
+            onClick: () => { },
+            onClickEdit: 1
+        }
+
+        expect(validateBuildBookmarkListCardProps(props)).toBe(false);
+    });
 });
 
 describe("validateNewBuildBookmarkListCardProps", () => {

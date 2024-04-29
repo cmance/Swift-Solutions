@@ -123,4 +123,36 @@ public class BookmarkListApiController : Controller
         }
     }
 
+    [HttpPut("BookmarkList")]
+    public async Task<IActionResult> UpdateBookmarkListName([FromBody] UpdateBookmarkListName updateBookmarkListName) {
+        try
+        {
+            PopNGoUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            PgUser pgUser = _pgUserRepository.GetPgUserFromIdentityId(user.Id);
+            if (pgUser == null)
+            {
+                return Unauthorized();
+            }
+
+            if (string.IsNullOrEmpty(updateBookmarkListName.OldBookmarkListTitle) || string.IsNullOrEmpty(updateBookmarkListName.NewBookmarkListTitle))
+            {
+                return BadRequest("Old and new bookmark list titles cannot be null or empty.");
+            }
+
+            var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(pgUser.Id, updateBookmarkListName.OldBookmarkListTitle);
+            _bookmarkListRepository.UpdateBookmarkListName(pgUser.Id, bookmarkListId, updateBookmarkListName.NewBookmarkListTitle);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating bookmark list name");
+            return StatusCode(500);
+        }
+    } 
+
 }

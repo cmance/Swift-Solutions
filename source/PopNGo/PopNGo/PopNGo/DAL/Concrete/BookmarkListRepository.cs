@@ -69,6 +69,37 @@ namespace PopNGo.DAL.Concrete
             }
         }
 
+        public void UpdateBookmarkListName (int userId, int listId, string newListName)
+        {
+            if (string.IsNullOrEmpty(newListName))
+            {
+                throw new ArgumentNullException("List name cannot be null or empty", nameof(newListName));
+            }
+
+            if (!IsBookmarkListNameUnique(userId, newListName))
+            {
+                throw new ArgumentException($"Bookmark list name {newListName} is not unique for user {userId}", nameof(newListName));
+            }
+
+            var bookmarkList = _bookmarkLists.FirstOrDefault(bl => bl.UserId == userId && bl.Id == listId);
+            if (bookmarkList == null)
+            {
+                throw new ArgumentException($"No bookmark list found for user {userId} with the id {listId}", nameof(listId));
+            }
+
+            bookmarkList.Title = newListName;
+
+            try
+            {
+                AddOrUpdate(bookmarkList);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception, rethrow it, or handle it in some other way
+                throw new Exception("Error updating bookmark list name", ex);
+            }
+        }
+
         public void DeleteBookmarkList(int userId, int listId)
         {
             var bookmarkList = _bookmarkLists.FirstOrDefault(bl => bl.UserId == userId && bl.Id == listId);
