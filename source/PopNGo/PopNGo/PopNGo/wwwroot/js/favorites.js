@@ -8,6 +8,12 @@ import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './u
 import { formatTags } from './util/tags.js';
 import { showToast } from './util/toast.js';
 import { applyFiltersAndSortEvents } from './util/filter.js';
+import { showDeleteBookmarkListConfirmationModal } from './util/showDeleteBookmarkListConfirmationModal.js';
+import { deleteBookmarkList } from './api/bookmarkLists/deleteBookmarkList.js';
+import { buildAndShowEditBookmarkListModal } from './ui/buildAndShowEditBookmarkListModal.js';
+import { updateBookmarkListName } from './api/bookmarkLists/updateBookmarkListName.js';
+import { showDeleteFavoriteEventConfirmationModal } from './ui/showDeleteFavoriteEventConfirmationModal.js';
+import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
 
 let currentBookmarkList = null;
 
@@ -17,11 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function initPage() {
     getBookmarkLists().then(bookmarkLists => {
-        if (bookmarkLists.length === 0) {
-            displayNoBookmarkListsMessage();
-        } else {
-            displayBookmarkLists(bookmarkLists);
-        }
+        displayBookmarkLists(bookmarkLists);
     }).catch((error) => {
         // If the user is not logged in, display a login prompt
         displayLoginPrompt();
@@ -36,11 +38,6 @@ function displayLoginPrompt() {
     document.getElementById('login-prompt').style.display = 'block';
 }
 
-function displayNoBookmarkListsMessage() {
-    document.getElementById('favorite-events-title').style.display = 'none';
-    document.getElementById('no-favorites-message').style.display = 'block';
-}
-
 /// Displaying bookmark lists
 
 /**
@@ -48,9 +45,10 @@ function displayNoBookmarkListsMessage() {
  * @param {String} name
  * @param {Number} eventQuantity
  * @param {String | null | undefined} image
+ * @param {String[]} bookmarkListNames
  * @returns {HTMLElement}
  */
-function createBookmarkListCard(name, eventQuantity, image) {
+function createBookmarkListCard(name, eventQuantity, image, bookmarkListNames) {
     const props = {
         bookmarkListName: name,
         eventQuantity: eventQuantity,
@@ -59,6 +57,38 @@ function createBookmarkListCard(name, eventQuantity, image) {
             // If the user clicks on the bookmark list, display the events from that list
             displayEventsFromBookmarkList(name);
             currentBookmarkList = name;
+        },
+        onClickDelete: (event) => {
+            event.stopPropagation();
+            showDeleteBookmarkListConfirmationModal(name, (listName) => {
+                deleteBookmarkList(listName).then(() => {
+                    initPage();
+                    showToast(`Bookmark list "${name}" deleted`);
+                }).catch((error) => {
+                    console.error('Failed to delete bookmark list, ', error);
+                    showToast('Failed to delete bookmark list');
+                });
+            });
+        },
+        onClickEdit: (event) => {
+            event.stopPropagation();
+
+            const onClickSave = (newName) => {
+                if (newName === name) {
+                    return;
+                }
+                
+                updateBookmarkListName(name, newName).then(() => {
+                    initPage();
+                    showToast(`Bookmark list "${name}" renamed to "${newName}"`);
+                }).catch((error) => {
+                    console.error('Failed to update bookmark list name, ', error);
+                    showToast('Failed to update bookmark list name');
+                });
+            }
+
+            // Show the edit bookmark list modal
+            buildAndShowEditBookmarkListModal(name, onClickSave, bookmarkListNames);
         }
     };
 
@@ -86,7 +116,7 @@ function displayBookmarkLists(bookmarkLists) {
     // Create a card for each bookmark list
     bookmarkLists.forEach(bookmarkList => {
         try {
-            const card = createBookmarkListCard(bookmarkList.title, bookmarkList.favoriteEventQuantity, bookmarkList.image);
+            const card = createBookmarkListCard(bookmarkList.title, bookmarkList.favoriteEventQuantity, bookmarkList.image, bookmarkLists.map(list => list.title));
             bookmarkListContainer.appendChild(card);
         } catch (error) {
             console.error("Props for bookmark list card was invalid, skipping...")
@@ -158,6 +188,17 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             distanceUnit: null,
             distance: null,
             onPressEvent: () => onClickDetailsAsync(eventInfo),
+            onPressDelete: () => {
+                showDeleteFavoriteEventConfirmationModal(() => {
+                    removeEventFromFavorites(eventInfo.apiEventID, bookmarkList).then(() => {
+                        displayEventsFromBookmarkList(bookmarkList);
+                        showToast('Event removed from favorites');
+                    }).catch((error) => {
+                        console.error('Failed to remove event from favorites, ', error);
+                        showToast('Failed to remove event from favorites');
+                    });
+                })
+            }
         };
 
         // Clone the template

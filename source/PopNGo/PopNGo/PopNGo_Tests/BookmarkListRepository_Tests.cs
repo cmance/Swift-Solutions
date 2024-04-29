@@ -157,6 +157,114 @@ public class BookMarkRepositoryTests
     }
 
     [Test]
+    public void DeleteBookmarkList_ShouldDeleteBookmarkList()
+    {
+        // Arrange
+        var userId = 3;
+        var listName = "Test List";
+
+        // Act
+        _bookmarkListRepository.AddBookmarkList(userId, listName);
+        var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(userId, listName);
+        _bookmarkListRepository.DeleteBookmarkList(userId, bookmarkListId);
+
+        // Assert
+        Assert.That(_bookmarkListRepository.GetBookmarkLists(userId).Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void DeleteBookmarkList_ShouldDeleteFavorites()
+    {
+        // Arrange
+        var userId = 1;
+        var listName = "Test List";
+
+        // Act
+        _bookmarkListRepository.AddBookmarkList(userId, listName);
+        var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(userId, listName);
+        _favoritesRepository.AddFavorite(bookmarkListId, "event3");
+        _favoritesRepository.AddFavorite(bookmarkListId, "event4");
+        _favoritesRepository.AddFavorite(bookmarkListId, "event5");
+        _favoritesRepository.AddFavorite(bookmarkListId, "event6");
+        _bookmarkListRepository.DeleteBookmarkList(userId, bookmarkListId);
+
+        // Assert
+        Assert.That(_favoritesRepository.GetUserFavorites(bookmarkListId).Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void DeleteBookmarkList_ShouldThrowExceptionWhenListIdIsNotFound()
+    {
+        // Arrange
+        var userId = 1;
+        var listId = 2;
+
+        // // Assert
+        Assert.Throws<ArgumentException>(() => _bookmarkListRepository.DeleteBookmarkList(userId, listId));
+    }
+
+    [Test]
+    public void UpdateBookmarkListName_ShouldEditBookmarkListName()
+    {
+        // Arrange
+        var userId = 1;
+        var listName = "Test List";
+        var newTitle = "New Title";
+
+        // Act
+        _bookmarkListRepository.AddBookmarkList(userId, listName);
+        var bookmarkListCount = _bookmarkListRepository.GetBookmarkLists(userId).Count;
+        var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(userId, listName);
+        _bookmarkListRepository.UpdateBookmarkListName(userId, bookmarkListId, newTitle);
+
+        // Assert
+        Assert.That(_bookmarkListRepository.GetBookmarkLists(userId).Last().Title, Is.EqualTo(newTitle));
+        // Check that it hasnt added a new bookmark list
+        Assert.That(_bookmarkListRepository.GetBookmarkLists(userId).Count, Is.EqualTo(bookmarkListCount));
+    }
+
+    [Test]
+    public void UpdateBookmarkListName_ShouldThrowExceptionWhenListIdIsNotFound()
+    {
+        // Arrange
+        var userId = 1;
+        var listId = 999;
+        var newTitle = "New Title";
+
+        // Assert
+        Assert.Throws<ArgumentException>(() => _bookmarkListRepository.UpdateBookmarkListName(userId, listId, newTitle));
+    }
+
+    [Test]
+    public void UpdateBookmarkListName_ShouldThrowExceptionWhenListNameIsNull()
+    {
+        // Arrange
+        var userId = 1;
+        var listName = "Test List";
+        var newTitle = "";
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => _bookmarkListRepository.UpdateBookmarkListName(userId, 1, newTitle));
+    }
+
+    [Test]
+    public void UpdateBookmarkListName_ShouldThrowExceptionWhenListNameIsDuplicate()
+    {
+        // Arrange
+        var userId = 1;
+        var listName = "Test List";
+        var newTitle = "New Title";
+
+        // Act
+        _bookmarkListRepository.AddBookmarkList(userId, listName);
+        _bookmarkListRepository.AddBookmarkList(userId, newTitle);
+        var bookmarkListId = _bookmarkListRepository.GetBookmarkListIdFromName(userId, listName);
+
+        // Assert
+        Assert.Throws<ArgumentException>(() => _bookmarkListRepository.UpdateBookmarkListName(userId, bookmarkListId, newTitle));
+    }
+
+    [Test]
     public void GetBookmarkListIdFromName_ShouldReturnListId()
     {
         // Arrange
