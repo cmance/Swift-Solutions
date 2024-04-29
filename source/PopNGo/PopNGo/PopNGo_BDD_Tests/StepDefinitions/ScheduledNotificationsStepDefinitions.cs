@@ -11,7 +11,7 @@ using PopNGo_BDD_Tests.Drivers;
 using OpenQA.Selenium.Chrome; // Add this line
 using OpenQA.Selenium.Edge; // Add this line
 using OpenQA.Selenium.Firefox;
-using SpecFlow.Actions.Selenium; // Add this line
+// using SpecFlow.Actions.Selenium; // Add this line
 
 
 namespace PopNGo_BDD_Tests.StepDefinitions
@@ -86,6 +86,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         public void ThenIShouldSeeTheNewTimeOnThePage()
         {
             DateTime newTime = (DateTime)_scenarioContext["EditedTime"];
+            Thread.Sleep(1000);
             DateTime time = _notificationsPage.GetTime();
             time.Should().Be(newTime);
             Console.WriteLine("Time = " + time);

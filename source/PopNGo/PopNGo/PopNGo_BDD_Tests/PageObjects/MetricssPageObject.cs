@@ -1,17 +1,9 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using PopNGo_BDD_Tests.Shared;
-using System;
-using System.Collections.ObjectModel;
-using PopNGo_BDD_Tests.PageObjects;
-using FluentAssertions.Extensions;
-using OpenQA.Selenium.Support.Extensions;
 
 namespace PopNGo_BDD_Tests.PageObjects
 {
     public class MetricsPageObject : PageObject
     {
-        string _scheduleId = "";
         public MetricsPageObject(IWebDriver webDriver) : base(webDriver)
         {
             // using a named page (in Common.cs)

@@ -11,7 +11,7 @@ using PopNGo_BDD_Tests.Drivers;
 using OpenQA.Selenium.Chrome; // Add this line
 using OpenQA.Selenium.Edge; // Add this line
 using OpenQA.Selenium.Firefox;
-using SpecFlow.Actions.Selenium; // Add this line
+// using SpecFlow.Actions.Selenium; // Add this line
 
 
 namespace PopNGo_BDD_Tests.StepDefinitions
@@ -126,6 +126,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         public void GivenIAmOnThePage(string page)
         {
             _webDriver.Current.Navigate().GoToUrl(Common.UrlFor(page));
+            Thread.Sleep(3000);
         }
     }
 }

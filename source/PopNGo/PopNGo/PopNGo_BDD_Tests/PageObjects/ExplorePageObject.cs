@@ -1,8 +1,4 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using PopNGo_BDD_Tests.Shared;
-using System.Collections.ObjectModel;
-using PopNGo_BDD_Tests.PageObjects;
 
 namespace PopNGo_BDD_Tests.PageObjects
 {
