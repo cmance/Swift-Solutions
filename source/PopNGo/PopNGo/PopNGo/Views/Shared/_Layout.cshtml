@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="~/css/components/newBookmarkListCard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/placeholderEventCard.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/components/filters.css" asp-append-version="true" />
-
+    <link rel="stylesheet" href="~/css/itinerary.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PopNGo.styles.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,6 +93,13 @@
                 </svg>
             </a>
         </li>
+        <li class="nav-item custom-nav-item">
+            <a id="itinerary-logo" class="text-light onhover" asp-area="" asp-controller="Home" asp-action="Itinerary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-map-fill" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.5.5 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.5.5 0 0 0-.196 0zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1z" />
+                </svg>
+            </a>
+        </li>
     </div>
     <div class="container">
         <main role="main" class="pb-3">
@@ -112,7 +119,11 @@
     <script type="module" src="~/js/ui/buildEventCard.js"></script>
     <script type="module" src="~/js/api/favorites/getEventIsFavorited.js"></script>
     <script type="module" src="~/js/util/filter.js"></script>
+    <script type="module" src="~/js/itinerary.js"></script>
     <script src="~/js/layout.js"></script>
+    <!-- Add this line in the <head> section of your HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
     <!-- Example of including your JavaScript files as modules -->
     @await RenderSectionAsync("Scripts", required: false)
 </body>

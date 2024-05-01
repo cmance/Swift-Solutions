@@ -1,0 +1,265 @@
+﻿.day-indicator {
+    display: flex;
+    background-color: #333; /* Dark background */
+    color: white; /* White text */
+    border-radius: 15px; /* Rounded corners, slightly larger */
+    overflow: hidden; /* Clip the children */
+    align-items: center; /* Center items vertically */
+    font-size: 24px; /* Larger font size */
+    padding: 0px;
+}
+
+    .day-indicator .date {
+        background-color: #FFA500; /* Orange background */
+        padding: 20px 40px; /* Increased padding for a larger box */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center text */
+        justify-content: center; /* Center text */
+        font-weight: bold; /* Bold font */
+        font-size: 32px; /* Even larger font size for the date */
+    }
+
+    .day-indicator .title {
+        padding: 20px 40px; /* Increased padding */
+        font-weight: bold; /* Bold font */
+        font-size: 28px; /* Larger font size for the title */
+    }
+
+
+.accordion-button.day-indicator {
+    display: flex;
+    background-color: #313030 !important; /* Dark background */
+    color: white; /* White text */
+    border-radius: 15px; /* Rounded corners */
+    overflow: hidden; /* Clip the children */
+    align-items: center; /* Center items vertically */
+    font-size: 24px; /* Larger font size */
+    border: none; /* No border */
+    box-shadow: none; /* Remove shadow */
+    padding-left: 0; /* Align with accordion style */
+    padding-right: 0; /* Align with accordion style */
+}
+
+    .accordion-button.day-indicator .title {
+        font-weight: bold; /* Bold font */
+        font-size: 30px; /* Larger font size for the title */
+    }
+
+.accordion-button {
+    height: 10vh;
+}
+
+.timeline_area {
+    position: relative;
+    z-index: 1;
+}
+
+.single-timeline-area {
+    position: relative;
+    z-index: 1;
+    padding-left: 180px;
+}
+
+@media only screen and (max-width: 575px) {
+    .single-timeline-area {
+        padding-left: 100px;
+    }
+}
+
+.single-timeline-area .timeline-date {
+    position: absolute;
+    width: 180px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -ms-grid-row-align: center;
+    align-items: center;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    padding-right: 60px;
+}
+
+@media only screen and (max-width: 575px) {
+    .single-timeline-area .timeline-date {
+        width: 50px;
+    }
+}
+
+.single-timeline-area .timeline-date::after {
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    content: "";
+    background-color: #ebebeb;
+    top: 0;
+    right: 30px;
+    z-index: 1;
+}
+
+.single-timeline-area .timeline-date::before {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background-color: #f1c40f;
+    content: "";
+    top: 50%;
+    right: 26px;
+    z-index: 5;
+    margin-top: -5.5px;
+}
+
+.single-timeline-area .timeline-date p {
+    margin-bottom: 0;
+    color: #020710;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.single-timeline-area .single-timeline-content {
+    position: relative;
+    z-index: 1;
+    padding: 30px 30px 25px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    -webkit-box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
+    box-shadow: 0 0.25rem 1rem 0 rgba(47, 91, 234, 0.125);
+    border: 1px solid #ebebeb;
+}
+
+@media only screen and (max-width: 575px) {
+    .single-timeline-area .single-timeline-content {
+        padding: 20px;
+    }
+}
+
+.single-timeline-area .single-timeline-content .timeline-icon {
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+    width: 30px;
+    height: 30px;
+    background-color: #f1c40f;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 30px;
+    flex: 0 0 30px;
+    text-align: center;
+    max-width: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+    .single-timeline-area .single-timeline-content .timeline-icon i {
+        color: #ffffff;
+        line-height: 30px;
+    }
+
+.single-timeline-area .single-timeline-content .timeline-text h6 {
+    -webkit-transition-duration: 500ms;
+    transition-duration: 500ms;
+}
+
+.single-timeline-area .single-timeline-content .timeline-text p {
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
+.single-timeline-area .single-timeline-content:hover .timeline-icon,
+.single-timeline-area .single-timeline-content:focus .timeline-icon {
+    background-color: #020710;
+}
+
+.single-timeline-area .single-timeline-content:hover .timeline-text h6,
+.single-timeline-area .single-timeline-content:focus .timeline-text h6 {
+    color: #3f43fd;
+}
+
+.delete-event-btn {
+    border: none;
+    background: none;
+    color: red;
+    cursor: pointer;
+}
+
+    .delete-event-btn i {
+        font-size: 1.5rem; /* Adjust size as needed */
+    }
+
+/*END OF STyling*/
+.card {
+    max-width: 1200px; /* Adjust based on preference */
+    background-color: #1E1E1E;
+    border: none;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+.text-muted {
+    color: #aaa !important;
+}
+
+.card-text {
+    color: #ccc;
+}
+
+
+
+
+#accordion-header-bg {
+    background-color: #1e1e1e !important;
+}
+
+.btn-check:focus + .btn-secondary, .btn-secondary:focus {
+    color: none !important;
+    background-color: none !important;
+    border-color: none !important;
+    box-shadow: 0 0 0 0.25rem rgba(130,138,145,.5);
+}
+
+.accordion-button::before {
+    color: #fff !important;
+    background-color: #e7f1ff;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+}
+
+.accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Adjust based on your layout needs */
+}
+
+.delete-itinerary-btn {
+    margin-left: auto; /* Pushes the delete button to the end of the accordion header */
+}
+
+.img-event {
+    width: 100%; /* Ensure the image takes up the full width of its container */
+    height: 200px; /* Fixed height for all images */
+    object-fit: cover; /* Cover the container without distorting the image */
+    object-position: center; /* Center the image within the container */
+    border-radius: 0.25rem; /* Optional: Adds rounded corners to the image */
+}
+
+.delete-event-btn {
+    float: none; /* Remove any floating if applied */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Optional: Adjust according to your design needs */
+}
+
+.card-body {
+    padding-right: 0; /* Adjust padding to ensure alignment */
+}

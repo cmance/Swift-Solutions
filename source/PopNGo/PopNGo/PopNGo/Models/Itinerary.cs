@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace PopNGo.Models;
 
-public partial class ScheduledNotification
+public partial class Itinerary
 {
     public int Id { get; set; }
 
     public int UserId { get; set; }
 
-    public DateTime Time { get; set; }
+    public string ItineraryTitle { get; set; }
 
-    public string Type { get; set; }
+    public virtual ICollection<ItineraryEvent> ItineraryEvents { get; set; } = new List<ItineraryEvent>();
 
     public virtual PgUser User { get; set; }
 }

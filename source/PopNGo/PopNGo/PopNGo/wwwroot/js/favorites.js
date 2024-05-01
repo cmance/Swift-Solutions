@@ -14,6 +14,7 @@ import { buildAndShowEditBookmarkListModal } from './ui/buildAndShowEditBookmark
 import { updateBookmarkListName } from './api/bookmarkLists/updateBookmarkListName.js';
 import { showDeleteFavoriteEventConfirmationModal } from './ui/showDeleteFavoriteEventConfirmationModal.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
+import { getAllUserEventsFromItinerary } from './api/itinerary/itineraryApi.js'; // Adjust the import path as necessary
 
 let currentBookmarkList = null;
 
@@ -219,6 +220,7 @@ async function onClickDetailsAsync(eventInfo) {
     console.log("onClickDetailsAsync Favorites");
     console.log(eventInfo);
     const eventDetailsModalProps = {
+        apiEventID: eventInfo.apiEventID,
         img: eventInfo.eventImage,
         title: eventInfo.eventName,
         description: (eventInfo.eventDescription ?? 'No description') + '...',
@@ -235,6 +237,7 @@ async function onClickDetailsAsync(eventInfo) {
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
+        populateItineraryDropdown(eventInfo.apiEventID);
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
     };
@@ -245,3 +248,98 @@ document.getElementById('filter-button').addEventListener('click', function () {
     displayEventsFromBookmarkList(currentBookmarkList);
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    const saveButton = document.getElementById('save-new-itinerary');
+    if (!saveButton) {
+        console.error('Save button not found!');
+        return;
+    }
+    saveButton.addEventListener('click', function () {
+        const titleInput = document.getElementById('itinerary-title');
+        if (!titleInput) {
+            console.error('Title input not found!');
+            return;
+        }
+        const itineraryTitle = titleInput.value.trim();
+        if (itineraryTitle) {
+            console.log('Attempting to create new itinerary:', itineraryTitle);
+            createNewItinerary(itineraryTitle);
+        } else {
+            alert('Please enter a title for the itinerary.');
+        }
+    });
+});
+
+async function createNewItinerary(itineraryTitle) {
+    console.log('Creating new itinerary with title:', itineraryTitle);
+    let url = `/api/ItineraryApi/Itinerary?itineraryTitle=${itineraryTitle}`;
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Error ${response.status}: ${errorText}`);
+        throw new Error(`Error ${response.status}: ${errorText}`);
+    }
+
+    const result = await response.json(); // This will return the new itinerary object or a success message
+    console.log('Itinerary created:', result);
+    return result;
+}
+
+async function populateItineraryDropdown(apiEventID) {
+    try {
+        const itineraries = await getAllUserEventsFromItinerary();
+        const dropdownMenu = document.getElementById('dropdownMenuButton1').nextElementSibling;
+
+        while (dropdownMenu.children.length > 1) {
+            dropdownMenu.removeChild(dropdownMenu.lastChild);
+        }
+
+        itineraries.forEach(itinerary => {
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.className = 'dropdown-item';
+            link.textContent = itinerary.itineraryTitle;
+            link.href = "#";
+            link.dataset.itineraryId = itinerary.id;  // Assuming each itinerary has an 'id' property
+            link.addEventListener('click', function () {
+                addEventToItinerary(this.dataset.itineraryId, apiEventID);
+            });
+            item.appendChild(link);
+            dropdownMenu.appendChild(item);
+
+
+        });
+
+    } catch (error) {
+        console.error('Failed to fetch itineraries:', error);
+        alert('Failed to load itineraries. Please try again.');
+    }
+}
+
+async function addEventToItinerary(itineraryId, apiEventId) {
+    const url = `/api/ItineraryEventApi/ItineraryEvent/${apiEventId}/${itineraryId}`;
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`Error ${response.status}: ${errorText}`);
+            alert(`Failed to add event to itinerary: ${errorText}`);
+            return;
+        }
+        alert('Event successfully added to the itinerary!');
+    } catch (error) {
+        console.error('Error adding event to itinerary:', error);
+        alert('Error adding event to itinerary. Please try again.');
+    }
+}
