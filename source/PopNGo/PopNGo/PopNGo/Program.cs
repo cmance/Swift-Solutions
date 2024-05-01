@@ -99,6 +99,8 @@ public class Program
         builder.Services.AddScoped<ISearchRecordRepository, SearchRecordRepository>();
         builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
         builder.Services.AddScoped<IAccountRecordRepository, AccountRecordRepository>();
+        builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
+        builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
 
         
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();

@@ -60,8 +60,6 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     if (!addToCalendarButtonContainer.querySelector('button')) {
         addToCalendarButtonContainer.appendChild(addToCalendarButton);
-    } else {
-        console.error("Button already exists in the container.");
     }
 
     // Buy Tickets Dropdown
@@ -81,8 +79,6 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
         viewOriginalPostLink.href = props.eventOriginalLink;
         viewOriginalPostLink.target = '_blank';
     }
-
-
 }
 
 /**

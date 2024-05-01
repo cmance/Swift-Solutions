@@ -50,7 +50,7 @@ public class AdminMetricsApiController : Controller
             e => e.TimeSent.Hour,
             e => e.TimeSent.Date,
             e => e.TimeSent.Month,
-            e => e.TimeSent.Year  
+            e => e.TimeSent.Year
         );
 
         var emailHistoryResponse = new EmailHistoryResponse
@@ -77,7 +77,7 @@ public class AdminMetricsApiController : Controller
             e => e.Time.Hour,
             e => e.Time.Date,
             e => e.Time.Month,
-            e => e.Time.Year  
+            e => e.Time.Year
         );
 
         var searchRecordResponse = new SearchRecordResponse
@@ -95,10 +95,10 @@ public class AdminMetricsApiController : Controller
     public async Task<ActionResult<AccountRecordResponse>> GetAccountMetrics(int time)
     {
         var accountRecordList = buildLabels(time);
-        if(time == 0 || time == 1)
+        if (time == 0 || time == 1)
         {
             accountRecordList = new List<string>();
-            if(time == 0)
+            if (time == 0)
             {
                 accountRecordList.Add("Today");
             }
@@ -115,7 +115,7 @@ public class AdminMetricsApiController : Controller
             e => e.Day.DayOfYear,
             e => e.Day.Date,
             e => e.Day.Month,
-            e => e.Day.Year  
+            e => e.Day.Year
         );
 
         var accountRecordResponse = new AccountRecordResponse
@@ -137,37 +137,37 @@ public class AdminMetricsApiController : Controller
         return Ok(accountRecords);
     }
 
-//  ==================================================
-//  Helper Functions
+    //  ==================================================
+    //  Helper Functions
     public List<string> buildLabels(int time)
     {
         var searchRecordList = new List<string>();
         List<string> months = new List<string>() { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
-        if(time < 2 && time >= 0)
+        if (time < 2 && time >= 0)
         {
-            for(int i = 0; i < 23; i++)
+            for (int i = 0; i < 23; i++)
             {
                 searchRecordList.Add(DateTime.Now.AtMidnight().AddHours(i).ToShortTimeString());
             }
         }
-        else if(time == 7)
+        else if (time == 7)
         {
-            for(int i = 0; i < time; i++)
+            for (int i = 0; i < time; i++)
             {
                 searchRecordList.Add(DateTime.Now.AddDays(-6 + i).Date.ToShortDateString());
             }
         }
-        else if(time == 30)
+        else if (time == 30)
         {
-            for(int i = 0; i < time; i++)
+            for (int i = 0; i < time; i++)
             {
                 searchRecordList.Add(DateTime.Now.AddDays(-29 + i).Date.ToShortDateString());
             }
         }
-        else if(time == 365)
+        else if (time == 365)
         {
-            for(int i = 0; i < 12; i++)
+            for (int i = 0; i < 12; i++)
             {
                 int month = DateTime.Now.AddMonths(-12 + i).Month;
                 if (month > 11) { month -= 12; }
@@ -192,13 +192,13 @@ public class AdminMetricsApiController : Controller
         var searchRecordBuckets = new List<Tuple<int, int>>();
         List<string> months = new List<string>() { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
         IEnumerable<T> query = null;
-        
-        if(time != -1)
+
+        if (time != -1)
         {
-            if(time < 2 && time >= 0)
+            if (time < 2 && time >= 0)
             {
                 DateTime check = DateTime.Now.AtMidnight().AddDays(-time);
-                searchRecordBuckets.Add(new Tuple<int, int>( 0, 0 ));
+                searchRecordBuckets.Add(new Tuple<int, int>(0, 0));
                 query = group.Where(h => predicate1.Invoke(h) == check.DayOfYear);
                 query.ToList().ForEach(h => {
                     searchRecordBuckets[0] = new Tuple<int, int>(
@@ -207,22 +207,22 @@ public class AdminMetricsApiController : Controller
                     );
                 });
             }
-            else if(time > 0)
+            else if (time > 0)
             {
                 // Pre-initialize the searchRecordBuckets for a year.
-                if(time == 365)
+                if (time == 365)
                 {
-                    for(int i = 0; i < 12; i++)
+                    for (int i = 0; i < 12; i++)
                     {
-                        searchRecordBuckets.Add(new Tuple<int, int>( 0, 0 ));
+                        searchRecordBuckets.Add(new Tuple<int, int>(0, 0));
                     }
                 }
 
-                foreach(var j in Enumerable.Range(0, time))
+                foreach (var j in Enumerable.Range(0, time))
                 {
-                    if(time != 365)
+                    if (time != 365)
                     {
-                        searchRecordBuckets.Add(new Tuple<int, int>( 0, 0 ));
+                        searchRecordBuckets.Add(new Tuple<int, int>(0, 0));
 
                         DateTime check = DateTime.Now.AtMidnight().AddDays((-time) + j + 1);
                         query = group.Where(h => predicate3.Invoke(h) == check.Date);
@@ -261,11 +261,11 @@ public class AdminMetricsApiController : Controller
         }
         else
         {
-            foreach(var i in Enumerable.Range(0, group.Count))
+            foreach (var i in Enumerable.Range(0, group.Count))
             {
                 var element = group.ElementAt(i);
                 string text = $"{months[predicate4.Invoke(element) - 1]} {predicate5.Invoke(element)}";
-                if(labels.Contains(text))
+                if (labels.Contains(text))
                 {
                     searchRecordBuckets[labels.IndexOf(text)] = new Tuple<int, int>(
                         searchRecordBuckets[labels.IndexOf(text)].Item1 + element.AccountsCreated,
@@ -297,13 +297,13 @@ public class AdminMetricsApiController : Controller
         var searchRecordBuckets = new List<int>();
         List<string> months = new List<string>() { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
         IEnumerable<T> query = null;
-        
-        if(time != -1)
+
+        if (time != -1)
         {
-            if(time < 2 && time >= 0)
+            if (time < 2 && time >= 0)
             {
                 DateTime check = DateTime.Now.AtMidnight().AddDays(-time);
-                foreach(var i in Enumerable.Range(0, 23))
+                foreach (var i in Enumerable.Range(0, 23))
                 {
                     searchRecordBuckets.Add(0);
                     query = group.Where(h => predicate1.Invoke(h) == check.DayOfYear && predicate2.Invoke(h) == i);
@@ -312,20 +312,20 @@ public class AdminMetricsApiController : Controller
                     });
                 }
             }
-            else if(time > 0)
+            else if (time > 0)
             {
                 // Pre-initialize the searchRecordBuckets for a year.
-                if(time == 365)
+                if (time == 365)
                 {
-                    for(int i = 0; i < 12; i++)
+                    for (int i = 0; i < 12; i++)
                     {
                         searchRecordBuckets.Add(0);
                     }
                 }
 
-                foreach(var j in Enumerable.Range(0, time))
+                foreach (var j in Enumerable.Range(0, time))
                 {
-                    if(time != 365)
+                    if (time != 365)
                     {
                         searchRecordBuckets.Add(0);
 
@@ -360,11 +360,11 @@ public class AdminMetricsApiController : Controller
         }
         else
         {
-            foreach(var i in Enumerable.Range(0, group.Count))
+            foreach (var i in Enumerable.Range(0, group.Count))
             {
                 var element = group.ElementAt(i);
                 string text = $"{months[predicate4.Invoke(element) - 1]} {predicate5.Invoke(element)}";
-                if(labels.Contains(text))
+                if (labels.Contains(text))
                 {
                     searchRecordBuckets[labels.IndexOf(text)]++;
                 }

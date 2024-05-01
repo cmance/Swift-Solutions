@@ -19,6 +19,8 @@ import { capitalizeFirstLetter } from './util/capitalizeFirstLetter.js';
 import { getForecastForLocation } from './api/weather/getForecast.js';
 import { buildWeatherCard, validateBuildWeatherCardProps } from './ui/buildWeatherCard.js';
 import { addMapLoadingSpinner, removeMapLoadingSpinner } from './util/mapLoadingSpinners.js';
+import { getAllUserEventsFromItinerary, addEventToItinerary, createNewItinerary } from './api/itinerary/itineraryApi.js'; // Adjust the import path as necessary
+
 
 let map = null;
 let mapMarkers = [];
@@ -123,6 +125,7 @@ async function loadSearchBarAndEvents(city, state, country) {
 async function onClickDetailsAsync(eventInfo) {
     console.log("Event Info: ", eventInfo);
     const eventDetailsModalProps = {
+        apiEventID: eventInfo.apiEventID,
         img: eventInfo.eventImage,
         title: eventInfo.eventName,
         description: (eventInfo.eventDescription ?? 'No description') + '...',
@@ -142,7 +145,7 @@ async function onClickDetailsAsync(eventInfo) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
-
+        populateItineraryDropdown(eventInfo.apiEventID);
         addEventToHistory(eventInfo.apiEventID);
     };
 }
@@ -518,4 +521,62 @@ window.onload = async function () {
 //     displaySavedLocations();
 // }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const saveButton = document.getElementById('save-new-itinerary');
+    if (saveButton) {
+        saveButton.addEventListener('click', function () {
+            const titleInput = document.getElementById('itinerary-title');
+            const itineraryTitle = titleInput.value.trim();
+            console.log("Captured itinerary title: ", itineraryTitle); // This should not be empty
+            if (itineraryTitle) {
+                createNewItinerary(itineraryTitle);
+            } else {
+                alert('Please enter a title for the itinerary.');
+            }
+        });
+    } else {
+        console.error('Save button not found!');
+    }
+});
 
+async function populateItineraryDropdown(apiEventID) {
+    try {
+        const itineraries = await getAllUserEventsFromItinerary();
+        const dropdownMenu = document.getElementById('dropdownMenuButton1').nextElementSibling;
+
+        // Remove previous items except for the first item, which might be a default or title
+        while (dropdownMenu.children.length > 1) {
+            dropdownMenu.removeChild(dropdownMenu.lastChild);
+        }
+
+        // Check if there are itineraries before attempting to populate the dropdown
+        if (itineraries.length === 0) {
+            console.log('No itineraries available.');
+            const item = document.createElement('li');
+            const link = document.createElement('a');
+            link.className = 'dropdown-item';
+            link.textContent = 'No itineraries available';
+            link.href = "#";
+            item.appendChild(link);
+            dropdownMenu.appendChild(item);
+        } else {
+            // Populate the dropdown with itineraries
+            itineraries.forEach(itinerary => {
+                const item = document.createElement('li');
+                const link = document.createElement('a');
+                link.className = 'dropdown-item';
+                link.textContent = itinerary.itineraryTitle;
+                link.href = "#";
+                link.dataset.itineraryId = itinerary.id;  // Assuming each itinerary has an 'id' property
+                link.addEventListener('click', function () {
+                    addEventToItinerary(this.dataset.itineraryId, apiEventID);
+                });
+                item.appendChild(link);
+                dropdownMenu.appendChild(item);
+            });
+        }
+
+    } catch (error) {
+        console.error('Failed to fetch itineraries:', error);
+    }
+}

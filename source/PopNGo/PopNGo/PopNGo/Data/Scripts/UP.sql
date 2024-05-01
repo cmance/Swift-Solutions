@@ -107,6 +107,26 @@ CREATE TABLE [AccountRecord] (
   [AccountsDeleted] INTEGER NOT NULL
 );
 
+CREATE TABLE [Itinerary] (
+    [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+    [UserID] INTEGER NOT NULL,
+    [ItineraryTitle] NVARCHAR(255) NOT NULL
+);
+
+-- Junction table for Itinerary to Event (Many-to-Many)
+CREATE TABLE [ItineraryEvents] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [ItineraryID] INTEGER NOT NULL,
+  [EventID] INTEGER NOT NULL
+);
+
+-- Add Foreign Key constraints
+ALTER TABLE [Itinerary] ADD CONSTRAINT FK_Itinerary_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User]([ID]);
+
+ALTER TABLE [ItineraryEvents] ADD CONSTRAINT FK_ItineraryEvents_ItineraryID FOREIGN KEY ([ItineraryID]) REFERENCES [Itinerary] ([ID]);
+
+ALTER TABLE [ItineraryEvents] ADD CONSTRAINT FK_ItineraryEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
+
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
 

@@ -3,6 +3,11 @@ export function formatStartTime(dateString) {
     return new Date(dateString).toLocaleDateString(undefined, options);
 }
 
+export function formatJustStartTime(dateString) {
+    const options = { hour: '2-digit', minute: '2-digit' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+}
+
 export function formatDateWithWeekday(startTime) {
     const date = new Date(startTime);
     return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
