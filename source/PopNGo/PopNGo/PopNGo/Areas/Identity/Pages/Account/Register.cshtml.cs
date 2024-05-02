@@ -39,6 +39,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
 
         private readonly IBookmarkListRepository _bookmarkListRepository;
         private readonly IScheduledNotificationRepository _scheduledNotificationRepository;
+        private readonly IAccountRecordRepository _accountRecordRepository;
 
         public RegisterModel(
             UserManager<PopNGoUser> userManager,
@@ -49,7 +50,8 @@ namespace PopNGo.Areas.Identity.Pages.Account
             IEmailSender emailSender,
             PopNGoDB popNGoDBContext,
             IBookmarkListRepository bookmarkListRepository,
-            IScheduledNotificationRepository scheduledNotificationRepository)
+            IScheduledNotificationRepository scheduledNotificationRepository,
+            IAccountRecordRepository accountRecordRepository)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -61,6 +63,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
             _popNGoDBContext = popNGoDBContext;
             _bookmarkListRepository = bookmarkListRepository;
             _scheduledNotificationRepository = scheduledNotificationRepository;
+            _accountRecordRepository = accountRecordRepository;
 
             if(_popNGoDBContext == null)
             {
@@ -197,6 +200,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
 
                     _bookmarkListRepository.AddBookmarkList(newUser.Id, "Favorites");
                     await _scheduledNotificationRepository.AddScheduledNotification(newUser.Id, DateTime.Now.AtMidnight().AddDays(1), "Upcoming Events");
+                    _accountRecordRepository.AdjustBalance(DateTime.Now.AtMidnight(), "created", "increase");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

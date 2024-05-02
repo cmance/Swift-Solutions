@@ -1,8 +1,4 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using PopNGo_BDD_Tests.Shared;
-using System.Collections.ObjectModel;
-using PopNGo_BDD_Tests.PageObjects;
 
 namespace PopNGo_BDD_Tests.PageObjects
 {
@@ -19,5 +15,6 @@ namespace PopNGo_BDD_Tests.PageObjects
 
         // Select the "Notifications" navigation item by id="scheduled-notifications"
         public IWebElement scheduledNotificationsNavItem => _webDriver.FindElement(By.Id("scheduled-notifications"));
+        public IWebElement metricsNavItem => _webDriver.FindElement(By.Id("metrics"));
     }
 }

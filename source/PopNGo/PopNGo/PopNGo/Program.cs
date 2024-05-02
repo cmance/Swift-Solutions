@@ -42,11 +42,23 @@ public class Program
 
         builder.Services.AddHttpClient<IDistanceCalculatorService, DistanceCalculatorService>((httpClient, services) =>
         {
-            httpClient.BaseAddress = new Uri(distanceCalculatorUrl);
+            httpClient.BaseAddress = new Uri(distanceCalculatorUrl);           
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", distanceCalculatorApiKey); // Set API key
             httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", "distance-calculator.p.rapidapi.com");
             return new DistanceCalculatorService(httpClient, services.GetRequiredService<ILogger<DistanceCalculatorService>>());
+        });
+
+        // REST API setup for the Weather Forecast API
+        string weatherForecasterUrl = "https://visual-crossing-weather.p.rapidapi.com/forecast";
+
+        builder.Services.AddHttpClient<IWeatherForecastService, WeatherForecastService>((httpClient, services) =>
+        {
+            httpClient.BaseAddress = new Uri(weatherForecasterUrl);
+            // httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", distanceCalculatorApiKey); // Set API key
+            httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", "visual-crossing-weather.p.rapidapi.com");
+            return new WeatherForecastService(httpClient, services.GetRequiredService<ILogger<WeatherForecastService>>());
         });
 
 
@@ -83,7 +95,14 @@ public class Program
         builder.Services.AddScoped<IEventRepository, EventRepository>();
         builder.Services.AddScoped<IBookmarkListRepository, BookmarkListRepository>();
         builder.Services.AddScoped<IScheduledNotificationRepository, ScheduledNotificationRepository>();
+        builder.Services.AddScoped<IWeatherRepository, WeatherRepository>();
+        builder.Services.AddScoped<ISearchRecordRepository, SearchRecordRepository>();
+        builder.Services.AddScoped<IEmailHistoryRepository, EmailHistoryRepository>();
+        builder.Services.AddScoped<IAccountRecordRepository, AccountRecordRepository>();
+        builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
+        builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
 
+        
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddDefaultIdentity<PopNGoUser>(options =>

@@ -25,6 +25,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -41,6 +43,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -57,6 +61,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -73,6 +79,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -89,6 +97,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -105,6 +115,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -121,6 +133,8 @@ describe('validateBuildEventCardProps', () => {
             city: 1,
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -137,6 +151,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: 1,
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -153,8 +169,10 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: 1,
-            favorited: false,
-            onPressFavorite: () => { },
+            distance: 1.5,
+            distanceUnit: "mi",
+            bookmarkListNames: [],
+            onPressBookmarkList: () => { },
             onPressEvent: () => { }
         }
 
@@ -169,6 +187,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: 'bookmarkListNames',
             onPressBookmarkList: () => { },
             onPressEvent: () => { }
@@ -185,6 +205,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: 'WRONG',
             onPressEvent: () => { }
@@ -201,6 +223,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: null,
             onPressEvent: () => { }
@@ -217,6 +241,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: undefined,
             onPressEvent: () => { }
@@ -233,6 +259,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: 1
@@ -249,6 +277,8 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: null
@@ -265,12 +295,33 @@ describe('validateBuildEventCardProps', () => {
             city: "city",
             state: "state",
             tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
             bookmarkListNames: [],
             onPressBookmarkList: () => { },
             onPressEvent: undefined
         }
 
         expect(validateBuildEventCardProps(props)).toBe(true);
+    });
+
+    test('onPressDelete not a function should return false', () => {
+        const props = {
+            img: "img",
+            title: "title",
+            date: new Date(),
+            city: "city",
+            state: "state",
+            tags: [],
+            distance: 1.5,
+            distanceUnit: "mi",
+            bookmarkListNames: [],
+            onPressBookmarkList: () => { },
+            onPressEvent: () => { },
+            onPressDelete: 1
+        }
+
+        expect(validateBuildEventCardProps(props)).toBe(false);
     });
 });
 
@@ -476,6 +527,39 @@ describe('validateBuildBookmarkListCardProps', () => {
         }
 
         expect(validateBuildBookmarkListCardProps(props)).toBe(true);
+    });
+
+    test('image not a string should return false', () => {
+        const props = {
+            bookmarkListName: "bookmarkListName",
+            eventQuantity: 1,
+            image: 1,
+            onClick: () => { }
+        }
+
+        expect(validateBuildBookmarkListCardProps(props)).toBe(false);
+    });
+
+    test('on click delete not a function should return false', () => {
+        const props = {
+            bookmarkListName: "bookmarkListName",
+            eventQuantity: 1,
+            onClick: () => { },
+            onClickDelete: 1
+        }
+
+        expect(validateBuildBookmarkListCardProps(props)).toBe(false);
+    });
+
+    test('on click edit not a function should return false', () => {
+        const props = {
+            bookmarkListName: "bookmarkListName",
+            eventQuantity: 1,
+            onClick: () => { },
+            onClickEdit: 1
+        }
+
+        expect(validateBuildBookmarkListCardProps(props)).toBe(false);
     });
 });
 

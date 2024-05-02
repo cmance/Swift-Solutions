@@ -11,10 +11,10 @@ using PopNGo.Services;
 
 namespace PopNGo_Tests
 {
-    public class ItineraryDb_Tests
+    public class ItineraryRepository_Tests
     {
         [Test]
-        public async Task AddPlanToItinerary_Success()
+        public async Task CreateNewItinerary_Success()
         {
             // Arrange
             //var mockItineraryRepository = new Mock<IItineraryRepository>();

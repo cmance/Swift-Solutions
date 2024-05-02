@@ -20,12 +20,19 @@
     text-align: center;
 }
 
+.bookmarkListBottomRow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
 .bookmarkListQuantityContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 15%;
-    height: 15%;
+    /* width: 15%; */
+    height: 100%;
+    aspect-ratio: 1;
     align-self: flex-end;
     background-color: white;
     border-radius: 50%;
@@ -36,4 +43,16 @@
     font-size: 1.2em;
     color: black;
     text-align: center;
+}
+
+.bookmarkListUtilityButtonsContainer {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 25%;
+    color: white;
+}
+
+.bookmarkListCardUtilityButton {
+    margin: 15%;
 }

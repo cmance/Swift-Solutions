@@ -36,12 +36,14 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         public void GivenTheVisitorNavigatesToTheExplorePage()
         {
             _webDriver.Navigate().GoToUrl(Common.UrlFor("Explore"));
+            Thread.Sleep(10000);
         }
 
         [When(@"the visitor clicks on any event card")]
         public void WhenTheVisitorClicksOnAnyEventCard()
         {
             _explorePage.ClickEventCard();
+            Thread.Sleep(1000);
         }
 
         [Then(@"the visitor should see a modal with a ""(.*)"" and ""(.*)"" button")]

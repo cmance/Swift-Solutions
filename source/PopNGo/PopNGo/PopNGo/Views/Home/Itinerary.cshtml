@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Itinerary Page";
+}
+
+<h1 class="text-center pt-5" >Your Itinerary</h1>
+<div class="container mt-5">
+    <div class="accordion" id="accordionExample">
+        <div class="accordion-item" style="background-color: transparent; border: none;">
+            <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed day-indicator bg-whites" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                    <div class="title">Please log in to see your itinerary</div>
+                </button>
+            </h2>
+        </div>
+    </div>
+</div>
+
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+@section Scripts {
+   <script type="module" src="~/js/itinerary.js"></script>
+}

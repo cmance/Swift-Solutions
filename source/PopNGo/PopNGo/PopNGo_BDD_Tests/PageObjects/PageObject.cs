@@ -1,12 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using PopNGo_BDD_Tests.Shared;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PopNGo_BDD_Tests.PageObjects
 {
@@ -44,41 +38,11 @@ namespace PopNGo_BDD_Tests.PageObjects
         public void GoTo(string pageName)
         {
             _webDriver.Navigate().GoToUrl(Common.UrlFor(pageName));
+            Thread.Sleep(3000);
         }
 
         public string GetTitle() => _webDriver.Title;
         public string GetURL() => _webDriver.Url;
-
-        // public bool SaveAllCookies()
-        // {
-        //     ReadOnlyCollection<Cookie> cookies = _webDriver.Manage().Cookies.AllCookies;
-        //     bool success = FileUtils.SerializeCookiesToFile(Common.CookieFile, cookies);
-        //     return success;
-        // }
-
-        // public bool LoadAllCookies()
-        // {
-        //     List<Cookie> cookies;
-        //     try
-        //     {
-        //         cookies = FileUtils.DeserializeCookiesFromFile(Common.CookieFile);
-        //     }
-        //     catch(Exception ex)
-        //     {
-        //         return false;
-        //     }
-        //     foreach (Cookie cookie in cookies)
-        //     {
-        //         _webDriver.Manage().Cookies.AddCookie(cookie);
-        //     }
-        //     _webDriver.Navigate().Refresh();
-        //     return true;
-        // }
-
-        // public void DeleteCookies()
-        // {
-        //     _webDriver.Manage().Cookies.DeleteAllCookies();
-        // }
 
         /// <summary>
         /// Helper method to wait until the expected result is available on the UI
