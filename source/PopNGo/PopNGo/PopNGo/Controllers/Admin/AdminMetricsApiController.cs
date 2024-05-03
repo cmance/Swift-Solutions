@@ -200,7 +200,8 @@ public class AdminMetricsApiController : Controller
                 DateTime check = DateTime.Now.AtMidnight().AddDays(-time);
                 searchRecordBuckets.Add(new Tuple<int, int>(0, 0));
                 query = group.Where(h => predicate1.Invoke(h) == check.DayOfYear);
-                query.ToList().ForEach(h => {
+                query.ToList().ForEach(h =>
+                {
                     searchRecordBuckets[0] = new Tuple<int, int>(
                         searchRecordBuckets[0].Item1 + h.AccountsCreated,
                         searchRecordBuckets[0].Item2 + h.AccountsDeleted
@@ -226,7 +227,8 @@ public class AdminMetricsApiController : Controller
 
                         DateTime check = DateTime.Now.AtMidnight().AddDays((-time) + j + 1);
                         query = group.Where(h => predicate3.Invoke(h) == check.Date);
-                        query.ToList().ForEach(h => {
+                        query.ToList().ForEach(h =>
+                        {
                             searchRecordBuckets[j] = new Tuple<int, int>(
                                 searchRecordBuckets[j].Item1 + h.AccountsCreated,
                                 searchRecordBuckets[j].Item2 + h.AccountsDeleted
@@ -249,7 +251,8 @@ public class AdminMetricsApiController : Controller
                             index += 12;
                         }
 
-                        query.ToList().ForEach(h => {
+                        query.ToList().ForEach(h =>
+                        {
                             searchRecordBuckets[index] = new Tuple<int, int>(
                                 searchRecordBuckets[index].Item1 + h.AccountsCreated,
                                 searchRecordBuckets[index].Item2 + h.AccountsDeleted
@@ -307,7 +310,8 @@ public class AdminMetricsApiController : Controller
                 {
                     searchRecordBuckets.Add(0);
                     query = group.Where(h => predicate1.Invoke(h) == check.DayOfYear && predicate2.Invoke(h) == i);
-                    query.ToList().ForEach(h => {
+                    query.ToList().ForEach(h =>
+                    {
                         searchRecordBuckets[i]++;
                     });
                 }
@@ -331,7 +335,8 @@ public class AdminMetricsApiController : Controller
 
                         DateTime check = DateTime.Now.AtMidnight().AddDays((-time) + j + 1);
                         query = group.Where(h => predicate3.Invoke(h) == check.Date);
-                        query.ToList().ForEach(h => {
+                        query.ToList().ForEach(h =>
+                        {
                             searchRecordBuckets[j]++;
                         });
                     }
@@ -351,7 +356,8 @@ public class AdminMetricsApiController : Controller
                             index += 12;
                         }
 
-                        query.ToList().ForEach(h => {
+                        query.ToList().ForEach(h =>
+                        {
                             searchRecordBuckets[index]++;
                         });
                     }
