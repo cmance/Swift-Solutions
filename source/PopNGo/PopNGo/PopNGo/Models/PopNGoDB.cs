@@ -45,8 +45,8 @@ public partial class PopNGoDB : DbContext
 
     public virtual DbSet<WeatherForecast> WeatherForecasts { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Name=ServerConnection");
+    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //    => optionsBuilder.UseSqlServer("Name=ServerConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

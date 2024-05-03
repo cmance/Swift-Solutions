@@ -1,22 +1,32 @@
-﻿@{
+@{
     ViewData["Title"] = "Itinerary Page";
 }
 
-<h1 class="text-center pt-5" >Your Itinerary</h1>
-<div class="container mt-5">
-    <div class="accordion" id="accordionExample">
-        <div class="accordion-item" style="background-color: transparent; border: none;">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button collapsed day-indicator bg-whites" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                    <div class="title">Please log in to see your itinerary</div>
-                </button>
-            </h2>
-        </div>
-    </div>
+
+@* This should be shown if the users are not logged in *@
+<div id="login-prompt" style="display: none;">
+    <h1>Access Restricted</h1>
+    <h3>
+        You need to be logged in to access this feature. Please <a href="/Identity/Account/Login">log in</a> or <a href="/Identity/Account/Register">sign up</a>.
+    </h3>
 </div>
 
+@* This show when the itinerary sections/items are empty*@
+<div id="no-itinerary-message" style="display: none;" class="alert alert-warning">
+    You have not created any itineraries yet. Go to the <a href="/Home/Explore">Explore page</a> to find events and create your itinerary.
+</div>
+
+
+@* This shouls show when there are itnerary items *@
+<div class="container mt-5">
+    <div class="accordion" id="accordionExample" style="display: none;">
+        <!-- Initially hidden -->
+        <!-- Content dynamically injected here -->
+    </div>
+</div>
 
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 @section Scripts {
    <script type="module" src="~/js/itinerary.js"></script>
 }
+
