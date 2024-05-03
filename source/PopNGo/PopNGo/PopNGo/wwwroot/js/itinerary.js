@@ -1,9 +1,10 @@
-﻿import { getAllUserEventsFromItinerary, addEventToItinerary } from './api/itinerary/itineraryApi.js';
+import { getAllUserEventsFromItinerary } from './api/itinerary/itineraryApi.js';
 import { formatStartTime } from './util/formatStartTime.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        const itineraries = await getAllUserEventsFromItinerary();
+        await initPage();
+
         const accordionExample = document.querySelector('#accordionExample');
 
         let accordionHtml = '';
@@ -18,6 +19,61 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+document.addEventListener('DOMContentLoaded', async () => {
+    // Assuming you have a function or a way to check if the user is logged in
+    const userIsLoggedIn = await checkUserLoggedIn(); // Replace this with your actual authentication check
+
+    if (!userIsLoggedIn) {
+        disableAddToItineraryButtons();
+        displayLoginPrompt(); // Show login prompt if not logged in
+    } else {
+        try {
+            const itineraries = await getAllUserEventsFromItinerary();
+            initPage(itineraries);
+        } catch (error) {
+            console.error('There was an error fetching the itinerary data:', error);
+        }
+    }
+});
+
+async function initPage() {
+    try {
+        const itineraries = await getAllUserEventsFromItinerary();
+        if (itineraries && itineraries.length > 0) {
+            const accordionExample = document.querySelector('#accordionExample');
+            let accordionHtml = '';
+            itineraries.forEach((itinerary, index) => {
+                accordionHtml += createAccordionHtml(itinerary, index);
+            });
+            accordionExample.innerHTML = accordionHtml;
+            attachDeleteEventListeners();
+            document.getElementById("login-prompt").style.display = "none";
+            document.getElementById("no-itinerary-message").style.display = "none";
+            accordionExample.style.display = ""; // Ensure it's visible if there are items
+        } else {
+            displayNoItineraryMessage();
+        }
+    } catch (error) {
+        if (error.message.includes('Unauthorized')) {
+            displayLoginPrompt();
+        } else {
+            displayNoItineraryMessage();
+        }
+    }
+}
+
+async function displayLoginPrompt() {
+    document.getElementById("login-prompt").style.display = "block";
+    document.getElementById("accordionExample").style.display = "block";
+}
+
+async function displayNoItineraryMessage() {
+    const noItineraryMsg = document.getElementById("no-itinerary-message");
+    if (noItineraryMsg) {
+        noItineraryMsg.style.display = "block";
+    }
+    document.getElementById("accordionExample").style.display = "none"; // Also hide if no itineraries are found
+}
 function createAccordionHtml(itinerary, index) {
     let eventsHtml = itinerary.events.map(event => createEventHtml(event, itinerary.id)).join(''); // Ensure itinerary.id is the correct ID
     return `
@@ -36,7 +92,6 @@ function createAccordionHtml(itinerary, index) {
         </div>
     `;
 }
-
 
 function createEventHtml(eventData, itineraryId) {
     return `
@@ -71,8 +126,6 @@ function createEventHtml(eventData, itineraryId) {
     `;
 }
 
-
-
 function attachDeleteEventListeners() {
     // Attach event listeners to delete individual events
     document.querySelectorAll('.delete-event-btn').forEach(button => {
@@ -98,7 +151,6 @@ function attachDeleteEventListeners() {
     });
 }
 
-
 async function deleteEvent(apiEventID, itineraryId) {
     try {
         let response = await fetch(`/api/ItineraryEventApi/DeleteEventFromItinerary/${apiEventID}/${itineraryId}`, {
@@ -115,7 +167,6 @@ async function deleteEvent(apiEventID, itineraryId) {
     }
 
 }
-
 async function deleteItinerary(itineraryId) {
     if (!confirm('Are you sure you want to delete this itinerary?')) return;
 
@@ -128,32 +179,16 @@ async function deleteItinerary(itineraryId) {
         if (!response.ok) throw new Error(`Error ${response.status}: ${await response.text()}`);
 
         // Remove the itinerary element from DOM after successful deletion
-        document.querySelector(`button[data-itinerary-id="${itineraryId}"]`).closest('.accordion-item').remove();
+        const itemToRemove = document.querySelector(`button[data-itinerary-id="${itineraryId}"]`).closest('.accordion-item');
+        itemToRemove.remove();
+
+        // Check if there are any itineraries left
+        if (!document.querySelector('.accordion-item')) {
+            displayNoItineraryMessage();
+        }
         alert('Itinerary deleted successfully');
     } catch (error) {
         console.error('Failed to delete the itinerary:', error);
         alert('Failed to delete the itinerary');
     }
 }
-
-//document.getElementById('exportPDFBtn').addEventListener('click', function () {
-// // If you are using modules, else use the global jsPDF
-
-//    const doc = new jsPDF();
-
-//    // Optional: Specify the format, orientation, and unit of the PDF
-//    const pdf = new jsPDF();  // Directly use jsPDF available globally
-
-//    // Capture the area of the page you want to print, e.g., the itinerary section
-//    const source = document.getElementById('accordionExample').innerHTML;
-
-//    // Use jsPDF's html method to capture the HTML and format it into a PDF
-//    pdf.html(source, {
-//        callback: function (doc) {
-//            doc.save('itinerary.pdf');
-//        },
-//        x: 10,
-//        y: 10
-//    });
-//});
-

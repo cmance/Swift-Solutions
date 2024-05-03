@@ -1,4 +1,4 @@
-﻿export async function getAllUserEventsFromItinerary() {
+export async function getAllUserEventsFromItinerary() {
     let url = `/api/ItineraryApi`;
     const res = await fetch(url, {
         method: 'GET',

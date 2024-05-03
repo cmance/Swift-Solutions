@@ -28,10 +28,10 @@ let page = 0;
 const pageSize = 10;
 let userLocation = {};
 let distanceUnit = "miles"
+let currentApiEventID = null;
 
 
-// Fetch event data and display it
-// Call getLocation when the script is loaded
+
 document.addEventListener("DOMContentLoaded", async function () {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async function (position) {
@@ -123,7 +123,13 @@ async function loadSearchBarAndEvents(city, state, country) {
  * @param {string} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
-    console.log("Event Info: ", eventInfo);
+    if (!eventInfo.apiEventID) {
+        console.error("Failed to retrieve apiEventID from event info", eventInfo);
+        return; // Early return if the apiEventID is undefined
+    }
+
+    console.log("Current ApiEventId ", currentApiEventID);
+
     const eventDetailsModalProps = {
         apiEventID: eventInfo.apiEventID,
         img: eventInfo.eventImage,
@@ -138,17 +144,22 @@ async function onClickDetailsAsync(eventInfo) {
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
         venueWebsite: eventInfo.venueWebsite
-    }
-
+    };
+    console.log("Current ApiEventId ", currentApiEventID);
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
-        populateItineraryDropdown(eventInfo.apiEventID);
+        currentApiEventID = eventInfo.apiEventID;
+        console.log("Current ApiEventId ", currentApiEventID);
+        populateItineraryDropdown(currentApiEventID);
         addEventToHistory(eventInfo.apiEventID);
-    };
+    } else {
+        console.error("Validation failed for event details modal properties", eventDetailsModalProps);
+    }
 }
+
 
 /**
  * Get the next page of events and display them
@@ -218,6 +229,7 @@ async function displayEvents(events) {
         bookmarkLists = await getBookmarkLists();
     } catch (error) {
         if (error instanceof UnauthorizedError) {
+            disableAddToItineraryButton();
             console.error("Unauthorized to get bookmark lists");
         } else {
             console.error("Error getting bookmark lists", error);
@@ -247,6 +259,15 @@ async function displayEvents(events) {
     }
 
     // paginationDiv.style.display = 'flex'; //Display after events are loaded
+}
+
+function disableAddToItineraryButton() {
+    const addToItineraryButton = document.getElementById('dropdownMenuButton1');
+    if (addToItineraryButton) {
+        addToItineraryButton.disabled = true;
+        addToItineraryButton.classList.add('disabled'); // Optionally add this class for CSS styling purposes
+        addToItineraryButton.setAttribute('title', 'You must be logged in to add to itinerary');
+    }
 }
 
 function displayWeatherForecast(weatherData) {
@@ -521,24 +542,6 @@ window.onload = async function () {
 //     displaySavedLocations();
 // }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const saveButton = document.getElementById('save-new-itinerary');
-    if (saveButton) {
-        saveButton.addEventListener('click', function () {
-            const titleInput = document.getElementById('itinerary-title');
-            const itineraryTitle = titleInput.value.trim();
-            console.log("Captured itinerary title: ", itineraryTitle); // This should not be empty
-            if (itineraryTitle) {
-                createNewItinerary(itineraryTitle);
-            } else {
-                alert('Please enter a title for the itinerary.');
-            }
-        });
-    } else {
-        console.error('Save button not found!');
-    }
-});
-
 async function populateItineraryDropdown(apiEventID) {
     try {
         const itineraries = await getAllUserEventsFromItinerary();
@@ -580,3 +583,29 @@ async function populateItineraryDropdown(apiEventID) {
         console.error('Failed to fetch itineraries:', error);
     }
 }
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const saveButton = document.getElementById('save-new-itinerary');
+    if (saveButton) {
+        saveButton.addEventListener('click', async function () { // Make this function async
+            const titleInput = document.getElementById('itinerary-title');
+            const itineraryTitle = titleInput.value.trim();
+            console.log("Captured itinerary title: ", itineraryTitle);
+            if (itineraryTitle) {
+                // Assume createNewItinerary is an async function and waits for API call to complete
+                await createNewItinerary(itineraryTitle);
+                // Close the modal
+                const modalElement = document.getElementById('exampleModal');
+                const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+                bootstrapModal.hide();
+
+                // Refresh the dropdown to include the new itinerary
+                await populateItineraryDropdown(currentApiEventID);
+            } else {
+                alert('Please enter a title for the itinerary.');
+            }
+        });
+    } else {
+        console.error('Save button not found!');
+    }
+});
