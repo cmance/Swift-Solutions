@@ -16,6 +16,8 @@
     border-radius: 20px;
     background-color: #1e1e1e;
     padding: 20px;
+
+    cursor: pointer;
 }
 
 #date {
