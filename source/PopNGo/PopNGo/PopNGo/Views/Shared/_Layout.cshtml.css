@@ -36,6 +36,19 @@ a.navbar-brand {
   border: 1.5px solid #595959; /* Adjust border thickness and color as needed */
 }
 
+.close-navbar {
+  position:fixed;
+  left: 10px;
+  top: 14px;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 0;
+  outline: none;
+  scale: 1.5;
+
+}
+
 .custom-nav-item {
   padding: 0; /* Remove the padding */
 }

@@ -22,3 +22,6 @@ document.querySelectorAll('.onhover svg').forEach(function (svg, index) {
     }
 });
 
+document.getElementById('close-navbar').addEventListener('click', function () {
+    document.querySelector('.custom-bottom-navbar').style.display = 'none';
+});
