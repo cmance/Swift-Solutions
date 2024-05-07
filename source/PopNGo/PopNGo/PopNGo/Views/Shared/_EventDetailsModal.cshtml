@@ -2,16 +2,15 @@
     <!-- Modal content -->
     <div class="modal-dialog modal-extra-lg" role="document">
         <div class="modal-content">
-            <img id="event-modal-img" src="~/media/images/placeholder_event_card_image.png" />
+            <img alt="Event Image" id="event-modal-img" src="~/media/images/placeholder_event_card_image.png" />
             <div id="modal-event-card-tags-container">
                 <div class="event-modal-tag rounded-pill">Tag1</div>
                 <div class="event-modal-tag rounded-pill">Tag2</div>
                 <div class="event-modal-tag rounded-pill">Tag3</div>
             </div>
             <div class="original-post-link-container">
-                <a id="original-post-link" class="btn btn-warning original-post-link" href="">
-                    View Original Event
-                    Post
+                <a aria-label="View original event post link." id="original-post-link" class="btn btn-warning original-post-link" href="">
+                    View Original Event Post
                 </a>
             </div>
 
@@ -32,19 +31,19 @@
             </div>
 
             <div id="buttons-container">
-                <div id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
+                <div aria-label="Add event to Google calendar button." id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
                 <div class="dropdown">
-                    <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button aria-label="Add event to itinerary button." class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         Add to itinerary
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new itinerary</button></li>
+                        <li><button aria-label="Create new itinerary button." class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new itinerary</button></li>
                     </ul>
                 </div>
 
                 <div id="right-buttons">
                     <div id="buy-tickets-btn" title="Buy tickets for this event">
-                        <button id="buyTicketsBtn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
+                        <button aria-label="Buy tickets link." id="buyTicketsBtn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                             Buy Tickets
                         </button>
