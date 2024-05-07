@@ -7,23 +7,23 @@
             <div id="invalid-feedback" class="invalid-feedback">
                 Start date cannot be before end date.
             </div>
-            <input type="date" id="start-date" name="start-date">
+            <input aria-label="Enter the start date range." type="date" id="start-date" name="start-date">
             <span> to </span>
-            <input type="date" id="end-date" name="end-date">
+            <input aria-label="Enter the ending date range." type="date" id="end-date" name="end-date">
         </div>
     </div>
     @* ******************** *@
 
     @* Filters Components *@
     <div id="filters-container">
-        <select id="sort-date" class="form-control">
+        <select aria-label="Sort the events by date." id="sort-date" class="form-control">
             <option value="" disabled selected>Filter by Date</option>
             <option value="">Any</option>
             <option value="asc">Ascending</option>
             <option value="desc">Descending</option>
         </select>
 
-        <select id="sort-rating" class="form-control">
+        <select aria-label="Sort the events by venue rating." id="sort-rating" class="form-control">
             <option value="" disabled selected>Filter by Venue Rating</option>
             <option value="">Any</option>
             <option value="asc">Ascending</option>
@@ -31,14 +31,14 @@
         </select>
 
         <div id="last-row">
-            <select id="sort-alphabetical" class="form-control">
+            <select aria-label="Sort the events alphabetically." id="sort-alphabetical" class="form-control">
                 <option value="" disabled selected>Filter Alphabetically</option>
                 <option value="">Any</option>
                 <option value="asc">Ascending</option>
                 <option value="desc">Descending</option>
             </select>
 
-            <button id="filter-button" class="btn btn-caution">Apply Filters</button>
+            <button aria-label="Apply event filters button." id="filter-button" class="btn btn-caution">Apply Filters</button>
         </div>
     </div>
     @* ******************** *@
