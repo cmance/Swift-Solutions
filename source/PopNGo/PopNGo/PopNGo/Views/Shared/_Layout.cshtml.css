@@ -38,13 +38,13 @@ a.navbar-brand {
 
 .close-navbar {
   position:fixed;
-  left: 10px;
-  top: 14px;
+  left: 15px;
+  top: 15px;
   background-color: transparent;
   color: white;
   border: none;
   padding: 0;
-  outline: none;
+
   scale: 1.5;
 
 }
@@ -58,7 +58,6 @@ a.navbar-brand {
   color: white;
   border: none;
   padding: 0;
-  outline: none;
   scale: 1.5;
 }
 
