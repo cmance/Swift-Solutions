@@ -3,7 +3,7 @@
 <template id="event-card-template">
     <div class="mb-2" id="event-card-container">
         <div id="img-container">
-            <img id="event-card-image" src="https://via.placeholder.com/500" alt="Event Image" />
+            <img alt="Image for event." id="event-card-image" src="https://via.placeholder.com/500" alt="Event Image" />
             <div id="date" class="bg-white">
                 <div class="text-dark" id="day-number">14</div>
                 <div class="text-dark" id="month">JUL</div>
@@ -26,8 +26,10 @@
             </div>
         </div>
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="event-card-bookmark-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Save
+            <button aria-label="Save event to bookmarks button." class="btn btn-secondary dropdown-toggle" type="button" id="event-card-bookmark-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 24 24">
+                    <path fill="white" d="M19 24l-7-6-7 6v-24h14v24z" />
+                </svg>
             </button>
             <div class="dropdown-menu" id="event-card-bookmark-dropdown-menu" aria-labelledby="event-card-bookmark-button">
                 <a class="dropdown-item" href="#">Action</a>
@@ -36,7 +38,7 @@
             </div>
         </div>
         <div class="event-card-delete-icon-container">
-            <i class="fas fa-trash-alt"></i>
+            <i aria-label="Delete event icon." class="fas fa-trash-alt"></i>
         </div>
     </div>
 </template>

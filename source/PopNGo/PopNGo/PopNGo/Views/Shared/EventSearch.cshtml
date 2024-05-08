@@ -16,23 +16,23 @@
 
         <div id="country-state-city-select-container" class="input-group text-swipe justify-content-between">
             <div class="form-floating" id="country-select">
-                <select class="form-select" id="search-event-country">
+                <select aria-label="Select a country to look for events in." class="form-select" id="search-event-country">
                 </select>
                 <label for="search-event-country" class="input-group-text bg-none text-search-label">Country</label>
             </div>
             <div class="form-floating" id="state-select">
-                <select class="form-select" id="search-event-state">
+                <select aria-label="Select a state to look for events in." class="form-select" id="search-event-state">
                 </select>
                 <label for="search-event-state" class="input-group-text bg-none text-search-label">State /
                     Province</label>
             </div>
             <div class="form-floating" id="city-select">
-                <select class="form-select" id="search-event-city">
+                <select aria-label="Select a city to look for events in." class="form-select" id="search-event-city">
                 </select>
                 <label for="search-event-city" class="input-group-text bg-none text-search-label">City</label>
             </div>
             <div class="form-floating" id="filter-select">
-                <select id="filter-dropdown" class="form-select btn">
+                <select aria-label="Select a timeframe to look for events within." id="filter-dropdown" class="form-select btn">
                     <option value="">Any</option>
                     <option value="today">Today</option>
                     <option value="tomorrow">Tomorrow</option>
@@ -45,20 +45,13 @@
                 <label id="label-filter-select" for="filter-dropdown" class="input-group-text bg-none text-search-label">Date Filter</label>
             </div>
             <div class="form-floating" id="distance-container">
-            @* <div class="form" id="distance-container"> *@
-                <select id="distance-select" class="form-select">
+                <select aria-label="Select your preferred distance units." id="distance-select" class="form-select">
                     <option value="miles">Mi</option>
                     <option value="kilometers">Km</option>
                 </select>
-                @* <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round" id="distance-checkbox"></span>
-                    <br/>
-                    <span id="distance-label">Km or Mi</span>
-                </label> *@
                 <label for="distance-select" class="input-group-text bg-none text-search-label">Distance Units</label>
             </div>
-            <button class="btn text-light rounded-end onhover" id="search-event-button" type="button">
+            <button aria-label="Search for events button." class="btn text-light rounded-end onhover" id="search-event-button" type="button">
                 <i class="fas fa-search"></i>
             </button>
         </div>
