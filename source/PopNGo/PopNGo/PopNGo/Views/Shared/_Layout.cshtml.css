@@ -36,6 +36,44 @@ a.navbar-brand {
   border: 1.5px solid #595959; /* Adjust border thickness and color as needed */
 }
 
+.close-navbar {
+  position:fixed;
+  left: 15px;
+  top: 15px;
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 0;
+
+  scale: 1.5;
+
+}
+
+.close-navbar-2 {
+  position: fixed;
+  top: 25px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 0;
+  scale: 1.5;
+}
+
+.minimized-navbar {
+  position: fixed;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  width: 15vw;
+  height: 100px;
+  background-color: #1E1E1E;
+  border: 1.5px solid #595959; /* Adjust border thickness and color as needed */
+
+}
+
 .custom-nav-item {
   padding: 0; /* Remove the padding */
 }

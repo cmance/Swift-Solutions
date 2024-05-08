@@ -96,14 +96,16 @@
     padding-right: 10px; /* Add padding to prevent text from overlapping with the arrow */
 }
 
-#filters-container select:focus {
+/* Styles the dropdown arrow on hover */
+/* #filters-container select:focus {
     outline: none !important;
     border: none !important;
     box-shadow: none !important;
-}
+} */
 
 #filter-button {
     margin-left: 10px;
+    color: white;
 }
 
 #no-events-found-filter-message h3 {
