@@ -34,4 +34,5 @@ DROP TABLE [Weather];
 DROP TABLE [EmailHistory];
 DROP TABLE [SearchRecord];
 DROP TABLE [AccountRecord];
+DROP TABLE [ItineraryEvents];
 DROP TABLE [Itinerary];

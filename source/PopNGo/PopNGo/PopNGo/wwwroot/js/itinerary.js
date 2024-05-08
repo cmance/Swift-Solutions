@@ -19,23 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Assuming you have a function or a way to check if the user is logged in
-    const userIsLoggedIn = await checkUserLoggedIn(); // Replace this with your actual authentication check
-
-    if (!userIsLoggedIn) {
-        disableAddToItineraryButtons();
-        displayLoginPrompt(); // Show login prompt if not logged in
-    } else {
-        try {
-            const itineraries = await getAllUserEventsFromItinerary();
-            initPage(itineraries);
-        } catch (error) {
-            console.error('There was an error fetching the itinerary data:', error);
-        }
-    }
-});
-
 async function initPage() {
     try {
         const itineraries = await getAllUserEventsFromItinerary();
