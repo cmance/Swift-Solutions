@@ -86,6 +86,6 @@ public class DistanceCalculatorApiController : Controller
             return StatusCode(StatusCodes.Status401Unauthorized);
         }
 
-        return user.DistanceUnit.ToLower();
+        return user.DistanceUnit?.ToLower() ?? "miles";
     }
 }

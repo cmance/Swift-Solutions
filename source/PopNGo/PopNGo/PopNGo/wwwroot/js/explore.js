@@ -214,11 +214,19 @@ async function displayEvents(events) {
     events = events.map(event => { event.distance = null; event.distanceUnit = null; return event; });
 
     // Populate event data with distances
-    const eventDistances = await getDistancesForEvents(userLocation.lat, userLocation.long, events, distanceUnit);
-    if(eventDistances.distances.length > 0) {
-        events = events.map((event, index) => {
-            event.distance = eventDistances.distances[index];
-            event.distanceUnit = eventDistances.unit;
+    if(!userLocation.lat || !userLocation.long) {
+        const eventDistances = await getDistancesForEvents(userLocation.lat, userLocation.long, events, distanceUnit);
+        if(eventDistances.distances.length > 0) {
+            events = events.map((event, index) => {
+                event.distance = eventDistances.distances[index];
+                event.distanceUnit = eventDistances.unit;
+                return event;
+            });
+        }
+    } else {
+        events = events.map(event => {
+            event.distance = null;
+            event.distanceUnit = null;
             return event;
         });
     }
@@ -276,7 +284,7 @@ function displayWeatherForecast(weatherData) {
     const weatherForecastTemplate = document.getElementById('weather-card-template');
 
     for (let forecast of weatherData.weatherForecasts) {
-        console.log(forecast);
+        // console.log(forecast);
         let newForecastCard = weatherForecastTemplate.content.cloneNode(true);
 
         let forecastCardProps = {
@@ -355,7 +363,7 @@ async function searchForEvents() {
     }
 
     const weatherForecast = await getForecastForLocation(mapCoords.lat, mapCoords.lng);
-    console.log(weatherForecast);
+    // console.log(weatherForecast);
     displayWeatherForecast(weatherForecast);
     
     toggleSearching();
