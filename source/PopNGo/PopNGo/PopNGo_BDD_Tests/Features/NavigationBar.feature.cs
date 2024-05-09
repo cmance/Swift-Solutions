@@ -139,14 +139,14 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Navigation styling change")]
+        [NUnit.Framework.DescriptionAttribute("Navigation styling change on hover")]
         [NUnit.Framework.CategoryAttribute("navigation")]
-        public async System.Threading.Tasks.Task NavigationStylingChange()
+        public async System.Threading.Tasks.Task NavigationStylingChangeOnHover()
         {
             string[] tagsOfScenario = new string[] {
                     "navigation"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            Reqnroll.ScenarioInfo scenarioInfo = new Reqnroll.ScenarioInfo("Navigation styling change", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            Reqnroll.ScenarioInfo scenarioInfo = new Reqnroll.ScenarioInfo("Navigation styling change on hover", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 20
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -161,7 +161,7 @@ this.ScenarioInitialize(scenarioInfo);
     await testRunner.GivenAsync("the user is on the home page", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 22
-    await testRunner.WhenAsync("the user clicks on the home logo", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("the user hovers over the home logo", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 23
     await testRunner.ThenAsync("the color of the home logo should not be white", ((string)(null)), ((Reqnroll.Table)(null)), "Then ");
@@ -171,14 +171,14 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Navigation styling change on hover")]
+        [NUnit.Framework.DescriptionAttribute("Navigation bar hides when hide button is clicked")]
         [NUnit.Framework.CategoryAttribute("navigation")]
-        public async System.Threading.Tasks.Task NavigationStylingChangeOnHover()
+        public async System.Threading.Tasks.Task NavigationBarHidesWhenHideButtonIsClicked()
         {
             string[] tagsOfScenario = new string[] {
                     "navigation"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            Reqnroll.ScenarioInfo scenarioInfo = new Reqnroll.ScenarioInfo("Navigation styling change on hover", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            Reqnroll.ScenarioInfo scenarioInfo = new Reqnroll.ScenarioInfo("Navigation bar hides when hide button is clicked", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 26
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -193,10 +193,42 @@ this.ScenarioInitialize(scenarioInfo);
     await testRunner.GivenAsync("the user is on the home page", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 28
-    await testRunner.WhenAsync("the user hovers over the home logo", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("the user clicks on the hide button", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 29
-    await testRunner.ThenAsync("the color of the home logo should not be white", ((string)(null)), ((Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("the navigation bar should disappear", ((string)(null)), ((Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Navigation bar appears when show button is clicked")]
+        [NUnit.Framework.CategoryAttribute("navigation")]
+        public async System.Threading.Tasks.Task NavigationBarAppearsWhenShowButtonIsClicked()
+        {
+            string[] tagsOfScenario = new string[] {
+                    "navigation"};
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            Reqnroll.ScenarioInfo scenarioInfo = new Reqnroll.ScenarioInfo("Navigation bar appears when show button is clicked", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 32
+this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 33
+    await testRunner.GivenAsync("the user is on the home page", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 34
+    await testRunner.WhenAsync("the user clicks on the show button", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 35
+    await testRunner.ThenAsync("the navigation bar should appear", ((string)(null)), ((Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
