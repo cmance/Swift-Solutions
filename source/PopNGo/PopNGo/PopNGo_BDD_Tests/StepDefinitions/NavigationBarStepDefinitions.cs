@@ -8,6 +8,7 @@ using PopNGo_BDD_Tests.Drivers;
 using OpenQA.Selenium.Chrome; // Add this line
 using OpenQA.Selenium.Edge; // Add this line
 using OpenQA.Selenium.Firefox; // Add this line
+using System.Threading.Tasks;
 
 
 
@@ -40,6 +41,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         [Then("the user should see the navigation bar")]
         public void ThenTheUserShouldSeeTheNavigationBar()
         {
+            _homePage.OpenNavigationBar();
             _homePage.NavigationBar.Displayed.Should().BeTrue();
         }
 
@@ -66,6 +68,45 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         {
             var color = _homePage.GetHomeLogoColor();
             Assert.AreNotEqual("rgb(255, 255, 255)", color); // Check that the color is not white
+        }
+
+        [When("the user clicks on the hide button")]
+        public async Task WhenTheUserClicksOnTheHideButton()
+        {
+            if (!_homePage.NavigationBar.Displayed)
+            {
+                _homePage.OpenNavigationBar();
+                await Task.Delay(500);
+            }
+            
+            _homePage.CloseNavigationBar();
+            await Task.Delay(500);
+        }
+
+        [Then("the navigation bar should disappear")]
+        public void ThenTheNavigationBarShouldDisappear()
+        {
+            _homePage.NavigationBar.Displayed.Should().BeFalse();
+        }
+
+        [When("the user clicks on the show button")]
+        public async Task WhenTheUserClicksOnTheShowButton()
+        {
+            if (_homePage.NavigationBar.Displayed)
+            {
+                _homePage.CloseNavigationBar();
+                await Task.Delay(500);
+            }
+
+            _homePage.OpenNavigationBar();
+            await Task.Delay(500);
+        }
+
+        [Then("the navigation bar should appear")]
+        public async Task ThenTheNavigationBarShouldAppear()
+        {
+            await Task.Delay(500); // Wait for the UI to update
+            _homePage.NavigationBar.Displayed.Should().BeTrue();
         }
     }
 }
