@@ -44,6 +44,12 @@ CREATE TABLE [Event] (
   [VenueWebsite] NVARCHAR(255),
 );
 
+CREATE TABLE [EventTag] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1,1),
+  [TagId] INTEGER NOT NULL, -- FK to tag
+  [EventId] INTEGER NOT NULL, -- FK to event
+)
+
 CREATE TABLE [TicketLink] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [EventID] INTEGER NOT NULL,
@@ -140,3 +146,6 @@ ALTER TABLE [ScheduledNotification] ADD CONSTRAINT FK_ScheduledNotification_User
 ALTER TABLE [WeatherForecast] ADD CONSTRAINT FK_WeatherForecast_WeatherId FOREIGN KEY ([WeatherId]) REFERENCES [Weather] ([ID]);
 
 ALTER TABLE [EmailHistory] ADD CONSTRAINT FK_EmailHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
+
+ALTER TABLE [EventTag] ADD CONSTRAINT FK_EventTag_TagId FOREIGN KEY ([TagId]) REFERENCES [Tag] ([ID]);
+ALTER TABLE [EventTag] ADD CONSTRAINT FK_EventTag_EventId FOREIGN KEY ([EventId]) REFERENCES [Event] ([ID]);

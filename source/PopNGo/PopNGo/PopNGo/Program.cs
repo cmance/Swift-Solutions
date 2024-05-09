@@ -101,6 +101,7 @@ public class Program
         builder.Services.AddScoped<IAccountRecordRepository, AccountRecordRepository>();
         builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
         builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
+        builder.Services.AddScoped<IEventTagRepository, EventTagRepository>();
 
         
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();

@@ -15,6 +15,15 @@ namespace PopNGo.DAL.Concrete
             _ticketLink = context.TicketLinks;
         }
 
+        public Event GetEventFromApiId(string apiEventId)
+        {
+            if (string.IsNullOrEmpty(apiEventId))
+            {
+                throw new ArgumentException("ApiEventId cannot be null or empty", nameof(apiEventId));
+            }
+            return _event.FirstOrDefault(e => e.ApiEventId == apiEventId);
+        }
+
         public Event AddEvent(EventDetail eventDetail)
         {
             ValidateEventParameters(eventDetail);

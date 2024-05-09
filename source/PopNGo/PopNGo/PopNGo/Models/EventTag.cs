@@ -6,23 +6,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PopNGo.Models;
 
-public partial class ItineraryEvent
+[Table("EventTag")]
+public partial class EventTag
 {
     [Key]
     [Column("ID")]
     public int Id { get; set; }
 
-    [Column("ItineraryID")]
-    public int ItineraryId { get; set; }
+    public int TagId { get; set; }
 
-    [Column("EventID")]
     public int EventId { get; set; }
 
     [ForeignKey("EventId")]
-    [InverseProperty("ItineraryEvents")]
+    [InverseProperty("EventTags")]
     public virtual Event Event { get; set; }
 
-    [ForeignKey("ItineraryId")]
-    [InverseProperty("ItineraryEvents")]
-    public virtual Itinerary Itinerary { get; set; }
+    [ForeignKey("TagId")]
+    [InverseProperty("EventTags")]
+    public virtual Tag Tag { get; set; }
 }
