@@ -32,9 +32,9 @@
 
     @* back/next page buttons, and page number *@
     <div id="pagination" class="pagination justify-content-center m-5" style="display: none;">
-        <button disabled id="previous-page-button" class="btn rounded-pill pagination-buttons">0</button>
-        <div id="page-number" class="rounded-pill page-number">1</div>
-        <button id="next-page-button" class="btn rounded-pill pagination-buttons">2</button>
+        <button disabled aria-label="Previous page of events" id="previous-page-button" class="btn rounded-pill pagination-buttons">0</button>
+        <div aria-label="Current event page" id="page-number" class="rounded-pill page-number">1</div>
+        <button aria-label="Next page of events." id="next-page-button" class="btn rounded-pill pagination-buttons">2</button>
     </div>
 
     <div class="row weather-preview" id="weather-preview">

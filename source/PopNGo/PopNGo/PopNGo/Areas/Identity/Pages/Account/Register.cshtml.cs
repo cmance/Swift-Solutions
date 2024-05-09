@@ -180,6 +180,9 @@ namespace PopNGo.Areas.Identity.Pages.Account
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.NotificationEmail = Input.Email;
+                user.DistanceUnit = "miles";
+                user.TemperatureUnit = "f";
+                user.MeasurementUnit = "inches";
 
                 Console.WriteLine("User: " + user.FirstName + " " + user.Id);
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);

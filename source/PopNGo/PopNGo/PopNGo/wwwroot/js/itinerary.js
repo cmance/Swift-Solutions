@@ -19,23 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Assuming you have a function or a way to check if the user is logged in
-    const userIsLoggedIn = await checkUserLoggedIn(); // Replace this with your actual authentication check
-
-    if (!userIsLoggedIn) {
-        disableAddToItineraryButtons();
-        displayLoginPrompt(); // Show login prompt if not logged in
-    } else {
-        try {
-            const itineraries = await getAllUserEventsFromItinerary();
-            initPage(itineraries);
-        } catch (error) {
-            console.error('There was an error fetching the itinerary data:', error);
-        }
-    }
-});
-
 async function initPage() {
     try {
         const itineraries = await getAllUserEventsFromItinerary();
@@ -79,9 +62,9 @@ function createAccordionHtml(itinerary, index) {
     return `
         <div class="accordion-item pb-3" style="background-color: transparent; border: none;">
             <h2 class="accordion-header" id="heading${index}">
-                <button class="accordion-button collapsed" id="accordion-header-bg" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
+                <button aria-label="View itinerary dropdown button" class="accordion-button collapsed" id="accordion-header-bg" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="collapse${index}">
                     <span class="text-light" contenteditable="true">${itinerary.itineraryTitle}</span>
-                    <button class="btn btn-danger float-end delete-itinerary-btn mx-4" data-itinerary-id="${itinerary.id}"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button aria-label="Delete itinerary button." class="btn btn-danger float-end delete-itinerary-btn mx-4" data-itinerary-id="${itinerary.id}"><i class="fa fa-trash" aria-hidden="true"></i></button>
                 </button>
             </h2>
             <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#accordionExample">
@@ -114,7 +97,7 @@ function createEventHtml(eventData, itineraryId) {
                                 </div>
                             </div>
                             <div class="col-md-1">
-                                <button class="btn btn-danger delete-event-btn" data-event-id="${eventData.apiEventID}" data-itinerary-id="${itineraryId}">
+                                <button aria-label="Delete event in itinerary button" class="btn btn-danger delete-event-btn" data-event-id="${eventData.apiEventID}" data-itinerary-id="${itineraryId}">
                                     <i class="fa fa-trash" aria-hidden="true"></i>
                                 </button>
                             </div>

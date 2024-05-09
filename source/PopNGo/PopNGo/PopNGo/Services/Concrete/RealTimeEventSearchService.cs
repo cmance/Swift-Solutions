@@ -120,7 +120,7 @@ namespace PopNGo.Services
                     if (response.IsSuccessStatusCode)
                     {
                         responseBody = await response.Content.ReadAsStringAsync();
-                        _logger.LogInformation($"Response body: {responseBody}");
+                        // _logger.LogInformation($"Response body: {responseBody}");
                         if (!string.IsNullOrEmpty(responseBody))
                         {
                             break;
@@ -157,30 +157,73 @@ namespace PopNGo.Services
 
             AllEventDetail allEventDetail = JsonSerializer.Deserialize<AllEventDetail>(responseBody, options);
 
-            IList<EventDetail> eventDetails = allEventDetail.data.Select(data => new EventDetail
-            {
-                EventID = data.event_id,
-                EventName = data.name,
-                EventLink = data.link,
-                EventDescription = data.description,
-                EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue,
-                EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue,
-                EventIsVirtual = data.is_virtual,
-                EventThumbnail = data.thumbnail,
-                EventLanguage = data.language,
-                Full_Address = data.venue?.full_address ?? "",
-                Longitude = data.venue?.longitude ?? 0,
-                Latitude = data.venue?.latitude ?? 0,
-                Phone_Number = data.venue?.phone_number,
-                VenueName = data.venue?.name,
-                VenueRating = data.venue?.rating,
-                VenueWebsite = data.venue?.website,
-                TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
+            IList<EventDetail> eventDetails = allEventDetail.data.Select(data => {
+                EventDetail newOne = new EventDetail();
+                Console.WriteLine($"Event ID: {data.event_id}");
+                newOne.EventID = data.event_id;
+                Console.WriteLine($"Event Name: {data.name}");
+                newOne.EventName = data.name;
+                Console.WriteLine($"Event Link: {data.link}");
+                newOne.EventLink = data.link;
+                Console.WriteLine($"Event Description: {data.description}");
+                newOne.EventDescription = data.description;
+                Console.WriteLine($"Event Start Time: {data.start_time}");
+                newOne.EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue;
+                Console.WriteLine($"Event End Time: {data.end_time}");
+                newOne.EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue;
+                Console.WriteLine($"Event Is Virtual: {data.is_virtual}");
+                newOne.EventIsVirtual = data.is_virtual;
+                Console.WriteLine($"Event Thumbnail: {data.thumbnail}");
+                newOne.EventThumbnail = data.thumbnail;
+                Console.WriteLine($"Event Language: {data.language}");
+                newOne.EventLanguage = data.language;
+                Console.WriteLine($"Full Address: {data.venue?.full_address}");
+                newOne.Full_Address = data.venue?.full_address ?? "";
+                Console.WriteLine($"Longitude: {data.venue?.longitude}");
+                newOne.Longitude = data.venue?.longitude ?? 0;
+                Console.WriteLine($"Latitude: {data.venue?.latitude}");
+                newOne.Latitude = data.venue?.latitude ?? 0;
+                Console.WriteLine($"Phone Number: {data.venue?.phone_number}");
+                newOne.Phone_Number = data.venue?.phone_number;
+                Console.WriteLine($"Venue Name: {data.venue?.name}");
+                newOne.VenueName = data.venue?.name;
+                Console.WriteLine($"Venue Rating: {data.venue?.rating}");
+                newOne.VenueRating = data.venue?.rating;
+                Console.WriteLine($"Venue Website: {data.venue?.website}");
+                newOne.VenueWebsite = data.venue?.website;
+                Console.WriteLine($"Ticket Links: {data.ticket_links}");
+                newOne.TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
                 {
                     Source = t.source,
                     Link = t.link
-                }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
-                EventTags = data.tags
+                }).ToList() : new List<PopNGo.Models.DTO.TicketLink>();
+                Console.WriteLine($"Event Tags: {data.tags}");
+                newOne.EventTags = data.tags;
+                return newOne;
+                // return new EventDetail {
+                //     EventID = data.event_id,
+                //     EventName = data.name,
+                //     EventLink = data.link,
+                //     EventDescription = data.description,
+                //     EventStartTime = DateTime.TryParse(data.start_time, out DateTime startTime) ? startTime : DateTime.MinValue,
+                //     EventEndTime = DateTime.TryParse(data.end_time, out DateTime endTime) ? endTime : DateTime.MinValue,
+                //     EventIsVirtual = data.is_virtual,
+                //     EventThumbnail = data.thumbnail,
+                //     EventLanguage = data.language,
+                //     Full_Address = data.venue?.full_address ?? "",
+                //     Longitude = data.venue?.longitude ?? 0,
+                //     Latitude = data.venue?.latitude ?? 0,
+                //     Phone_Number = data.venue?.phone_number,
+                //     VenueName = data.venue?.name,
+                //     VenueRating = data.venue?.rating,
+                //     VenueWebsite = data.venue?.website,
+                //     TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
+                //     {
+                //         Source = t.source,
+                //         Link = t.link
+                //     }).ToList() : new List<PopNGo.Models.DTO.TicketLink>(),
+                //     EventTags = data.tags
+                // };
             }).ToList();
 
             return eventDetails;
