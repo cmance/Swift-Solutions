@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using PopNGo.Areas.Identity.Data;
+using PopNGo.Services;
 
 namespace PopNGo.Areas.Identity.Pages.Account
 {
@@ -21,9 +22,9 @@ namespace PopNGo.Areas.Identity.Pages.Account
     public class ResendEmailConfirmationModel : PageModel
     {
         private readonly UserManager<PopNGoUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly EmailSender _emailSender;
 
-        public ResendEmailConfirmationModel(UserManager<PopNGoUser> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(UserManager<PopNGoUser> userManager, EmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -81,10 +82,15 @@ namespace PopNGo.Areas.Identity.Pages.Account
                 pageHandler: null,
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
+
             await _emailSender.SendEmailAsync(
                 Input.Email,
                 "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                new Dictionary<string, string>
+                {
+                    { "template", "confirmation" },
+                    { "confirmationURL", callbackUrl }
+                });
 
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return Page();

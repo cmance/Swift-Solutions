@@ -89,14 +89,16 @@
 }
 
 #filters-container select {
-    background-color: #1e1e1e !important;
-    color: white !important;
+    color: white;
+    /* background-color: #1e1e1e !important;
+    color: white !important; */
     border-radius: 10px;
     border: 0;
     appearance: none; /* Remove default select dropdown arrow */
     -webkit-appearance: none; /* For Safari */
     -moz-appearance: none; /* For Firefox */
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="orange" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') no-repeat right 10px center; /* Adjust the horizontal position of the arrow */
+    background-color: #1e1e1e;
     padding-right: 10px; /* Add padding to prevent text from overlapping with the arrow */
 }
 
