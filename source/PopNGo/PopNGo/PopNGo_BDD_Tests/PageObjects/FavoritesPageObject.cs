@@ -28,5 +28,6 @@ namespace PopNGo_BDD_Tests.PageObjects
         public IReadOnlyList<IWebElement> BookmarkListTitles => _webDriver.FindElements(By.ClassName("bookmarkListCardTitleText"));
         public IWebElement CreateBookmarkListButton => _webDriver.FindElement(By.ClassName("saveNewBookmarkListButton"));
         public IWebElement NewBookmarkListNameInput => _webDriver.FindElement(By.Id("new-bookmark-list-card-title-input"));
+        public IWebElement FilterByTagDropdownButton => _webDriver.FindElement(By.Id("filter-tag-dropdown"));
     }
 }

@@ -30,6 +30,33 @@ public class EventRepositoryTests
     }
 
     [Test]
+    public void GetEventFromApiId_ShouldReturnEvent()
+    {
+        // Arrange
+        var eventId = "event1";
+
+        // Act
+        var result = _eventRepository.GetEventFromApiId(eventId);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ApiEventId, Is.EqualTo(eventId));
+    }
+
+    [Test]
+    public void GetEventFromApiId_ShouldErrorIfEventIdIsNull()
+    {
+        // Arrange
+        var eventId = "";
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.GetEventFromApiId(eventId));
+
+        // Assert
+        Assert.That(ex.Message, Is.EqualTo("ApiEventId cannot be null or empty (Parameter 'apiEventId')"));
+    }
+
+    [Test]
     public void AddEvent_ShouldAddNewEvent()
     {
         // Arrange
@@ -57,7 +84,7 @@ public class EventRepositoryTests
         _eventRepository.AddEvent(eventDetail);
 
         // Assert
-         var events = _context.Events.ToList();
+        var events = _context.Events.ToList();
         Assert.That(events.Count, Is.EqualTo(7));
         var addedEvent = events.Last();
         Assert.That(addedEvent.ApiEventId, Is.EqualTo(eventDetail.EventID));

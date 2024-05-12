@@ -17,11 +17,15 @@ namespace PopNGo.Controllers
         private readonly IEventRepository _eventRepository;
         private readonly ISearchRecordRepository _searchRecordRepository;
         private readonly IPgUserRepository _pgUserRepository;
+        private readonly IEventTagRepository _eventTagRepository;
+        private readonly ITagRepository _tagRepository;
         private readonly ILogger<RealTimeEventSearchApiController> _logger;
         private readonly UserManager<PopNGoUser> _userManager;
         public RealTimeEventSearchApiController(
             IRealTimeEventSearchService realTimeEventSearchService,
             IEventRepository eventRepository,
+            ITagRepository tagRepository,
+            IEventTagRepository eventTagRepository,
             ISearchRecordRepository searchRecordRepository,
             IPgUserRepository pgUserRepository,
             ILogger<RealTimeEventSearchApiController> logger,
@@ -29,6 +33,8 @@ namespace PopNGo.Controllers
         {
             _realTimeEventSearchService = realTimeEventSearchService;
             _eventRepository = eventRepository;
+            _eventTagRepository = eventTagRepository;
+            _tagRepository = tagRepository;
             _searchRecordRepository = searchRecordRepository;
             _pgUserRepository = pgUserRepository;
             _logger = logger;
@@ -58,6 +64,20 @@ namespace PopNGo.Controllers
                     if (!_eventRepository.IsEvent(eventDetail.EventID))
                     {
                         _eventRepository.AddEvent(eventDetail);
+                        // Add tags to database
+                        foreach (string tag in eventDetail.EventTags)
+                        {
+                            // Skip any tags that are too long
+                            if(tag.Length <= 255) {
+                                Models.Tag foundTag = await _tagRepository.FindByName(tag);
+                                if (foundTag != null) {
+                                    await _tagRepository.CreateNew(tag);
+                                }
+                            }
+                           // Add event tags to database
+                            _eventTagRepository.AddEventTag((await _tagRepository.FindByName(tag)).Id, _eventRepository.GetEventFromApiId(eventDetail.EventID).Id);
+
+                        }
                     }
                 }
                 var events = _eventRepository.GetEventsFromEventApiIds(eventsDetails.Select(e => e.EventID).ToList());

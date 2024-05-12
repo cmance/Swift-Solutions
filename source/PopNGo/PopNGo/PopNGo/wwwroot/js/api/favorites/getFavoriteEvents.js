@@ -24,7 +24,7 @@
  * @async
  * @function getEvents
  * @param {string} bookmarkListName
- * @returns {Object[]}
+ * @returns {Promise<Object[]>}
  */
 export async function getFavoriteEvents(bookmarkListName) {
     try {

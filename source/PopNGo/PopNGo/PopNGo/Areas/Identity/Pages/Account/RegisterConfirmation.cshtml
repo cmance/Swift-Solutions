@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Register confirmation";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/identity.css" />
+}
 
 <h1 class="text-light">@ViewData["Title"]</h1>
 @{
@@ -13,11 +16,11 @@
             </div>
         </div>
     }
-<p class="text-light">
+<p class="text-light text-muted">
         Please check your email to confirm your account.
 </p>
 
-<p class="text-light">
+<p class="text-light text-muted">
     Didn't get it yet? <a class="text-swipe" asp-page="./ResendEmailConfirmation" asp-route-email="@Model.Email">Resend confirmation email</a>
 </p>
 }

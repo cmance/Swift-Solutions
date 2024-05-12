@@ -1,3 +1,15 @@
+:root {
+  --main-font-color: #d38100; /* This is our current font color */
+  --main-font-color2: #ff9d03; /* This as our new font color gives us a passing contrast */
+  --swipe-font-color: #d35400; /* This is our current font color */
+  --swipe-font-color2: #ff7417; /* This as our new font color gives us a passing contrast */
+  --main-bg-color: #3F3F3F; /* This is our current BG color */
+  --main-bg-color2: #333333; /* This as our new BG color gives us a passing contrast */
+
+  --btn-hover-color: #313030; /* This is our current hover color */
+  --btn-font-color: #ff9b58;
+}
+
 .btn:focus,
 .btn:active:focus,
 .btn-link.nav-link:focus,
@@ -372,8 +384,8 @@ input[type="date"] {
 }
 
 input[type="date"]:focus {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+  border: none;
+  outline: none;
+  box-shadow: none;
   background: #ff9800;
 }

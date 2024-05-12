@@ -14,15 +14,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using PopNGo.Areas.Identity.Data;
+using PopNGo.Services;
 
 namespace PopNGo.Areas.Identity.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<PopNGoUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly EmailSender _emailSender;
 
-        public ForgotPasswordModel(UserManager<PopNGoUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<PopNGoUser> userManager, EmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;
@@ -74,7 +75,12 @@ namespace PopNGo.Areas.Identity.Pages.Account
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    new Dictionary<string, string>
+                    {
+                        { "template", "resetPassword" },
+                        { "resetPasswordURL", callbackUrl }
+                    }
+                );
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

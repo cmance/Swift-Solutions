@@ -297,5 +297,21 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _favoritesPage.EditBookmarkListNameInput.Clear();
             _favoritesPage.EditBookmarkListNameInput.SendKeys(_scenarioContext["newBookmarkListTitle"].ToString());
         }
+
+        [Then("I should see the filter by tag dropdown button")]
+        public void ThenIShouldSeeTheFilterByTagDropdownButton()
+        {
+            // Check that the filter by tag dropdown button is displayed
+            _favoritesPage.FilterByTagDropdownButton.Displayed.Should().BeTrue();
+        }
+
+        [When("I click on the new bookmark list")]
+        public void WhenIClickOnTheNewBookmarkList()
+        {
+            // Get the bookmark list from scenario context
+            string newBookmarkListTitle = _scenarioContext["newBookmarkListTitle"].ToString();
+            // Click the new bookmark list
+            _favoritesPage.GetBookmarkListFromTitle(newBookmarkListTitle).Click();
+        }
     }
 }

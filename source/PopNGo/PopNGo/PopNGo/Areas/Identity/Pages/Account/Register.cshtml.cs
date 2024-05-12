@@ -23,6 +23,7 @@ using PopNGo.Areas.Identity.Data;
 using PopNGo.DAL.Abstract;
 using PopNGo.Data;
 using PopNGo.Models;
+using PopNGo.Services;
 
 namespace PopNGo.Areas.Identity.Pages.Account
 {
@@ -34,7 +35,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<PopNGoUser> _emailStore;
         private readonly IPasswordValidator<PopNGoUser> _passwordValidator;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+        private readonly EmailSender _emailSender;
         private readonly PopNGoDB _popNGoDBContext;
 
         private readonly IBookmarkListRepository _bookmarkListRepository;
@@ -47,7 +48,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
             IPasswordValidator<PopNGoUser> passwordValidator,
             SignInManager<PopNGoUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
+            EmailSender emailSender,
             PopNGoDB popNGoDBContext,
             IBookmarkListRepository bookmarkListRepository,
             IScheduledNotificationRepository scheduledNotificationRepository,
@@ -173,6 +174,16 @@ namespace PopNGo.Areas.Identity.Pages.Account
                 return Page();
             }
 
+            // Add a sanity check so that you can't create a second account with the same email.
+            var emailExists = await _emailStore.FindByEmailAsync(Input.Email.ToUpper(), CancellationToken.None);
+            if (emailExists != null)
+            {
+                ModelState.AddModelError("Email", "An incorrect email has been entered. Please try again.");
+
+                return Page();
+            }
+
+            // Alright, we made it past the initial sanity checks. Were there any other errors?
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -184,16 +195,15 @@ namespace PopNGo.Areas.Identity.Pages.Account
                 user.TemperatureUnit = "f";
                 user.MeasurementUnit = "inches";
 
-                Console.WriteLine("User: " + user.FirstName + " " + user.Id);
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
-                await _userManager.AddToRoleAsync(user, "User");
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddToRoleAsync(user, "User");
+                    
                     PgUser newUser = new()
                     {
                         AspnetuserId = user.Id
@@ -205,6 +215,7 @@ namespace PopNGo.Areas.Identity.Pages.Account
                     await _scheduledNotificationRepository.AddScheduledNotification(newUser.Id, DateTime.Now.AtMidnight().AddDays(1), "Upcoming Events");
                     _accountRecordRepository.AdjustBalance(DateTime.Now.AtMidnight(), "created", "increase");
 
+                    // Set up the email confirmation
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -214,17 +225,24 @@ namespace PopNGo.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    // Send the email confirmation to the user's email (no checking if that exists!)
+                    await _emailSender.SendEmailAsync(
+                        Input.Email,
+                        "Confirm your email",
+                        new Dictionary<string, string>
+                        {
+                            { "template", "confirmation" },
+                            { "confirmationURL", callbackUrl }
+                        }
+                    );
 
+                    // If the user is required to confirm their email, redirect them to the confirmation page.
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl, userCreated = true });
                     }
                     else
                     {
-                        // await _signInManager.SignInAsync(user, isPersistent: false);
-                        // return LocalRedirect(returnUrl);
                         return RedirectToPage("Login", new { userCreated = true});
                     }
                 }
