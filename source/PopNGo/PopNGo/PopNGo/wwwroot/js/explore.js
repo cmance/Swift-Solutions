@@ -211,7 +211,7 @@ async function displayEvents(events) {
     events = events.map(event => { event.distance = null; event.distanceUnit = null; return event; });
 
     // Populate event data with distances
-    if(!userLocation.lat || !userLocation.long) {
+    if(userLocation.lat && userLocation.long) {
         const eventDistances = await getDistancesForEvents(userLocation.lat, userLocation.long, events, distanceUnit);
         if(eventDistances.distances.length > 0) {
             events = events.map((event, index) => {

@@ -138,8 +138,8 @@ export function validateBuildEventCardProps(data) {
         img: x => (typeof x === 'string' || x === undefined || x === null),
         title: x => typeof x === 'string',
         date: x => x instanceof Date,
-        city: x => typeof x === 'string',
-        state: x => typeof x === 'string',
+        city: x => typeof x === 'string' || x === undefined || x === null,
+        state: x => typeof x === 'string' || x === undefined || x === null,
         tags: x => Array.isArray(x),
         distance: x => typeof x === 'number' || x === null,
         distanceUnit: x => typeof x === 'string' || x === null,
@@ -148,5 +148,6 @@ export function validateBuildEventCardProps(data) {
         onPressEvent: x => (typeof x === 'function' || x === undefined || x === null),
         onPressDelete: x => (typeof x === 'function' || x === undefined || x === null),
     }
+
     return validateObject(data, schema).length === 0;
 }
