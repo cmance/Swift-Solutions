@@ -8,6 +8,13 @@
                 <div class="event-modal-tag rounded-pill">Tag2</div>
                 <div class="event-modal-tag rounded-pill">Tag3</div>
             </div>
+            <div class="original-post-link-container">
+                <a id="original-post-link" class="btn btn-warning original-post-link" href="">
+                    View Original Event
+                    Post
+                </a>
+            </div>
+
             <h2 id="event-modal-title" class="event-modal-headers">Event title</h2>
             <div id="modal-event-description" class="event-modal-description-text">
                 This is a description test, this is a description test, this is a description test, this is a
@@ -26,10 +33,19 @@
 
             <div id="buttons-container">
                 <div id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
+                <div class="dropdown">
+                    <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Add to itinerary
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new itinerary</button></li>
+                    </ul>
+                </div>
+
                 <div id="right-buttons">
                     <div id="buy-tickets-btn" title="Buy tickets for this event">
                         <button id="buyTicketsBtn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                                aria-expanded="false">
                             Buy Tickets
                         </button>
                         <div class="dropdown-menu" aria-labelledby="buyTicketsBtn">
@@ -38,6 +54,24 @@
                     </div>
                     <div id="view-venue-btn" title="View information about the venue"></div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create your itinerary here</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" id="itinerary-title" type="text" placeholder="Enter the title">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" id="save-new-itinerary" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

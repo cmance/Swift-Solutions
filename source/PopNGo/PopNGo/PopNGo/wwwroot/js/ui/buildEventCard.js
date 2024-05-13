@@ -20,9 +20,12 @@ import { validateObject } from "../validation.js";
      city: String,
      state: String,
      tags: Array[Tag],
+     distance: Number,
+     distanceUnit: String,
      bookmarkListNames: Array[String]
      onPressBookmarkList: (bookmarkListName: String) => void (optional),
      onPressEvent: Function
+     onPressDelete: Function (optional) If not provided, the delete button will be removed
  }
 
  Tag: {
@@ -56,6 +59,14 @@ export const buildEventCard = (eventCardElement, props) => {
     eventCardElement.querySelector('#day-number').textContent = props.date.getDate();
     eventCardElement.querySelector('#month').textContent = props.date.toLocaleString('default', { month: 'short' });
 
+    // Set the distance
+    if (props.distance !== null) {
+        eventCardElement.querySelector('#distance-number').textContent = props.distance;
+        eventCardElement.querySelector('#distance-unit').textContent = props.distanceUnit;
+    } else {
+        eventCardElement.querySelector('#distance').remove();
+    }
+
     // Set the location
     eventCardElement.querySelector('#event-card-location').textContent = props.state
     ? `${props.city}, ${props.state}` // If state is provided, display the city and state
@@ -85,6 +96,16 @@ export const buildEventCard = (eventCardElement, props) => {
         eventCardElement.querySelector('#event-card-bookmark-button').addEventListener('click', (event) => {
             if (event && event.stopPropagation) event.stopPropagation();
         });
+    }
+
+    // Set the delete button click event
+    if (props.onPressDelete) {
+        eventCardElement.querySelector('.event-card-delete-icon-container').addEventListener('click', (event) => {
+            event.stopPropagation();
+            props.onPressDelete();
+        });
+    } else {
+        eventCardElement.querySelector('.event-card-delete-icon-container').remove();
     }
 
     // Set the tags:
@@ -119,10 +140,12 @@ export function validateBuildEventCardProps(data) {
         city: x => typeof x === 'string',
         state: x => typeof x === 'string',
         tags: x => Array.isArray(x),
+        distance: x => typeof x === 'number' || x === null,
+        distanceUnit: x => typeof x === 'string' || x === null,
         bookmarkListNames: x => Array.isArray(x) || x === undefined || x === null,
         onPressBookmarkList: x => (typeof x === 'function' || x === undefined || x === null),
         onPressEvent: x => (typeof x === 'function' || x === undefined || x === null),
+        onPressDelete: x => (typeof x === 'function' || x === undefined || x === null),
     }
-
     return validateObject(data, schema).length === 0;
 }

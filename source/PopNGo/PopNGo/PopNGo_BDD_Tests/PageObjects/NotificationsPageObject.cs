@@ -1,11 +1,5 @@
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using PopNGo_BDD_Tests.Shared;
-using System;
-using System.Collections.ObjectModel;
-using PopNGo_BDD_Tests.PageObjects;
 using FluentAssertions.Extensions;
-using OpenQA.Selenium.Support.Extensions;
 
 namespace PopNGo_BDD_Tests.PageObjects
 {
@@ -19,7 +13,7 @@ namespace PopNGo_BDD_Tests.PageObjects
         }
         
         public IWebElement SchedulesTable => _webDriver.FindElement(By.Name("admin-schedules-table"));
-        public IWebElement ScheduleRow => SchedulesTable.FindElement(By.TagName("tr[data-userid=\"6b6c5d33-e6d7-4d18-a565-a657eaf7a8a5\"]"));
+        public IWebElement ScheduleRow => SchedulesTable.FindElement(By.CssSelector("tr[data-userid=\"6b6c5d33-e6d7-4d18-a565-a657eaf7a8a5\"]"));
         
         public IWebElement ScheduleRowButtons { get {
             SetScheduleId();

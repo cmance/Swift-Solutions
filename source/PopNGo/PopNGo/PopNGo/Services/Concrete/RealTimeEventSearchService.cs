@@ -18,8 +18,8 @@ namespace PopNGo.Services
 
     public class TicketLink
     {
-        public string? source { get; set; }
-        public string? link { get; set; }
+        public string source { get; set; }
+        public string link { get; set; }
     }
 
     class InfoLink
@@ -98,10 +98,14 @@ namespace PopNGo.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<EventDetail>> SearchEventAsync(string query, int start)
+        public async Task<IEnumerable<EventDetail>> SearchEventAsync(string query, int start, string date = null)
         {
             string endpoint = $"search-events?query={query}&start={start}";
-            _logger.LogInformation($"Calling Real Time Search Event API at {endpoint}");
+
+            if (date != null)
+            {
+                endpoint += $"&date={date}";
+            }
 
             HttpResponseMessage response = null;
             string responseBody = null;

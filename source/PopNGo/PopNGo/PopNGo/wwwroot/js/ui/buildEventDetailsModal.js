@@ -60,8 +60,6 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
     if (!addToCalendarButtonContainer.querySelector('button')) {
         addToCalendarButtonContainer.appendChild(addToCalendarButton);
-    } else {
-        console.error("Button already exists in the container.");
     }
 
     // Buy Tickets Dropdown
@@ -72,6 +70,15 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     // View Venue Btn
     buildVenueDetailsModal(eventDetailsModalElement, props);
 
+    // Populate view original post link
+    if (!props.eventOriginalLink) {
+        eventDetailsModalElement.querySelector('#original-post-link').disabled = true;
+    }
+    else {
+        const viewOriginalPostLink = eventDetailsModalElement.querySelector('#original-post-link');
+        viewOriginalPostLink.href = props.eventOriginalLink;
+        viewOriginalPostLink.target = '_blank';
+    }
 }
 
 /**

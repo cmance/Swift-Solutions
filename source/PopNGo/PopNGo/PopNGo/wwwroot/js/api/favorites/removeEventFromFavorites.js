@@ -1,6 +1,7 @@
 /**
  * Removes an event from the user's bookmark list
  * @param {string} apiEventId 
+ * @param {string} bookmarkListTitle
  */
 export async function removeEventFromFavorites(apiEventId, bookmarkListTitle) {
     let url = "/api/FavoritesApi/RemoveFavorite";
@@ -10,7 +11,7 @@ export async function removeEventFromFavorites(apiEventId, bookmarkListTitle) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            eventApiId: apiEventId,
+            apiEventId: apiEventId,
             bookmarkListTitle: bookmarkListTitle,
         })
     })
