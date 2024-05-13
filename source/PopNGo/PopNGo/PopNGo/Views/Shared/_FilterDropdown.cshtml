@@ -1,0 +1,45 @@
+<div id="filter-dropdown-container" style="display: none;">
+    @* Date Range Component *@
+    <div id="date-range-container">
+        <h3 id="date-range-text">Date Range</h3>
+
+        <div>
+            <div id="invalid-feedback" class="invalid-feedback">
+                Start date cannot be before end date.
+            </div>
+            <input type="date" id="start-date" name="start-date">
+            <span> to </span>
+            <input type="date" id="end-date" name="end-date">
+        </div>
+    </div>
+    @* ******************** *@
+
+    @* Filters Components *@
+    <div id="filters-container">
+        <select id="sort-date" class="form-control">
+            <option value="" disabled selected>Filter by Date</option>
+            <option value="">Any</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+
+        <select id="sort-rating" class="form-control">
+            <option value="" disabled selected>Filter by Venue Rating</option>
+            <option value="">Any</option>
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+        </select>
+
+        <div id="last-row">
+            <select id="sort-alphabetical" class="form-control">
+                <option value="" disabled selected>Filter Alphabetically</option>
+                <option value="">Any</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+
+            <button id="filter-button" class="btn btn-caution">Apply Filters</button>
+        </div>
+    </div>
+    @* ******************** *@
+</div>

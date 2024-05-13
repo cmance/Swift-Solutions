@@ -26,6 +26,7 @@ namespace PopNGo.DAL.Concrete
                 EventDescription = eventDetail.EventDescription,
                 EventLocation = eventDetail.Full_Address,
                 EventImage = eventDetail.EventThumbnail,
+                EventOriginalLink = eventDetail.EventLink,
                 Latitude = eventDetail.Latitude,
                 Longitude = eventDetail.Longitude,
                 VenuePhoneNumber = eventDetail.Phone_Number,

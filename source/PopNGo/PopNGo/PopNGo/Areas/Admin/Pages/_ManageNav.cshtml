@@ -1,6 +1,7 @@
 @using PopNGo.Areas.Admin.Pages
-<ul class="nav nav-pills flex-column navigation sticky-top">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext) text-swipe" id="hug" asp-page="./Index">Main Hub</a></li>
+<ul class="nav nav-pills navigation sticky-top row">
+    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext) text-swipe" id="hub" asp-page="./Index">Main Hub</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.UsersNavClass(ViewContext) text-swipe" id="users" asp-page="./Users">Users</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ScheduledNotificationsNavClass(ViewContext) text-swipe" id="scheduled-notifications" asp-page="./ScheduledNotifications">Scheduled Notifications</a></li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.MetricsNavClass(ViewContext) text-swipe" id="metrics" asp-page="./Metrics">Metrics</a></li>
 </ul>

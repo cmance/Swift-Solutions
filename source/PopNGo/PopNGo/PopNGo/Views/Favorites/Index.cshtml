@@ -1,5 +1,7 @@
 <h1 id="favorite-events-title" class="text-light" style="text-align: center;">Bookmarks</h1>
 
+<partial name="_FilterDropdown" />
+
 @*Favorite events go here*@
 <div id="favorite-events-container"></div>
 
@@ -10,15 +12,14 @@
             href="/Identity/Account/Register">sign up</a>.</h3>
 </div>
 
-<div id="no-favorites-message" style="display: none;">
-    <h3>You have no favorite events. Go to <a href="/Home/Explore">explore</a> or <a href="/Map">map</a> page to find some!</h3>
-</div>
-
 <partial name="_BookmarkListCard" />
 <partial name="_NewBookmarkListCard" />
 <partial name="_EventCard" />
 <partial name="_EventDetailsModal" />
 <partial name="_ViewVenueModal" />
+<partial name="_DeleteBookmarkListConfirmationModal" />
+<partial name="_EditBookmarkListModal" />
+<partial name="_DeleteFavoriteEventConfirmationModal" />
 
 <div id="toastContainer"></div>
 
@@ -30,6 +31,12 @@
 <div class="container">
     <div id="favorite-events-container" class="row">
     </div>
+</div>
+
+<div id="no-events-found-filter-message" style="display: none;">
+    <h3>
+        No events found matching the selected filters.
+    </h3>
 </div>
 
 @section Scripts {

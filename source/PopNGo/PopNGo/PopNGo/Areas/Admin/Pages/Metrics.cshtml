@@ -1,0 +1,57 @@
+@page
+@model MetricsModel
+@{
+    ViewData["Title"] = "Site Metrics";
+    ViewData["ActivePage"] = ManageNavPages.Metrics;
+}
+
+<div class="container">
+    <partial name="../../Identity/Pages/Account/_StatusMessage" model="Model.StatusMessage" />
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Instructions</h2>
+            <p>Observe the site's metrics here. For each chart, you can choose whether you want to view the data within a certain time period, such as yesterday, the past week, or all the data.</p>
+        </div>
+        <hr />
+        <div class="col-md-12 my-2">
+            <h2>User Stats</h2>
+            <select id="user-account-metrics-chart-select" class="admin-chart-select">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">Past Week</option>
+                <option value="month">Past Month</option>
+                <option value="year">Past Year</option>
+            </select>
+            <canvas id="user-account-metrics-chart" class="admin-chart"></canvas>
+        </div>
+        <div class="col-md-12 my-2">
+            <h2>Email History Stats</h2>
+            <select id="email-activity-metrics-chart-select" class="admin-chart-select">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">Past Week</option>
+                <option value="month">Past Month</option>
+                <option value="year">Past Year</option>
+            </select>
+            <canvas id="email-activity-metrics-chart" class="admin-chart"></canvas>
+        </div>
+        <div class="col-md-12 my-2">
+            <h2>Search Activity Stats</h2>
+            <select id="event-activity-metrics-chart-select" class="admin-chart-select">
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">Past Week</option>
+                <option value="month">Past Month</option>
+                <option value="year">Past Year</option>
+            </select>
+            <canvas id="event-activity-metrics-chart" class="admin-chart"></canvas>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="module" src="~/js/ui/buildAdminCharts.js"></script>
+}

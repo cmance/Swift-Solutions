@@ -11,16 +11,18 @@
  * @param {number} start - The index of the first event to return
  * @returns {Object[]}
  */
-export async function getEvents(query, start) {
+export async function getEvents(query, start, date = null) {
+    let endpoint = `/api/search/events?q=${query}&start=${start}`;
+
+    if (date !== null) {
+        endpoint += `&date=${date}`;
+    }
     try {
-        const response = await fetch(`/api/search/events?q=${query}&start=${start}`);
+        const response = await fetch(endpoint);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-
-        console.log(data);
-        return data;
+        return await response.json();
     } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
         throw error;

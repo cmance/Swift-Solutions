@@ -13,4 +13,7 @@ public class PopNGoUser : IdentityUser
     public bool NotifyWeekBefore { get; set; }
     public bool NotifyDayBefore { get; set; }
     public bool NotifyDayOf { get; set; }
+    public string DistanceUnit { get; set; }
+    public string TemperatureUnit { get; set; }
+    public string MeasurementUnit { get; set; }
 }

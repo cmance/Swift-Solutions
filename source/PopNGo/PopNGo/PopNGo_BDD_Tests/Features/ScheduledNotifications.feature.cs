@@ -100,10 +100,10 @@ this.ScenarioInitialize(scenarioInfo);
 await testRunner.GivenAsync("I am an admin", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 11
-await testRunner.WhenAsync("I am in the Admin area", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
+await testRunner.WhenAsync("I am on the \"Admin\" page", ((string)(null)), ((Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 12
-await testRunner.ThenAsync("I should see a way to navigate to Notifications", ((string)(null)), ((Reqnroll.Table)(null)), "Then ");
+await testRunner.ThenAsync("I should see a way to navigate to the \'Notifications\' page", ((string)(null)), ((Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

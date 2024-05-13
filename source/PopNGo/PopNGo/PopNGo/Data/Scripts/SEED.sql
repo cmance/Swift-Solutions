@@ -25,7 +25,15 @@ VALUES
 INSERT INTO [Event]
     ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
 VALUES
-    ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2', 'https://via.placeholder.com/150', 2.2, 2.2, '456-456-7890', 'Venue 2', 4.6, 'https://www.example2.com');
+    ('event2', '2022-01-02T00:00:00', 'Event 2', 'Description 2', 'Location 2', 'https://via.placeholder.com/175', 2.2, 2.2, '456-456-7890', 'Venue 2', 4.6, 'https://www.example2.com');
+INSERT INTO [Event]
+    ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
+VALUES
+    ('event3', '2028-01-02T00:00:00', 'Event 3', 'Description 3', 'Location 3', null, 2.2, 2.2, '456-456-7890', 'Venue 3', 1.5, 'https://www.example3.com');
+INSERT INTO [Event]
+    ([ApiEventID], [EventDate], [EventName], [EventDescription], [EventLocation], [EventImage], [Latitude], [Longitude], [VenuePhoneNumber], [VenueName], [VenueRating], [VenueWebsite])
+VALUES
+    ('event4', '2010-01-02T00:00:00', 'Event 4', 'Description 4', 'Location 4', 'https://via.placeholder.com/200', 2.2, 2.2, '456-456-7890', 'Venue 4', 1.5, 'https://www.example4.com');
 
 -- Get the IDs of the events we just inserted
 DECLARE @event1ID int = (SELECT [ID]
@@ -111,3 +119,18 @@ END;
 CLOSE user_cursor;
 
 DEALLOCATE user_cursor;
+
+INSERT INTO [Itinerary] ([UserID], [ItineraryTitle])
+VALUES
+  (@user1ID, 'New Year Trip'),
+  (@user2ID, 'Weekend Getaway');
+
+-- Get the IDs of the itineraries we just inserted
+DECLARE @itinerary1ID int = (SELECT TOP 1 [ID] FROM [Itinerary] WHERE [UserID] = @user1ID);
+DECLARE @itinerary2ID int = (SELECT TOP 1 [ID] FROM [Itinerary] WHERE [UserID] = @user2ID);
+
+-- Insert into ItineraryEvents - associating events to itineraries
+INSERT INTO [ItineraryEvents] ([ItineraryID], [EventID])
+VALUES
+  (@itinerary1ID, @event1ID), -- Itinerary 1 with Event 1
+  (@itinerary2ID, @event2ID) -- Itinerary 1 with Event 1

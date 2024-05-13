@@ -1,0 +1,16 @@
+﻿@* Weather card holding the date, temperature range, humidity, cloud cover, precipitation info, and a weather summary. *@
+
+<template id="weather-card-template">
+    <div class="mb-1 col" id="weather-card-container">
+        <label id="weather-date" class="text-light d-flex">14 JUL</label>
+        <hr class="text-light">
+        <div class="text-light">
+            <label><span class="weather-card-label">Temp (°<span id="temperature-unit">F</span>):</span> <span id="temperature-min">60</span> - <span id="temperature-max">70</span>
+        </div>
+        <div class="text-light"><span class="weather-card-label">Cloud Cover:</span> <span id="cloud-cover">50</span>%</div>
+        <div class="text-light"><span class="weather-card-label">Humidity:</span> <span id="humidity">50</span>%</div>
+        <hr class="text-light">
+        <div class="text-light"><span class="weather-card-label">Precipitation:</span><br/><span id="precipitation">0</span></div>
+        <div class="text-light"><span class="weather-card-label">Summary:</span><br/><span id="condition">Sunny</span></div>
+    </div>
+</template>

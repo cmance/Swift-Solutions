@@ -19,3 +19,25 @@ export async function addEventToHistory(apiEventId) {
         throw new Error('Network response was not ok');
     }
 }
+
+/**
+ * Adds event to user's itinerary
+ * @param {string} apiEventId 
+ */
+export async function addEventToItinerary(apiEventId) {
+    let url = `/api/ItineraryApi/ItineraryDayEvent?apiEventId=${apiEventId}`;
+    const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+
+    if (!res.ok) {
+        if (res.status === 401) {
+            throw new Error('Unauthorized');
+        }
+
+        throw new Error('Network response was not ok');
+    }
+}

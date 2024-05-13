@@ -129,3 +129,22 @@ INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20240228144100_NotificationEmailData', N'8.0.1');
 
 COMMIT;
+
+BEGIN TRANSACTION;
+
+ALTER TABLE [AspNetUsers] ADD [DistanceUnit] NVARCHAR(max);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240418153200_DistanceSettingsData', N'8.0.1');
+
+COMMIT;
+
+BEGIN TRANSACTION;
+
+ALTER TABLE [AspNetUsers] ADD [TemperatureUnit] NVARCHAR(max);
+ALTER TABLE [AspNetUsers] ADD [MeasurementUnit] NVARCHAR(max);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240420135600_WeatherSettingsData', N'8.0.1');
+
+COMMIT;
