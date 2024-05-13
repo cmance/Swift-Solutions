@@ -63,6 +63,7 @@ namespace PopNGo.Areas.Admin.Pages
                     });
                 }            
 
+                Users = Users.OrderBy(s => s.Id).ToList();
             }
 
             return Page();

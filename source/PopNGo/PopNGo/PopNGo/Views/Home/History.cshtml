@@ -8,8 +8,18 @@
             href="/Identity/Account/Register">sign up</a>.</h3>
 </div>
 
-<div id="no-history-message" style="display: none;">
-    <h3>You have no previously viewed events. Go to the <a href="/Home/Explore">explore</a> page to find some!</h3>
+
+<div class="container">
+    <div id="no-history-events-container" class="row">
+        <div id="no-history-message-container" class="col-8">
+            <div id="no-history-message" style="display: none;">
+                <h3>You have no previously viewed events. Go to the <a href="/Home/Explore">explore</a> page to find some!</h3>
+            </div>
+        </div>
+        <div id="no-history-img-container" class="col-4">
+            <img src="~/media/images/placeholder_event_card_image.png" id="no-history-img" class="img-fluid" alt="No history events image">
+        </div>
+    </div>
 </div>
 
 <div id="history-container" style="display: none;">
@@ -30,6 +40,7 @@
 
 <partial name="_EventCard" />
 <partial name="_EventDetailsModal" />
+<partial name="_ViewVenueModal" />
 
 @section Scripts {
     <script type="module" src="~/js/history.js" asp-append-version="true"></script>
