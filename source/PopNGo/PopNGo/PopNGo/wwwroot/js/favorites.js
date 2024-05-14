@@ -5,7 +5,6 @@ import { buildNewBookmarkListCard } from './ui/buildNewBookmarkListCard.js';
 import { getFavoriteEvents } from './api/favorites/getFavoriteEvents.js';
 import { buildEventCard, validateBuildEventCardProps } from './ui/buildEventCard.js';
 import { buildEventDetailsModal, validateBuildEventDetailsModalProps } from './ui/buildEventDetailsModal.js';
-import { formatTags } from './util/tags.js';
 import { showToast } from './util/toast.js';
 import { applyFiltersAndSortEvents } from './util/filter.js';
 import { showDeleteBookmarkListConfirmationModal } from './util/showDeleteBookmarkListConfirmationModal.js';
@@ -18,6 +17,7 @@ import { getAllUserEventsFromItinerary } from './api/itinerary/itineraryApi.js';
 
 let currentBookmarkList = null;
 let currentApiEventID = null;
+let favoritedEvents = null;
 
 document.addEventListener('DOMContentLoaded', function () {
     initPage();
@@ -57,7 +57,7 @@ function createBookmarkListCard(name, eventQuantity, image, bookmarkListNames) {
         image: image,
         onClick: () => {
             // If the user clicks on the bookmark list, display the events from that list
-            displayEventsFromBookmarkList(name);
+            initDisplayEventsFromBookmarkList(name);
             currentBookmarkList = name;
         },
         onClickDelete: (event) => {
@@ -142,38 +142,67 @@ function createNewBookmarkList(bookmarkListName) {
     });
 }
 
-/// Displaying events from a bookmark list
-async function displayEventsFromBookmarkList(bookmarkList) {
-    let favoriteEvents = await getFavoriteEvents(bookmarkList);
+/// Called just once you click a bookmark list
+async function initDisplayEventsFromBookmarkList(bookmarkList) {
+    favoritedEvents = await getFavoriteEvents(bookmarkList);
     document.getElementById('invalid-feedback').style.display = 'none';
     document.getElementById("no-events-found-filter-message").style.display = "none";
     document.getElementById('filter-dropdown-container').style.display = 'flex';
 
-    // Apply filters and sort the events
-    favoriteEvents = applyFiltersAndSortEvents(favoriteEvents);
-
-
     // Set title of page to the bookmark list name and number of events
-    document.getElementById('favorite-events-title').innerText = `${bookmarkList} (${favoriteEvents.length ?? "0"} events)`;
+    document.getElementById('favorite-events-title').innerText = `${bookmarkList} (${favoritedEvents.length ?? "0"} events)`;
+
+
+    var filterTagDropdown = document.getElementById('filter-tag-dropdown')
+    filterTagDropdown.value = ''; // Reset the tag filter
+    filterTagDropdown.innerHTML = '<option value="" disabled selected>Filter by Tag</option>';
+    // Populate filter dropdown with tags names from the events
+    let tags = [];
+    favoritedEvents.forEach(event => {
+        tags = tags.concat(event.tags);
+    });
+    // Replace tag objects with tag names
+    tags = tags.map(tag => tag.name);
+    tags = [...new Set(tags)]; // Remove duplicates
+    // Populate the filter dropdown with the tags
+    document.getElementById('filter-tag-dropdown').style.display = 'flex';
+    const option = document.createElement('option');
+    option.value = '';
+    option.innerText = "Any";
+    filterTagDropdown.appendChild(option);
+    tags.forEach(tag => {
+        const option = document.createElement('option');
+        option.value = tag;
+        option.innerText = tag;
+        filterTagDropdown.appendChild(option);
+    });
+
+    displayEventsFromBookmarkList(favoritedEvents, bookmarkList);
+}
+
+/// Displaying events from a bookmark list
+async function displayEventsFromBookmarkList(favoriteEvents, bookmarkList) {
+    // Apply filters and sort the events
+    const filteredFavoriteEvents = applyFiltersAndSortEvents(favoriteEvents);
 
     // Clear the favorites and the bookmark list cards containers
     document.getElementById('favorite-events-container').innerHTML = '';
     document.getElementById('bookmark-list-cards-container').innerHTML = '';
 
-    if (favoriteEvents.length === 0) {
+    if (filteredFavoriteEvents.length === 0) {
         document.getElementById("no-events-found-filter-message").style.display = "block";
         return;
     }
 
-    if (!favoriteEvents) { // Validation failed
+    if (!filteredFavoriteEvents) { // Validation failed
         document.getElementById('invalid-feedback').style.display = 'block';
         return;
     } 
     // Display the favorite events
     const eventCardTemplate = document.getElementById('event-card-template');
     const favoriteEventsContainer = document.getElementById('favorite-events-container');
-    console.log(favoriteEvents);
-    favoriteEvents.forEach(async eventInfo => {
+    console.log(filteredFavoriteEvents);
+    filteredFavoriteEvents.forEach(async eventInfo => {
         let eventProps = {
             img: eventInfo.eventImage,
             title: eventInfo.eventName,
@@ -181,7 +210,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             city: eventInfo.eventLocation.split(',')[1],
             state: eventInfo.eventLocation.split(',')[2],
             eventOriginalLink: eventInfo.eventOriginalLink,
-            tags: await formatTags(eventInfo.eventTags), // This property doesn't exist in the provided JSON object
+            tags: eventInfo.tags, // This property doesn't exist in the provided JSON object
             ticketLinks: eventInfo.ticketLinks,
             venueName: eventInfo.venueName,
             venuePhoneNumber: eventInfo.venuePhoneNumber,
@@ -193,7 +222,7 @@ async function displayEventsFromBookmarkList(bookmarkList) {
             onPressDelete: () => {
                 showDeleteFavoriteEventConfirmationModal(() => {
                     removeEventFromFavorites(eventInfo.apiEventID, bookmarkList).then(() => {
-                        displayEventsFromBookmarkList(bookmarkList);
+                        displayEventsFromBookmarkList(favoritedEvents, bookmarkList);
                         showToast('Event removed from favorites');
                     }).catch((error) => {
                         console.error('Failed to remove event from favorites, ', error);
@@ -209,6 +238,8 @@ async function displayEventsFromBookmarkList(bookmarkList) {
         if (validateBuildEventCardProps(eventProps)) {
             buildEventCard(eventCard, eventProps);
             favoriteEventsContainer.appendChild(eventCard);
+        } else {
+            console.error('Invalid event card props:', eventProps);
         }
     });
 }
@@ -218,8 +249,6 @@ async function displayEventsFromBookmarkList(bookmarkList) {
  * @param {Object} eventInfo
  */
 async function onClickDetailsAsync(eventInfo) {
-    console.log("onClickDetailsAsync Favorites");
-    console.log(eventInfo);
     const eventDetailsModalProps = {
         apiEventID: eventInfo.apiEventID,
         img: eventInfo.eventImage,
@@ -233,7 +262,7 @@ async function onClickDetailsAsync(eventInfo) {
         venuePhoneNumber: eventInfo.venuePhoneNumber,
         venueRating: eventInfo.venueRating,
         venueWebsite: eventInfo.venueWebsite,
-        tags: [] // TODO: tags should be stored on event
+        tags: eventInfo.tags
     }
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
@@ -246,7 +275,7 @@ async function onClickDetailsAsync(eventInfo) {
 
 // Listener for filter button
 document.getElementById('filter-button').addEventListener('click', function () {
-    displayEventsFromBookmarkList(currentBookmarkList);
+    displayEventsFromBookmarkList(favoritedEvents, currentBookmarkList);
 });
 
 

@@ -16,22 +16,30 @@
 
     @* Filters Components *@
     <div id="filters-container">
-        <select aria-label="Sort the events by date." id="sort-date" class="form-control">
-            <option value="" disabled selected>Filter by Date</option>
-            <option value="">Any</option>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-        </select>
+        <div id="filter-button-row">
+            <select id="sort-date" class="form-control">
+                <option value="" disabled selected>Filter by Date</option>
+                <option value="">Any</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+            <select id="filter-tag-dropdown" class="form-control">
+                <option value="" disabled selected>Filter by Tag</option>
+                @* Populate in js *@
+            </select>
+        </div>
 
-        <select aria-label="Sort the events by venue rating." id="sort-rating" class="form-control">
-            <option value="" disabled selected>Filter by Venue Rating</option>
-            <option value="">Any</option>
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-        </select>
+        <div id="filter-button-row">
+            <select id="sort-rating" class="form-control">
+                <option value="" disabled selected>Filter by Venue Rating</option>
+                <option value="">Any</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+        </div>
 
-        <div id="last-row">
-            <select aria-label="Sort the events alphabetically." id="sort-alphabetical" class="form-control">
+        <div id="filter-button-row">
+            <select id="sort-alphabetical" class="form-control">
                 <option value="" disabled selected>Filter Alphabetically</option>
                 <option value="">Any</option>
                 <option value="asc">Ascending</option>

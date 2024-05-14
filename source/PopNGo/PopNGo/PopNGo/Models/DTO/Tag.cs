@@ -8,6 +8,7 @@ namespace PopNGo.Models.DTO
     {
         public string BackgroundColor { get; set; }
         public string TextColor { get; set; }
+        public string Name { get; set; }
     }
 }
 
@@ -20,7 +21,8 @@ namespace PopNGo.ExtensionMethods
             return new Models.DTO.Tag
             {
                 BackgroundColor = tag.BackgroundColor,
-                TextColor = tag.TextColor
+                TextColor = tag.TextColor,
+                Name = tag.Name
             };
         }
     }

@@ -12,10 +12,10 @@
     select:focus,
     button:active,
     button:focus {
-        outline: none !important;
-        box-shadow: none !important;
+        outline: none;
+        box-shadow: none;
         border-width: 2px;
-        border-color: #d38100 !important;
+        border-color: #d38100;
 
     }
 
@@ -53,7 +53,7 @@
     #no-events-section,
     #searching-events-section {
         background-color: rgba(93, 57, 0, 0.5);
-        border-color: #d38100 !important;
+        border-color: #d38100;
         color: #d38100;
     }
 }
@@ -150,6 +150,7 @@
     appearance: none;
     -webkit-appearance: none;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='orange' stroke-width='0.75' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'></path></svg>") no-repeat right center;
+    background-color: #313030;
     background-size: contain;
 }
 
@@ -237,6 +238,7 @@
     appearance: none;
     -webkit-appearance: none;
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='orange' stroke-width='0.75' stroke-linecap='round' stroke-linejoin='round'><path d='M6 9l6 6 6-6'></path></svg>") no-repeat right center;
+    background-color: #313030;
     background-size: contain;
     text-align: left;
 }

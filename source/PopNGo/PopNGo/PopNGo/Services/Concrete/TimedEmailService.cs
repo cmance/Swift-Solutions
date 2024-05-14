@@ -176,18 +176,27 @@ public class TimedEmailService : IHostedService, IDisposable
             IEmailHistoryRepository _emailHistoryRepo = scope.ServiceProvider.GetRequiredService<IEmailHistoryRepository>();
             UserManager<PopNGoUser> _userManager = scope.ServiceProvider.GetRequiredService<UserManager<PopNGoUser>>();
             EmailBuilder _emailBuilder = scope.ServiceProvider.GetRequiredService<EmailBuilder>();
-            IEmailSender _emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
+            EmailSender _emailSender = scope.ServiceProvider.GetRequiredService<EmailSender>();
 
             PgUser user = _userRepo.FindById(userId);
             PopNGoUser popNGoUser = await _userManager.FindByIdAsync(user.AspnetuserId);
 
-            // If the user has no linked account, don't send the email
-            if (popNGoUser != null)
+            // If the user has no linked account or is the admin, don't send the email
+            if (popNGoUser != null && popNGoUser.UserName != "admin@popngo.com")
             {
                 string emailBody = await _emailBuilder.BuildEmailAsync(userId);
                 if(emailBody != "")
                 {
-                    await _emailSender.SendEmailAsync(popNGoUser.NotificationEmail, "Your Event Reminders", emailBody);
+                    await _emailSender.SendEmailAsync(
+                        popNGoUser.NotificationEmail,
+                        "Your Event Reminders",
+                        new Dictionary<string, string>
+                        {
+                            { "template", "upcomingEvents" },
+                            { "messageContent", emailBody },
+                            { "name", popNGoUser.FirstName }
+                        });
+                        // emailBody);
                     _emailHistoryRepo.AddOrUpdate(new EmailHistory { UserId = userId, TimeSent = DateTime.Now, Type = "Upcoming Events" });
                 }
             }

@@ -14,6 +14,7 @@ function getFilterValues() {
         'date-asc-desc': 'asc',
         'venue-rating-asc-desc': 'asc',
         'event-alphabetical-asc-desc': 'asc'
+        'event-tag': 'sports' // Optional
     }
     */
 
@@ -22,6 +23,7 @@ function getFilterValues() {
     let sortDate = document.getElementById('sort-date');
     let sortRating = document.getElementById('sort-rating');
     let sortAlphabetical = document.getElementById('sort-alphabetical');
+    let eventTag = document.getElementById('filter-tag-dropdown');
 
     let filterValues = {};
 
@@ -40,6 +42,10 @@ function getFilterValues() {
 
     if(sortAlphabetical) {
         filterValues['event-alphabetical-asc-desc'] = sortAlphabetical ? sortAlphabetical.value : '';
+    }
+
+    if(eventTag) {
+        filterValues['event-tag'] = eventTag ? eventTag.value : '';
     }
 
     validateFilterValues(filterValues);
@@ -77,6 +83,12 @@ export function validateFilterValues(filterValues) {
     let eventAlphabeticalAscDesc = filterValues['event-alphabetical-asc-desc'];
     if (eventAlphabeticalAscDesc !== null && eventAlphabeticalAscDesc !== undefined && eventAlphabeticalAscDesc !== '' && eventAlphabeticalAscDesc !== 'asc' && eventAlphabeticalAscDesc !== 'desc') {
         console.error('Invalid event name sort order. Please select a valid event name sort order.');
+        return false;
+    }
+
+    let eventTag = filterValues['event-tag'];
+    if (eventTag !== null && eventTag !== undefined && eventTag !== '' && typeof eventTag !== 'string') {
+        console.error('Invalid event tag. Please select a valid event tag.');
         return false;
     }
 
@@ -175,20 +187,29 @@ export function sortByVenueRatingAscDesc(events, ascDesc) {
 export function returnSortedEvents(events, filterValues) {
     let sortedEvents = events;
 
-    if(filterValues['event-alphabetical-asc-desc']) {
+    if (filterValues['event-alphabetical-asc-desc']) {
         sortedEvents = sortByAlphabeticalAscDesc(sortedEvents, filterValues['event-alphabetical-asc-desc']);
     }
 
-    if(filterValues['date-asc-desc']) {
+    if (filterValues['date-asc-desc']) {
         sortedEvents = sortByDateAscDesc(sortedEvents, filterValues['date-asc-desc']);
     }
 
-    if(filterValues['start-date'] && filterValues['end-date']) {
+    if (filterValues['start-date'] && filterValues['end-date']) {
         sortedEvents = sortByDateRange(sortedEvents, filterValues['start-date'], filterValues['end-date']);
     }
 
-    if(filterValues['venue-rating-asc-desc']) {
+    if (filterValues['venue-rating-asc-desc']) {
         sortedEvents = sortByVenueRatingAscDesc(sortedEvents, filterValues['venue-rating-asc-desc']);
+    }
+
+    // event.tags =  [{
+        // name: 'sports',
+    // }]
+    if (filterValues['event-tag']) {
+        sortedEvents = sortedEvents.filter(event => {
+            return event.tags.some(tag => tag.name === filterValues['event-tag']);
+        });
     }
 
     return sortedEvents;

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
 using System.Text.Encodings.Web;
+using PopNGo.Services;
 
 namespace PopNGo.Controllers;
 [ApiController]
@@ -15,12 +16,12 @@ public class AdminUsersApiController : Controller
 {
     private readonly ILogger<EventApiController> _logger;
     private readonly UserManager<PopNGoUser> _userManager;
-    private readonly IEmailSender _emailSender;
+    private readonly EmailSender _emailSender;
 
     public AdminUsersApiController(
         UserManager<PopNGoUser> userManager,
         ILogger<EventApiController> logger,
-        IEmailSender emailSender
+        EmailSender emailSender
     )
     {
         _logger = logger;
@@ -49,11 +50,16 @@ public class AdminUsersApiController : Controller
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
 
-            callbackUrl = callbackUrl.Replace($"AdminApi/ResendVerificationEmail", "Identity/Account/ConfirmEmail");
+            callbackUrl = callbackUrl.Replace($"AdminUsersApi/ResendVerificationEmail", "Identity/Account/ConfirmEmail");
             await _emailSender.SendEmailAsync(
                 user.Email,
                 "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                new Dictionary<string, string>
+                {
+                    { "template", "confirmation" },
+                    { "confirmationURL", callbackUrl }
+                }
+            );
         }
         catch (Exception e)
         {
@@ -84,11 +90,16 @@ public class AdminUsersApiController : Controller
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
 
-            callbackUrl = callbackUrl.Replace($"AdminApi/ResendPasswordResetEmail", "Identity/Account/ResetPassword");
+            callbackUrl = callbackUrl.Replace($"AdminUsersApi/ResendPasswordResetEmail", "Identity/Account/ResetPassword");
             await _emailSender.SendEmailAsync(
                 user.Email,
                 "Reset your password",
-                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                new Dictionary<string, string>
+                {
+                    { "template", "resetPassword" },
+                    { "resetPasswordURL", callbackUrl }
+                }
+            );
         }
         catch (Exception e)
         {

@@ -8,6 +8,10 @@
         Layout = "/Views/Shared/_Layout.cshtml";
     }
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin.css" />
+    <link rel="stylesheet" href="~/css/identity.css" />
+}
 
 <h1 class="text-light">Admin Hub</h1>
 
@@ -24,9 +28,6 @@
     </div>
 </div>
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/admin.css" />
-}
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }

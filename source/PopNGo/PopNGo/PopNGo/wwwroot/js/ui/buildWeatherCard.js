@@ -88,8 +88,6 @@ export function validateBuildWeatherCardProps(data) {
     if (data === undefined || data === null) {
         return false;
     }
-
-    // console.log(typeof data.minTemp);
     const schema = {
         date: x => x instanceof Date,
         condition: x => typeof x === 'string',

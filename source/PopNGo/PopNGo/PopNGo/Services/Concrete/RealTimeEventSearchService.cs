@@ -179,6 +179,7 @@ namespace PopNGo.Services
                 newOne.EventLanguage = data.language;
                 Console.WriteLine($"Full Address: {data.venue?.full_address}");
                 newOne.Full_Address = data.venue?.full_address ?? "";
+                Console.WriteLine($"NewOne Full Address: {newOne.Full_Address}");
                 Console.WriteLine($"Longitude: {data.venue?.longitude}");
                 newOne.Longitude = data.venue?.longitude ?? 0;
                 Console.WriteLine($"Latitude: {data.venue?.latitude}");
@@ -192,13 +193,13 @@ namespace PopNGo.Services
                 Console.WriteLine($"Venue Website: {data.venue?.website}");
                 newOne.VenueWebsite = data.venue?.website;
                 Console.WriteLine($"Ticket Links: {data.ticket_links}");
-                newOne.TicketLinks = data.ticket_links != null ? data.ticket_links.Select(t => new PopNGo.Models.DTO.TicketLink
+                newOne.TicketLinks = data.ticket_links?.Select(t => new PopNGo.Models.DTO.TicketLink
                 {
                     Source = t.source,
                     Link = t.link
-                }).ToList() : new List<PopNGo.Models.DTO.TicketLink>();
-                Console.WriteLine($"Event Tags: {data.tags}");
-                newOne.EventTags = data.tags;
+                }).ToList() ?? new List<PopNGo.Models.DTO.TicketLink>();
+                Console.WriteLine($"Event Tags: {data.tags?.Count}");
+                newOne.EventTags = data.tags ?? new List<string>();
                 return newOne;
                 // return new EventDetail {
                 //     EventID = data.event_id,

@@ -111,7 +111,7 @@ namespace  PopNGo.Areas.Identity.Pages.Account.Manage
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
-
+        
         public static string NotificationsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Notifications);
         public static string SettingsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Settings);
 
