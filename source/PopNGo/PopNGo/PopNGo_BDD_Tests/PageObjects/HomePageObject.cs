@@ -1,4 +1,4 @@
-using Microsoft.Identity.Client;
+using Microsoft.Identity.Client; 
 using OpenQA.Selenium;
 
 namespace PopNGo_BDD_Tests.PageObjects

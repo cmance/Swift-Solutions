@@ -1,5 +1,5 @@
 @Cameron
-Feature: Navigation Bar
+Feature: Navigation Bar 
 
 As a visitor, I'd like to be able to more intuitively be able to switch pages so I can get to the page I want.
 
