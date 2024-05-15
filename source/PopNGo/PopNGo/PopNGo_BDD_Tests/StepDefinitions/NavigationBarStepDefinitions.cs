@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 
 
-namespace PopNGo_BDD_Tests.StepDefinitions
+namespace PopNGo_BDD_Tests.StepDefinitions 
 {
     [Binding]
     public sealed class NavigationBarStepDefinitions

@@ -10,6 +10,9 @@
         public string EventName { get; set; }
 
         public string ApiEventId { get; set; }
+
+        public decimal? Latitude { get; set; }
+        public decimal? Longitude { get; set; }
     }
 }
 
@@ -25,7 +28,10 @@ namespace PopNGo.ExtensionMethods
                 UserId = dayEvent.UserId,
                 ItineraryTitle = dayEvent.ItineraryTitle,
                 EventName = dayEvent.ItineraryEvents.Select(e => e.Event.EventName).FirstOrDefault(),// Convert each ItineraryEvent to EventDTO
-                ApiEventId = dayEvent.ItineraryEvents.Select(e => e.Event.ApiEventId).FirstOrDefault()
+                ApiEventId = dayEvent.ItineraryEvents.Select(e => e.Event.ApiEventId).FirstOrDefault(),
+                Latitude = dayEvent.ItineraryEvents.Select(e => e.Event.Latitude).FirstOrDefault(),
+                Longitude = dayEvent.ItineraryEvents.Select(e => e.Event.Longitude).FirstOrDefault()
+
             };
         } 
     }
