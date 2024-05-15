@@ -16,16 +16,13 @@ namespace PopNGo.Controllers.APIs
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItineraryApiController : ControllerBase
+    public class ItineraryApiController : Controller
     {
-        private readonly ILogger<ItineraryApiController> _logger;
-        private readonly PopNGoDB _context;
         private readonly IItineraryRepository _itineraryRepository;
         private readonly UserManager<PopNGoUser> _userManager;
         private readonly IPgUserRepository _pgUserRepository;
-        public ItineraryApiController(PopNGoDB context, UserManager<PopNGoUser> userManager, IItineraryRepository itineraryRepository, IPgUserRepository pgUserRepository)
+        public ItineraryApiController(UserManager<PopNGoUser> userManager, IItineraryRepository itineraryRepository, IPgUserRepository pgUserRepository)
         {
-            _context = context;
             _itineraryRepository = itineraryRepository;
             _userManager = userManager;
             _pgUserRepository = pgUserRepository;

@@ -18,26 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.body.appendChild(imgElement);
 
     try {
-        await initPage();
-
-        const accordionExample = document.querySelector('#accordionExample');
-        attachEventListeners(); // Make sure this is called after updating the DOM
-
-        let accordionHtml = '';
-        itineraries.forEach((itinerary, index) => {
-            accordionHtml += createAccordionHtml(itinerary, index);
-        });
-
-        accordionExample.innerHTML = accordionHtml;
-        attachDeleteEventListeners();
-    } catch (error) {
-        console.error('There was an error fetching the itinerary data:', error);
-    }
-});
-
-async function initPage() {
-    try {
         const itineraries = await getAllUserEventsFromItinerary();
+        console.log('Itineraries:', itineraries);
         if (itineraries && itineraries.length > 0) {
             const accordionExample = document.querySelector('#accordionExample');
             let accordionHtml = '';
@@ -45,7 +27,7 @@ async function initPage() {
                 accordionHtml += createAccordionHtml(itinerary, index);
             });
             accordionExample.innerHTML = accordionHtml;
-            attachDeleteEventListeners();
+
             document.getElementById("login-prompt").style.display = "none";
             document.getElementById("no-itinerary-message").style.display = "none";
             accordionExample.style.display = ""; // Ensure it's visible if there are items
@@ -59,7 +41,11 @@ async function initPage() {
             displayNoItineraryMessage();
         }
     }
-}
+
+    attachEventListeners(); // Make sure this is called after updating the DOM
+
+    attachDeleteEventListeners();
+});
 
 async function displayLoginPrompt() {
     document.getElementById("login-prompt").style.display = "block";
@@ -94,7 +80,7 @@ function createAccordionHtml(itinerary, index) {
 }
 
 function createEventHtml(eventData, itineraryId) {
-    const eventImage = eventData.eventImage || '/path/to/placeholder-image.png'; // Default image if not provided
+    const eventImage = eventData.eventImage || '/media/images/placeholder_event_card_image.png'; // Default image if not provided
     return `
         <div class="single-timeline-area" data-event-id="${eventData.apiEventID}" data-itinerary-id="${itineraryId}">
             <div class="row">
@@ -102,7 +88,7 @@ function createEventHtml(eventData, itineraryId) {
                     <div class="card mb-3 bg-dark text-white">
                         <div class="row g-0 align-items-center">
                             <div class="col-md-4">
-                                <img src="${eventImage}" onerror="this.onerror=null; this.src='/path/to/placeholder-image.png';" class="img-fluid rounded-start img-event" alt="${eventData.eventName} Image">
+                                <img src="${eventImage}" onerror="this.onerror=null; this.src='/media/images/placeholder_event_card_image.png';" class="img-fluid rounded-start img-event" alt="${eventData.eventName} Image">
                             </div>
                             <div class="col-md-7">
                                 <div class="card-body px-4 mx-4">
@@ -201,13 +187,14 @@ async function deleteItinerary(itineraryId) {
 
 function attachEventListeners() {
     document.querySelectorAll('[id^="hotels-button-"], [id^="food-button-"], [id^="coffee-button-"]').forEach(button => {
+        console.log('Adding event listener to button:', button.id);
         const debouncedClick = debounce(async function () {
             const index = this.id.split('-').slice(-2).join('-'); // Get the latitude and longitude from the button ID
             const parent = this.closest('.single-timeline-area');
             const latitude = parent.getAttribute('data-latitude');
             const longitude = parent.getAttribute('data-longitude');
             const type = this.id.split('-')[0].split('button')[0]; // Parse the type from ID
-            const suggestionsContainer = document.getElementById(`suggestions-container-${index}`);
+            const suggestionsContainer = document.getElementById(`suggestions-container-${latitude}-${longitude}`);
 
             // If the button clicked is the same as the previous button, toggle the visibility
             if (this.classList.contains('active-button')) {
@@ -224,7 +211,7 @@ function attachEventListeners() {
 
             if (latitude && longitude) {
                 // Fetch and display only if the container was previously hidden
-                await fetchAndDisplayPlaceSuggestions(type.charAt(0).toUpperCase() + type.slice(1), latitude, longitude, index);
+                await fetchAndDisplayPlaceSuggestions(type.charAt(0).toUpperCase() + type.slice(1), latitude, longitude, `${latitude}-${longitude}`);
                 suggestionsContainer.style.display = 'block';
             } else {
                 console.error(`Latitude or longitude is null for event at index ${index}: Lat ${latitude}, Lon ${longitude}`);
