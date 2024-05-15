@@ -2,20 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 
 namespace PopNGo.Models;
 
-[Table("Event")]
 public partial class Event
 {
-    [Key]
-    [Column("ID")]
     public int Id { get; set; }
 
-    [Required]
-    [Column("ApiEventID")]
-    [StringLength(255)]
     public string ApiEventId { get; set; }
 
     [Column(TypeName = "datetime")]

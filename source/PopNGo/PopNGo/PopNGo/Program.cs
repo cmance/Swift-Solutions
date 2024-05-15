@@ -176,6 +176,10 @@ public class Program
         });
 
         var app = builder.Build();
+        ScheduleTasking.SetServiceScopeFactory(app.Services.GetRequiredService<IServiceScopeFactory>());
+
+        SeedData(app).Wait();
+
 
         // Link the services to the ScheduleTasking class
         ScheduleTasking.SetServiceScopeFactory(app.Services.GetRequiredService<IServiceScopeFactory>());

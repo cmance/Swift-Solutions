@@ -148,6 +148,5 @@ export function validateBuildEventCardProps(data) {
         onPressEvent: x => (typeof x === 'function' || x === undefined || x === null),
         onPressDelete: x => (typeof x === 'function' || x === undefined || x === null),
     }
-
     return validateObject(data, schema).length === 0;
 }

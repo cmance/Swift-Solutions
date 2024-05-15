@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 accordionHtml += createAccordionHtml(itinerary, index);
             });
             accordionExample.innerHTML = accordionHtml;
-
             document.getElementById("login-prompt").style.display = "none";
             document.getElementById("no-itinerary-message").style.display = "none";
             accordionExample.style.display = ""; // Ensure it's visible if there are items
@@ -59,7 +58,6 @@ async function displayNoItineraryMessage() {
     }
     document.getElementById("accordionExample").style.display = "none"; // Also hide if no itineraries are found
 }
-
 function createAccordionHtml(itinerary, index) {
     let eventsHtml = itinerary.events.map(event => createEventHtml(event, itinerary.id)).join(''); // Ensure itinerary.id is the correct ID
     return `
@@ -158,7 +156,6 @@ async function deleteEvent(apiEventID, itineraryId) {
     }
 
 }
-
 async function deleteItinerary(itineraryId) {
     if (!confirm('Are you sure you want to delete this itinerary?')) return;
 
