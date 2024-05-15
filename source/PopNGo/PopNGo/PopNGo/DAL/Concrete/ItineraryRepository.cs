@@ -79,7 +79,9 @@ namespace PopNGo.DAL.Concrete
                         EventDescription = ie.Event.EventDescription,
                         EventLocation = ie.Event.EventLocation,
                         EventImage = ie.Event.EventImage,
-                        ApiEventID = ie.Event.ApiEventId
+                        ApiEventID = ie.Event.ApiEventId,
+                        Longitude = ie.Event.Longitude,
+                        Latitude = ie.Event.Latitude
                         // Additional fields that you require in your DTO
                     }).ToList()
                 }).ToList();
