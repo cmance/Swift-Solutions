@@ -85,7 +85,6 @@ public class Program
             return new PlaceSuggestionsService(httpClient, services.GetRequiredService<ILogger<PlaceSuggestionsService>>());
         });
 
-
         // Add services to the container.
         builder.Services.AddScoped<DbContext,PopNGoDB>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -129,10 +128,6 @@ public class Program
             }
         );
 
-        // Add the Database Developer Page Exception Filter
-        // Should only be used in Development
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
         // Add Identity
         builder.Services.AddDefaultIdentity<PopNGoUser>(options =>
             {
@@ -170,10 +165,6 @@ public class Program
         });
 
         var app = builder.Build();
-        ScheduleTasking.SetServiceScopeFactory(app.Services.GetRequiredService<IServiceScopeFactory>());
-
-        SeedData(app).Wait();
-
 
         // Link the services to the ScheduleTasking class
         ScheduleTasking.SetServiceScopeFactory(app.Services.GetRequiredService<IServiceScopeFactory>());
@@ -194,12 +185,8 @@ public class Program
         }
         else
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-            });
-            app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
         }
 
         app.UseForwardedHeaders();
