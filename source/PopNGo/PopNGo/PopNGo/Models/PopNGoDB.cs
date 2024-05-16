@@ -47,24 +47,24 @@ public partial class PopNGoDB : DbContext
 
     public virtual DbSet<WeatherForecast> WeatherForecasts { get; set; }
 
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    => optionsBuilder.UseSqlServer("Name=ServerConnection");
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder.UseSqlServer("Name=ServerConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AccountRecord>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AccountR__3214EC275F3E39FF");
+            entity.HasKey(e => e.Id).HasName("PK__AccountR__3214EC27B12BE096");
         });
 
         modelBuilder.Entity<BookmarkList>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Bookmark__3214EC277F32DADA");
+            entity.HasKey(e => e.Id).HasName("PK__Bookmark__3214EC2776A43C71");
         });
 
         modelBuilder.Entity<EmailHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EmailHis__3214EC27BABFB2D6");
+            entity.HasKey(e => e.Id).HasName("PK__EmailHis__3214EC276A279C61");
 
             entity.HasOne(d => d.User).WithMany(p => p.EmailHistories)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -73,27 +73,25 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<Event>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Event__3214EC27E647B2A7");
+            entity.HasKey(e => e.Id).HasName("PK__Event__3214EC273AB57D47");
         });
 
         modelBuilder.Entity<EventHistory>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC27ED51FD31");
+            entity.HasKey(e => e.Id).HasName("PK__EventHis__3214EC27EC0BE9B1");
 
             entity.HasOne(d => d.Event).WithMany(p => p.EventHistories)
-                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventHistory_EventID");
 
             entity.HasOne(d => d.User).WithMany(p => p.EventHistories)
-                .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EventHistory_UserID");
         });
 
         modelBuilder.Entity<EventTag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__EventTag__3214EC27B6376181");
+            entity.HasKey(e => e.Id).HasName("PK__EventTag__3214EC274EA0B0F3");
 
             entity.HasOne(d => d.Event).WithMany(p => p.EventTags)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -106,21 +104,20 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<FavoriteEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC273A7F2D52");
+            entity.HasKey(e => e.Id).HasName("PK__Favorite__3214EC2770CDD446");
 
             entity.HasOne(d => d.BookmarkList).WithMany(p => p.FavoriteEvents)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FavoriteEvents_BookmarkListID");
 
             entity.HasOne(d => d.Event).WithMany(p => p.FavoriteEvents)
-                .HasForeignKey(d => d.EventId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_FavoriteEvents_EventID");
         });
 
         modelBuilder.Entity<Itinerary>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3214EC27349ED671");
+            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3214EC2747CFD38A");
 
             entity.HasOne(d => d.User).WithMany(p => p.Itineraries)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -129,7 +126,7 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<ItineraryEvent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3214EC271647E977");
+            entity.HasKey(e => e.Id).HasName("PK__Itinerar__3214EC27080A731D");
 
             entity.HasOne(d => d.Event).WithMany(p => p.ItineraryEvents)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -142,12 +139,12 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<PgUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__PG_User__3214EC2718828522");
+            entity.HasKey(e => e.Id).HasName("PK__PG_User__3214EC27D18A90E6");
         });
 
         modelBuilder.Entity<ScheduledNotification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC272F626B75");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC276BB2AD09");
 
             entity.HasOne(d => d.User).WithMany(p => p.ScheduledNotifications)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -156,17 +153,17 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<SearchRecord>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__SearchRe__3214EC272D77BD2D");
+            entity.HasKey(e => e.Id).HasName("PK__SearchRe__3214EC27CD634189");
         });
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC27DAC21423");
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC27591F6AB7");
         });
 
         modelBuilder.Entity<TicketLink>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TicketLi__3214EC27C3974B19");
+            entity.HasKey(e => e.Id).HasName("PK__TicketLi__3214EC272D53BDA4");
 
             entity.HasOne(d => d.Event).WithMany(p => p.TicketLinks)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -175,12 +172,12 @@ public partial class PopNGoDB : DbContext
 
         modelBuilder.Entity<Weather>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Weather__3214EC27A7336938");
+            entity.HasKey(e => e.Id).HasName("PK__Weather__3214EC27BAFC4A2D");
         });
 
         modelBuilder.Entity<WeatherForecast>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__WeatherF__3214EC27A643637D");
+            entity.HasKey(e => e.Id).HasName("PK__WeatherF__3214EC2714DD59DE");
 
             entity.HasOne(d => d.Weather).WithMany(p => p.WeatherForecasts)
                 .OnDelete(DeleteBehavior.ClientSetNull)
