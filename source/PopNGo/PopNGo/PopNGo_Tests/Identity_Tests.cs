@@ -21,7 +21,7 @@ namespace PopNGo_Tests;
  */
 public class Identity_Tests
 {
-    private static readonly string _seedFile = @"..\..\..\..\PopNGo\Data\Scripts\Testing\IDENTITYSEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
+    private static readonly string _seedFile = @"../../../Sql/IDENTITYSEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
 
     // Create this helper like this, for whatever context you desire
     private static readonly InMemoryDbHelper<ApplicationDbContext> _dbHelper = new(_seedFile, DbPersistence.OneDbPerTest);

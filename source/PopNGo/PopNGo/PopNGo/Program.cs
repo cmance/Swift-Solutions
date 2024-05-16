@@ -18,7 +18,24 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
+        // Setup the connection string to our Identity database
+        // Swap the commented out lines to switch between Local and Azure databases
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options
+            .UseSqlServer(identityConnectionString)
+            .UseLazyLoadingProxies()
+        );
+        
+        // Setup the connection string to our Application database
+        // Swap the commented out lines to switch between Local and Azure databases
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        builder.Services.AddDbContext<PopNGoDB>(options => options
+            .UseSqlServer(serverConnectionString)
+            .UseLazyLoadingProxies()
+        );
+      
         // Setup all of our REST API services
         //REST API setup for Real Time Event Search API
         string realTimeEventSearchApiKey = builder.Configuration["RealTimeEventSearchApiKey"];
@@ -70,29 +87,6 @@ public class Program
 
 
         // Add services to the container.
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection string 'IdentityConnection' not found.");
-        // var identityConnection = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("IdentityConnectionAzure"))
-        // {
-        //     Password = builder.Configuration["PopNGo:DBPassword"]
-        // };
-        // var identityConnectionString = identityConnection.ConnectionString;
-        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options
-            .UseSqlServer(identityConnectionString)
-            .UseLazyLoadingProxies());
-        
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection") ?? throw new InvalidOperationException("Connection string 'ServerConnection' not found.");
-        // var serverConnection = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("ServerConnectionAzure"))
-        // {
-        //     Password = builder.Configuration["PopNGo:DBPassword"]
-        // };
-        // var serverConnectionString = serverConnection.ConnectionString;
-        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
-        builder.Services.AddDbContext<PopNGoDB>(options => options
-            .UseSqlServer(serverConnectionString)
-            .UseLazyLoadingProxies());
         builder.Services.AddScoped<DbContext,PopNGoDB>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddScoped<IEventHistoryRepository, EventHistoryRepository>();
