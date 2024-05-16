@@ -1,0 +1,59 @@
+name: Build, test and deploy PopNGo application to Azure
+
+on:
+  push:
+    branches: [ "integration-ci-cd" ]
+  pull_request:
+    branches: [ "integration-ci-cd" ]
+  workflow_dispatch: 
+
+env:
+# path from root of repo to dir containing project folders (usually where the .sln file is)
+  PATH_TO_SOLUTION: './source/PopNGo/PopNGo'
+  MAIN_PROJECT: PopNGo
+  UNIT_TEST_PROJECT: PopNGo_Tests
+  JS_UNIT_TEST_PROJECT: PopNGo_JSTests
+  AZURE_WEBAPP_NAME: popngo
+  AZURE_WEBAPP_PACKAGE_PATH: publish
+  CONFIGURATION: Release
+  DOTNET_CORE_VERSION: 8.0.x
+
+defaults:
+  run:
+    working-directory: './source/PopNGo/PopNGo'
+
+jobs:
+  build_and_test:
+    name: Build and run tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+  
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+
+    - name: Restore all projects in use
+      run: |
+        dotnet restore "${{ env.MAIN_PROJECT }}"
+        dotnet restore "${{ env.UNIT_TEST_PROJECT }}"
+
+    - name: Build main project
+      run: dotnet build "${{ env.MAIN_PROJECT }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+
+    - name: Build unit test project
+      run: dotnet build "${{ env.UNIT_TEST_PROJECT }}" --configuration "Debug" --no-restore
+
+    - name: Run all unit tests, but exclude BDD tests
+      run: dotnet test --filter FullyQualifiedName\!~Features --no-restore
+
+    - name: Publish
+      run: dotnet publish "${{ env.MAIN_PROJECT }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_WEBAPP_PACKAGE_PATH }}"
+
+    - name: Deploy to Azure WebApp using previously stored publish profile
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.POP_N_GO_PUBLISH_PROFILE }}
+        package: ${{ env.PATH_TO_SOLUTION }}/${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
