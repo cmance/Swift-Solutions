@@ -70,3 +70,87 @@ select.form-select:active {
     border-width: 2px;
     border-color: #d38100;
 }
+
+#google-image-prepend-login {
+    background-color: #e32c2c;
+    border-width: 0px;
+}
+
+#external-login-google {
+    color: #FFF;
+    background-color: #e94747;
+}
+
+.limited-width-login-form {
+    max-width: 300px;
+}
+
+.limited-width-login-submit {
+    max-width: 100px;
+}
+
+
+.password-prepend-identity, .username-prepend-identity {
+    background-color: #feaf48;
+    border-top-left-radius: 1rem !important;
+    border-bottom-left-radius: 1rem !important;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-right: 2px solid #000;
+    border-radius: 0 10px 10px 0;
+}
+
+.username-identity-form {
+    background-color: #feb85d !important;
+    color: #000 !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+.password-identity-form {
+    background-color: #feb85d !important;
+    color: #000 !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+.username-identity-form-label {
+    color: #000 !important;
+}
+
+.password-identity-form-label {
+    color: #000 !important;
+}
+
+.log-in-submit-identity {
+    background-color: #feaf48 !important;
+    color: #000 !important;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.center-form-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* This will stack the children vertically */
+}
+
+.left-align-content {
+    text-align: left;
+}
+
+
+.right-align-content {
+    text-align: right;
+}
