@@ -24,7 +24,7 @@ public class AdminNotificationsApiController : Controller
     private readonly IScheduledNotificationRepository _scheduledNotificationRepository;
     private readonly IEmailHistoryRepository _emailHistoryRepo;
     private readonly UserManager<PopNGoUser> _userManager;
-    private readonly IEmailSender _emailSender;
+    private readonly EmailSender _emailSender;
     private readonly EmailBuilder _emailBuilder;
 
     public AdminNotificationsApiController(
@@ -33,7 +33,7 @@ public class AdminNotificationsApiController : Controller
         IEmailHistoryRepository emailHistoryRepo,
         UserManager<PopNGoUser> userManager,
         ILogger<EventApiController> logger,
-        IEmailSender emailSender,
+        EmailSender emailSender,
         EmailBuilder emailBuilder
     )
     {
@@ -72,7 +72,16 @@ public class AdminNotificationsApiController : Controller
             string emailBody = await _emailBuilder.BuildEmailAsync(pgUser.Id);
             if (emailBody != "")
             {
-                await _emailSender.SendEmailAsync(user.NotificationEmail, "Your Event Reminders", emailBody);
+                await _emailSender.SendEmailAsync(
+                    user.NotificationEmail,
+                    "Your Event Reminders",
+                    new Dictionary<string, string>
+                    {
+                        { "template", "upcomingEvents" },
+                        { "messageContent", emailBody },
+                        { "name", user.FirstName }
+                    });
+                    // emailBody);
                 _emailHistoryRepo.AddOrUpdate(new EmailHistory { UserId = notification.UserId, TimeSent = DateTime.Now, Type = "Upcoming Events" });
             }
         }

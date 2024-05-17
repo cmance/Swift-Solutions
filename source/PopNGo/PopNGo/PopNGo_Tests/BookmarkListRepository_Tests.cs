@@ -11,7 +11,7 @@ namespace PopNGo_Tests;
 
 public class BookMarkRepositoryTests
 {
-    private static readonly string _seedFile = @"..\..\..\..\PopNGo\Data\Scripts\Testing\SEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
+    private static readonly string _seedFile = @"../../../Sql/SEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
 
     // Create this helper like this, for whatever context you desire
     private static readonly InMemoryDbHelper<PopNGoDB> _dbHelper = new(_seedFile, DbPersistence.OneDbPerTest);

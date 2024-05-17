@@ -99,7 +99,7 @@
 
 input:active,
 input:focus {
-    box-shadow: 0 0 0 0.1rem #dc9b4a, 0 0 0 0.2rem #ff6800 !important;
+    box-shadow: 0 0 0 0.1rem #dc9b4a, 0 0 0 0.2rem #ff6800;
 }
 
 input[type="text"],
@@ -107,29 +107,20 @@ input[type="email"],
 input[type="password"],
 input[type="text"]:focus,
 input[type="email"]:focus,
-input[type="password"]:focus
-/* input:-internal-autofill,
-input:-internal-autofill-selected,
-input:-webkit-autofill,
-input:-webkit-autofill-selected { */
-{
-    /* background-color: #ff9b58 !important;
-    color: #d35400 !important; */
-    background-color: #313030 !important;
-    color: #d38100 !important;
+input[type="password"]:focus {
+    background-color: #313030;
+    color: #d38100;
     border-color: #ffab74;
     border-radius: 10px;
 }
 
 div.form-floating > label {
-    color: #d38100 !important;
+    color: #d38100;
 }
 
-select {
-    /* background-color: #ff9b58 !important;
-    color: #d35400 !important; */
-    background-color: #313030 !important;
-    color: #d38100 !important;
+select.form-select {
+    background-color: #313030;
+    color: #d38100;
     border-color: #ffab74;
 }
 
@@ -138,47 +129,6 @@ input::placeholder,
     color: #cd6636;
 }
 
-#register-submit,
-#login-submit,
-#forgot-password-submit,
-#resend-email-submit,
-#change-email-button,
-#update-profile-button,
-#change-password-button,
-#download-personal-data-button,
-#update-notifications-button {
-    color: #ff9b58;
-    background-color: #d35400;
-    border-color: #ffab74;
-    border-radius: 10px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#register-submit:hover,
-#login-submit:hover,
-#forgot-password-submit:hover,
-#resend-email-submit:hover,
-#change-email-button:hover,
-#update-profile-button:hover,
-#change-password-button:hover,
-#download-personal-data-button:hover,
-#update-notifications-button:hover {
-    color: #313030 !important;
-    background-color: #d38100 !important;
-}
-
-#delete-personal-data-button {
-    border-radius: 10px;
-}
-
-.nav-link.active.text-swipe {
-    background-color: #d35400;
-    font-weight: normal;
-}
-
-.bg-orange {
-    background-color: #d35400;
-}
 .notification {
     margin: 0.5rem 0.5rem;
 }

@@ -11,5 +11,6 @@ namespace PopNGo.DAL.Abstract
         
         bool IsEvent(string apiEventId);
         
+        Event GetEventFromApiId(string apiEventId);
     }
 }

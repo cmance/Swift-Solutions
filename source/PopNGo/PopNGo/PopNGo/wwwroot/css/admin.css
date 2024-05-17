@@ -19,14 +19,14 @@ th {
 
 table[name="admin-schedules-table"] button,
 table[name="admin-users-table"] button {
-    font-size: 0.7rem !important;
+    font-size: 0.7rem;
     background-color: transparent;
     border-width: 2px;
 }
 
 button:active,
 button:focus {
-    box-shadow: 0 0 0 0.1rem #dc9b4a, 0 0 0 0.2rem #ff6800 !important;
+    box-shadow: 0 0 0 0.1rem #dc9b4a, 0 0 0 0.2rem #ff6800;
 }
 
 table tr:nth-child(odd) {
@@ -60,7 +60,7 @@ table tr:nth-child(even) {
     input:focus,
     button:focus,
     button:active {
-        box-shadow: 0 0 0 0.1rem #dc9b4a, 0 0 0 0.2rem #ff6800 !important;
+        box-shadow: 0 0 0 0.1rem #dc9b4a, 0 0 0 0.2rem #ff6800;
     }
     
     input:not([type="checkbox"]),
@@ -68,8 +68,8 @@ table tr:nth-child(even) {
     select,
     button,
     > div > label {
-        background-color: #313030 !important;
-        color: #d38100 !important;
+        background-color: #313030;
+        color: #d38100;
     }
 
     button {
@@ -77,8 +77,8 @@ table tr:nth-child(even) {
     }
 
     button:hover {
-        color: #313030 !important;
-        background-color: #d38100 !important;
+        color: #313030;
+        background-color: #d38100;
         
     }
 }

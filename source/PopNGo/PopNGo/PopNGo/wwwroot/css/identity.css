@@ -1,0 +1,72 @@
+#register-submit,
+#login-submit,
+#forgot-password-submit,
+#resend-email-submit,
+#change-email-button,
+#update-profile-button,
+#change-password-button,
+#download-personal-data-button,
+#update-notifications-button,
+#update-settings-button,
+#external-login-google,
+#external-register-google,
+#link-login-button-Google,
+a.btn.btn-primary,
+button.btn.btn-primary {
+    color: var(--btn-font-color);
+    background-color: var(--swipe-font-color);
+    border-color: #ffab74;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a.btn,
+a.btn,
+button.btn {
+    border-radius: 10px;
+}
+
+#register-submit:hover,
+#login-submit:hover,
+#forgot-password-submit:hover,
+#resend-email-submit:hover,
+#change-email-button:hover,
+#update-profile-button:hover,
+#change-password-button:hover,
+#download-personal-data-button:hover,
+#update-notifications-button:hover,
+#update-settings-button:hover,
+#external-login-google:hover,
+#external-register-google:hover,
+#link-login-button-Google:hover,
+a.btn.btn-primary:hover,
+button.btn.btn-primary:hover {
+    color: var(--btn-hover-color);
+    background-color: var(--main-font-color);
+}
+
+a.btn.btn-danger,
+button.btn.btn-danger,  
+a.btn.btn-danger:hover,
+button.btn.btn-danger:hover {
+    color: black;
+}
+
+.nav-link.active.text-swipe {
+    background-color: var(--swipe-font-color);
+    font-weight: normal;
+}
+
+select.form-select,
+select.form-select:focus {
+    border-radius: 10px;
+}
+
+input.form-control:focus,
+input.form-control:active,
+select.form-select:focus,
+select.form-select:active {
+    outline: none;
+    box-shadow: none;
+    border-width: 2px;
+    border-color: #d38100;
+}

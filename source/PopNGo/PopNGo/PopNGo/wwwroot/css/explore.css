@@ -46,7 +46,8 @@
 }
 
 #pagination {
-    margin-right: 605px !important;
+    margin: 3rem 605px 3rem 3rem;
+    /* margin-right: 605px !important; */
 }
 
 .pagination-buttons {

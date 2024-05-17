@@ -22,6 +22,7 @@ namespace PopNGo_BDD_Tests.Shared
             { "Home" , "/" },
             { "Explore", "/Home/Explore"},
             { "Favorites", "/Favorites" },
+            { "History", "/Home/History" },
             { "Login", "/Identity/Account/Login" },
             { "Admin", "/Admin" },
             { "Notifications", "/Admin/ScheduledNotifications" },

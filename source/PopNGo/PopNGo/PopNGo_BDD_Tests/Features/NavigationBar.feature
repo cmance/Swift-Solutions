@@ -1,5 +1,5 @@
 @Cameron
-Feature: Navigation Bar
+Feature: Navigation Bar 
 
 As a visitor, I'd like to be able to more intuitively be able to switch pages so I can get to the page I want.
 
@@ -17,13 +17,19 @@ Scenario: Click on the logo
     Then the user should be directed to the home page
 
 @navigation
-Scenario: Navigation styling change
-    Given the user is on the home page
-    When the user clicks on the home logo
-    Then the color of the home logo should not be white
-
-@navigation
 Scenario: Navigation styling change on hover
     Given the user is on the home page
     When the user hovers over the home logo
     Then the color of the home logo should not be white
+
+@navigation
+Scenario: Navigation bar hides when hide button is clicked
+    Given the user is on the home page
+    When the user clicks on the hide button
+    Then the navigation bar should disappear
+
+@navigation
+Scenario: Navigation bar appears when show button is clicked
+    Given the user is on the home page
+    When the user clicks on the show button
+    Then the navigation bar should appear

@@ -14,7 +14,7 @@ namespace PopNGo_Tests;
 
 public class EventRepositoryTests
 {
-    private static readonly string _seedFile = @"..\..\..\..\PopNGo\Data\Scripts\Testing\SEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
+    private static readonly string _seedFile = @"../../../Sql/SEED.sql";  // relative path from where the executable is: bin/Debug/net7.0
 
     // Create this helper like this, for whatever context you desire
     private static readonly InMemoryDbHelper<PopNGoDB> _dbHelper = new(_seedFile, DbPersistence.OneDbPerTest);
@@ -27,6 +27,33 @@ public class EventRepositoryTests
     {
         _context = _dbHelper.GetContext();
         _eventRepository = new EventRepository(_context);
+    }
+
+    [Test]
+    public void GetEventFromApiId_ShouldReturnEvent()
+    {
+        // Arrange
+        var eventId = "event1";
+
+        // Act
+        var result = _eventRepository.GetEventFromApiId(eventId);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ApiEventId, Is.EqualTo(eventId));
+    }
+
+    [Test]
+    public void GetEventFromApiId_ShouldErrorIfEventIdIsNull()
+    {
+        // Arrange
+        var eventId = "";
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => _eventRepository.GetEventFromApiId(eventId));
+
+        // Assert
+        Assert.That(ex.Message, Is.EqualTo("ApiEventId cannot be null or empty (Parameter 'apiEventId')"));
     }
 
     [Test]
@@ -57,7 +84,7 @@ public class EventRepositoryTests
         _eventRepository.AddEvent(eventDetail);
 
         // Assert
-         var events = _context.Events.ToList();
+        var events = _context.Events.ToList();
         Assert.That(events.Count, Is.EqualTo(7));
         var addedEvent = events.Last();
         Assert.That(addedEvent.ApiEventId, Is.EqualTo(eventDetail.EventID));

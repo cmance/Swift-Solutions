@@ -1,19 +1,14 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using PopNGo.Areas.Identity.Data;
 using PopNGo.Data;
 using PopNGo.Models;
-using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using PopNGo.Services;
 using Microsoft.OpenApi.Models;
 using PopNGo.DAL.Abstract;
 using PopNGo.DAL.Concrete;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication;
 
 namespace PopNGo;
 
@@ -23,6 +18,25 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Setup the connection string to our Identity database
+        // Swap the commented out lines to switch between Local and Azure databases
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options
+            .UseSqlServer(identityConnectionString)
+            .UseLazyLoadingProxies()
+        );
+        
+        // Setup the connection string to our Application database
+        // Swap the commented out lines to switch between Local and Azure databases
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        builder.Services.AddDbContext<PopNGoDB>(options => options
+            .UseSqlServer(serverConnectionString)
+            .UseLazyLoadingProxies()
+        );
+      
+        // Setup all of our REST API services
         //REST API setup for Real Time Event Search API
         string realTimeEventSearchApiKey = builder.Configuration["RealTimeEventSearchApiKey"];
         string realTimeEventSearchUrl = "https://real-time-events-search.p.rapidapi.com/";
@@ -55,37 +69,23 @@ public class Program
         builder.Services.AddHttpClient<IWeatherForecastService, WeatherForecastService>((httpClient, services) =>
         {
             httpClient.BaseAddress = new Uri(weatherForecasterUrl);
-            // httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", distanceCalculatorApiKey); // Set API key
             httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", "visual-crossing-weather.p.rapidapi.com");
             return new WeatherForecastService(httpClient, services.GetRequiredService<ILogger<WeatherForecastService>>());
         });
 
+        string placeSuggestionsUrl = "https://serpapi.com/search.json?";
+        string placeSuggestionsApiKey = builder.Configuration["SerpMapApiKey"];
+
+        builder.Services.AddHttpClient<IPlaceSuggestionsService, PlaceSuggestionsService>((httpClient, services) =>
+        {
+            httpClient.BaseAddress = new Uri(placeSuggestionsUrl);
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json"); // Accept JSON responses
+            httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", placeSuggestionsApiKey); // Set API key in Authorization header if needed
+            return new PlaceSuggestionsService(httpClient, services.GetRequiredService<ILogger<PlaceSuggestionsService>>());
+        });
 
         // Add services to the container.
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection") ?? throw new InvalidOperationException("Connection string 'IdentityConnection' not found.");
-        // var identityConnection = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("IdentityConnectionAzure"))
-        // {
-        //     Password = builder.Configuration["PopNGo:DBPassword"]
-        // };
-        // var identityConnectionString = identityConnection.ConnectionString;
-        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options
-            .UseSqlServer(identityConnectionString)
-            .UseLazyLoadingProxies());
-        
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection") ?? throw new InvalidOperationException("Connection string 'ServerConnection' not found.");
-        // var serverConnection = new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("ServerConnectionAzure"))
-        // {
-        //     Password = builder.Configuration["PopNGo:DBPassword"]
-        // };
-        // var serverConnectionString = serverConnection.ConnectionString;
-        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
-        builder.Services.AddDbContext<PopNGoDB>(options => options
-            .UseSqlServer(serverConnectionString)
-            .UseLazyLoadingProxies());
         builder.Services.AddScoped<DbContext,PopNGoDB>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         builder.Services.AddScoped<IEventHistoryRepository, EventHistoryRepository>();
@@ -101,10 +101,34 @@ public class Program
         builder.Services.AddScoped<IAccountRecordRepository, AccountRecordRepository>();
         builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
         builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
+        builder.Services.AddScoped<IEventTagRepository, EventTagRepository>();
 
-        
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        // Add Google Authentication
+        builder.Services.AddAuthentication().AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = builder.Configuration["GoogleAuthenticationSecretId"];
+                googleOptions.ClientSecret = builder.Configuration["GoogleAuthenticationSecretKey"];
 
+                googleOptions.SaveTokens = true;
+
+                googleOptions.Events.OnCreatingTicket = ctx =>
+                {
+                    List<AuthenticationToken> tokens = ctx.Properties.GetTokens().ToList();
+
+                    tokens.Add(new AuthenticationToken()
+                    {
+                        Name = "TicketCreated",
+                        Value = DateTime.UtcNow.ToString()
+                    });
+
+                    ctx.Properties.StoreTokens(tokens);
+
+                    return Task.CompletedTask;
+                };
+            }
+        );
+
+        // Add Identity
         builder.Services.AddDefaultIdentity<PopNGoUser>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -113,14 +137,18 @@ public class Program
                     typeof(CustomEmailConfirmationTokenProvider<PopNGoUser>)));
                 options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
-            })
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            }
+        )
+        .AddRoles<IdentityRole>()
+        .AddEntityFrameworkStores<ApplicationDbContext>();
         
+        // Add Email-related services
         builder.Services.AddTransient<CustomEmailConfirmationTokenProvider<PopNGoUser>>();
-        builder.Services.AddTransient<IEmailSender, EmailSender>();
+        builder.Services.AddTransient<EmailSender>();
         builder.Services.AddTransient<EmailBuilder>();
         builder.Services.AddHostedService<TimedEmailService>();
+
+        // Add the services for Controllers
         builder.Services.AddControllersWithViews();
 
         // Add Swagger
@@ -129,13 +157,22 @@ public class Program
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API", Version = "v1" });
         });
 
+        // Configure Forwarded Headers
+        builder.Services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders =
+                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        });
+
         var app = builder.Build();
+
+        // Link the services to the ScheduleTasking class
         ScheduleTasking.SetServiceScopeFactory(app.Services.GetRequiredService<IServiceScopeFactory>());
 
+        // Seed the database with the Admin user and roles
         SeedData(app).Wait();
 
-
-        // Configure the HTTP request pipeline.
+        // Configure environment settings
         if (app.Environment.IsDevelopment())
         {
             // app.UseMigrationsEndPoint();
@@ -148,14 +185,11 @@ public class Program
         }
         else
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-            });
-            app.UseDeveloperExceptionPage();
+            app.UseExceptionHandler("/Home/Error");
+            app.UseHsts();
         }
 
+        app.UseForwardedHeaders();
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
@@ -171,6 +205,11 @@ public class Program
         app.Run();
     }
 
+    // Seed the database with the Admin user and roles
+    // This method is called by the Main method on startup
+    // It checks if the Admin user exists and creates it if it does not
+    // Then it checks if the Admin and User roles exists and creates them if they do not
+    // Finally, it checks if the Admin user is in the Admin role and adds it if it is not
     public static async Task SeedData(WebApplication app) {
         using (var scope = app.Services.CreateScope()) {
             PopNGoDB _popNGoDBContext = scope.ServiceProvider.GetRequiredService<PopNGoDB>();

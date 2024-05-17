@@ -1,3 +1,4 @@
+using Microsoft.Identity.Client; 
 using OpenQA.Selenium;
 
 namespace PopNGo_BDD_Tests.PageObjects
@@ -9,7 +10,7 @@ namespace PopNGo_BDD_Tests.PageObjects
             // using a named page (in Common.cs)
             _pageName = "Home";
         }
-        public IWebElement NavigationBar => _webDriver.FindElement(By.ClassName("navbar"));
+        public IWebElement NavigationBar => _webDriver.FindElement(By.Id("custom-bottom-navbar-id"));
 
         // Select the "Home" navigation item by id="home-logo"
         public IWebElement homeLogo => _webDriver.FindElement(By.Id("home-logo"));
@@ -22,6 +23,12 @@ namespace PopNGo_BDD_Tests.PageObjects
 
         // Select the "History" navigation item by id="history-logo"
         public IWebElement historyNavItem => _webDriver.FindElement(By.Id("history-logo"));
+
+        public IWebElement hideNavigationBar => _webDriver.FindElement(By.Id("close-navbar"));
+
+        public IWebElement showNavigationBar => _webDriver.FindElement(By.Id("close-navbar-2"));
+
+        public IWebElement hiddenNavigationBar => _webDriver.FindElement(By.ClassName("minimized-navbar"));
 
         public void ClickHomeLogo()
         {
@@ -36,6 +43,16 @@ namespace PopNGo_BDD_Tests.PageObjects
         public string GetHomeLogoColor()
         {
             return homeLogo.GetCssValue("color");
+        }
+
+        public void CloseNavigationBar()
+        {
+            hideNavigationBar.Click();
+        }
+
+        public void OpenNavigationBar()
+        {
+            showNavigationBar.Click();
         }
 
     }
