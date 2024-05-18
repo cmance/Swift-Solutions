@@ -31,5 +31,7 @@ namespace PopNGo_BDD_Tests.Shared
 
         public static string PathFor(string pathName) => Paths[pathName];
         public static string UrlFor(string pathName) => BaseUrl + Paths[pathName];
+
+        
     }
 }
