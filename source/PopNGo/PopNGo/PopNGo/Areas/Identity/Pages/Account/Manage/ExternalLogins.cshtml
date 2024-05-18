@@ -38,10 +38,10 @@
 }
 @if (Model.OtherLogins?.Count > 0)
 {
-    <h4 class="text-light text-muted">Add another service to log in.</h4>
+    <h4 class="text-light text-muted" style="text-align: center;">Add another service to log in.</h4>
     <hr class="text-light text-muted" />
     <form id="link-login-form" asp-page-handler="LinkLogin" method="post" class="form-horizontal">
-        <div id="socialLoginList">
+        <div id="socialLoginList" class="text-center">
             <p>
                 @foreach (var provider in Model.OtherLogins)
                 {
