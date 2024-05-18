@@ -76,9 +76,10 @@ select.form-select:active {
     border-width: 0px;
 }
 
-#external-login-google {
+#external-login-google, #external-register-google {
     color: #FFF;
     background-color: #e94747;
+    border-width: 0px;
 }
 
 .limited-width-login-form {
@@ -208,4 +209,55 @@ select.form-select:active {
     outline: none;
     box-shadow: 0 0 0 2px #feaf48;
     border-color: #feaf48;
+}
+
+/* Registration */
+.registration-password-helper-identity {
+    color: #8e8e8e;
+    padding-bottom: 20px;
+}
+
+
+.registration-form-identity {
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    background-color: #feb85d !important;
+    color: #000 !important;
+}
+
+.form-floating.align-items-end label {
+    right: 0;
+    left: auto;
+}
+
+.register-identity-container {
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.register-submit-identity {
+    background-color: #feaf48 !important;
+    color: #000 !important;
+}
+
+.form-floating label {
+    padding-left: 20px;
+    color: #000 !important;
+}
+
+.text-danger {
+    max-width: 100%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+
+    .register-identity-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }
