@@ -213,6 +213,12 @@ select.form-select:active {
 
 .login-checkbox-identity:checked {
     background-color: #feaf48;
+    border-color: #feaf48;
+}
+
+.login-checkbox-identity:checked:active {
+    background-color: #feb85d;
+    border-color: #feb85d;
 }
 
 .login-checkbox-identity:focus {
@@ -270,4 +276,33 @@ select.form-select:active {
         flex-direction: column;
         align-items: center;
     }
+}
+
+/* Profile */
+
+.profile-identity-center-image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.anchor-tag-profile-identity {
+    border-radius: 20px;
+    color: #000;
+    background-color: #feaf48;
+    max-width: 235px;
+}
+
+.anchor-tag-profile-identity:hover {
+    color: #000;
+    background-color: #feb85d;
+}
+
+.align-profile-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
 }

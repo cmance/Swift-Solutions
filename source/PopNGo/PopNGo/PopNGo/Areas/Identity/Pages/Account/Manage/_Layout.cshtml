@@ -1,5 +1,5 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
     {
         Layout = parentLayout.ToString();
     }
@@ -12,19 +12,22 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/identity.css" />
 }
-
-<h1 class="text-light">Manage your account</h1>
+<div style="text-align: center;">
+    <h1 class="text-light">Manage your account</h1>
+    <h2 class="text-light text-muted">Change your account settings</h2>
+</div>
 
 <div>
-    <h2 class="text-light text-muted">Change your account settings</h2>
     <hr />
-    <div class="row">
-        <div class="col-md-3">
+    <div class="row"
+        style="background-color: #2E2E2E; padding: 10px 0; border-width: 2px; border-color: #FFF; border-style: solid;">
+        <div class="col-md-12">
             <partial name="_ManageNav" />
         </div>
-        <div class="col-md-9">
-            @RenderBody()
-        </div>
+    </div>
+    <br>
+    <div class="row" style="background-color: #2E2E2E; padding: 10px 0; border-width: 2px; border-color: #FFF; border-style: solid;">
+        @RenderBody()
     </div>
 </div>
 
