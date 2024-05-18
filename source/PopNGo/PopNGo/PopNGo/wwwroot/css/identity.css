@@ -70,3 +70,239 @@ select.form-select:active {
     border-width: 2px;
     border-color: #d38100;
 }
+
+#google-image-prepend-login {
+    background-color: #e32c2c;
+    border-width: 0px;
+}
+
+#external-login-google, #external-register-google {
+    color: #FFF;
+    background-color: #e94747;
+    border-width: 0px;
+}
+
+.limited-width-login-form {
+    max-width: 300px;
+}
+
+.limited-width-login-submit {
+    max-width: 100px;
+}
+
+
+.password-prepend-identity, .username-prepend-identity {
+    background-color: #feaf48;
+    border-top-left-radius: 1rem !important;
+    border-bottom-left-radius: 1rem !important;
+    border-left: none;
+    border-top: none;
+    border-bottom: none;
+    border-right: 2px solid #000;
+    border-radius: 0 10px 10px 0;
+}
+
+.username-identity-form {
+    background-color: #feb85d !important;
+    color: #000 !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+.base-identity-form {
+    background-color: #feb85d !important;
+    color: #000 !important; 
+}
+
+.base-submit-identity {
+    background-color: #feaf48 !important;
+    color: #000 !important;
+}
+
+.password-identity-form {
+    background-color: #feb85d !important;
+    color: #000 !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+}
+
+.username-identity-form-label {
+    color: #000 !important;
+}
+
+.password-identity-form-label {
+    color: #000 !important;
+}
+
+.log-in-submit-identity {
+    background-color: #feaf48 !important;
+    color: #000 !important;
+}
+
+.log-in-submit-identity:hover {
+    background-color: #feb85d !important;
+    color: #000 !important;
+}
+
+.log-in-submit-identity:active {
+    background-color: #feaf48 !important;
+    border-color: #feaf48;
+    outline: none;
+    box-shadow: 0 0 0 2px #feaf48;
+}
+
+.log-in-submit-identity:focus {
+    background-color: #feb85d !important;
+    border-color: #feb85d;
+    outline: none;
+    box-shadow: 0 0 0 2px #feaf48;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.center-form-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* This will stack the children vertically */
+}
+
+.left-align-content {
+    text-align: left;
+}
+
+
+.right-align-content {
+    text-align: right;
+}
+
+.form-label {
+    color: #FFF;
+}
+
+.login-questions {
+    color: #FFF;
+}
+
+.login-questions:hover {
+    color: #feaf48;
+}
+
+.login-checkbox-identity {
+    border-color: #feaf48;
+    border-width: 2px;
+}
+
+.login-checkbox-identity-all {
+    margin-top: 20px;
+}
+
+.shorter-button {
+    height: 70%;
+    margin-top: 10px;
+}
+
+.login-checkbox-identity:checked {
+    background-color: #feaf48;
+    border-color: #feaf48;
+}
+
+.login-checkbox-identity:checked:active {
+    background-color: #feb85d;
+    border-color: #feb85d;
+}
+
+.login-checkbox-identity:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #feaf48;
+    border-color: #feaf48;
+}
+
+/* Registration */
+.registration-password-helper-identity {
+    color: #8e8e8e;
+    padding-bottom: 20px;
+}
+
+
+.registration-form-identity {
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    background-color: #feb85d !important;
+    color: #000 !important;
+}
+
+.form-floating.align-items-end label {
+    right: 0;
+    left: auto;
+}
+
+.register-identity-container {
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.register-submit-identity {
+    background-color: #feaf48 !important;
+    color: #000 !important;
+}
+
+.form-floating label {
+    padding-left: 20px;
+    color: #000 !important;
+}
+
+.text-danger {
+    max-width: 100%;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+@media (max-width: 768px) {
+
+    .register-identity-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* Profile */
+
+.profile-identity-center-image {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.anchor-tag-profile-identity {
+    border-radius: 20px;
+    color: #000;
+    background-color: #feaf48;
+    max-width: 235px;
+}
+
+.anchor-tag-profile-identity:hover {
+    color: #000;
+    background-color: #feb85d;
+}
+
+.align-profile-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+}

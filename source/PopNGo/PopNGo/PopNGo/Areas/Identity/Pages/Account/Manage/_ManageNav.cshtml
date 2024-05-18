@@ -2,16 +2,61 @@
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext) text-swipe" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext) text-swipe" id="email" asp-page="./Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext) text-swipe" id="change-password" asp-page="./ChangePassword">Password</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.NotificationsNavClass(ViewContext) text-swipe" id="notifications" asp-page="./Notifications">Notifications</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.SettingsNavClass(ViewContext) text-swipe" id="settings" asp-page="./Settings">Settings</a></li>
+
+<div class="row">
+    <div class="col-md-3 align-profile-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="profile" asp-page="./Index" aria-label="Profile Link">
+            <img src="~/media/images/identity/account.png" height="150" width="150" alt="Profile icon">
+            <div style="text-align: center;">Profile</div>
+        </a>
+    </div>
+    <div class="col-md-3 align-profile-item">
+        <a class="nav-link @ManageNavPages.EmailNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="email" asp-page="./Email" aria-label="Email Link">
+            <img src="~/media/images/identity/at.png"  height="150" width="150" alt="Email icon">
+            <div style="text-align: center;">Email</div>
+        </a>
+    </div>
+    <div class="col-md-3 align-profile-item">
+        <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="change-password" asp-page="./ChangePassword" aria-label="Change Password Link">
+            <img src="~/media/images/identity/key.png"  height="150" width="150" alt="Key icon">
+            <div style="text-align: center;">Password</div>
+        </a>
+    </div>
+    <div class="col-md-3 align-profile-item">
+        <a class="nav-link @ManageNavPages.NotificationsNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="notifications" asp-page="./Notifications" aria-label="Notifications Link">
+            <img src="~/media/images/identity/notification.png"  height="150" width="150" alt="Bell icon">
+            <div style="text-align: center;">Notifications</div>
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- New links -->
+    <div class="col-md-3 align-profile-item">
+        <a class="nav-link @ManageNavPages.SettingsNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="settings" asp-page="./Settings" aria-label="Settings Link">
+            <img src="~/media/images/identity/gear.png" height="150" width="150" alt="Gear icon">
+            <div style="text-align: center;">Settings</div>
+        </a>
+    </div>
     @if (hasExternalLogins)
     {
-        <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext) text-swipe" asp-page="./ExternalLogins">External logins</a></li>
+        <div class="col-md-3 align-profile-item">
+            <a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" asp-page="./ExternalLogins" aria-label="External Logins Link">
+                <img src="~/media/images/identity/external-link.png" height="150" width="150" alt="External link icon">
+                <div style="text-align: center;">External logins</div>
+            </a>
+        </div>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext) text-swipe" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext) text-swipe" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
-</ul>
+    <div class="col-md-3 align-profile-item">
+        <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="two-factor" asp-page="./TwoFactorAuthentication" aria-label="Two-factor Authentication Link">
+            <img src="~/media/images/identity/two-step-verification.png" height="150" width="150" alt="Two-factor authentication icon">
+            <div style="text-align: center;">Two-factor</div>
+        </a>
+    </div>
+    <div class="col-md-3 align-profile-item" style="padding-bottom: 20px;">
+        <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext) text-swipe profile-identity-center-image anchor-tag-profile-identity" id="personal-data" asp-page="./PersonalData" aria-label="Personal Data Link">
+            <img src="~/media/images/identity/personal-data.png" height="150" width="150" alt="Personal data icon">
+            <div style="text-align: center;">Personal data</div>
+        </a>
+    </div>
+</div>
