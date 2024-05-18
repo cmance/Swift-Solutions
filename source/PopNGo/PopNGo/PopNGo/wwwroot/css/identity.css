@@ -132,6 +132,25 @@ select.form-select:active {
     color: #000 !important;
 }
 
+.log-in-submit-identity:hover {
+    background-color: #feb85d !important;
+    color: #000 !important;
+}
+
+.log-in-submit-identity:active {
+    background-color: #feaf48 !important;
+    border-color: #feaf48;
+    outline: none;
+    box-shadow: 0 0 0 2px #feaf48;
+}
+
+.log-in-submit-identity:focus {
+    background-color: #feb85d !important;
+    border-color: #feb85d;
+    outline: none;
+    box-shadow: 0 0 0 2px #feaf48;
+}
+
 .center-content {
     display: flex;
     justify-content: center;
@@ -153,4 +172,40 @@ select.form-select:active {
 
 .right-align-content {
     text-align: right;
+}
+
+.form-label {
+    color: #FFF;
+}
+
+.login-questions {
+    color: #FFF;
+}
+
+.login-questions:hover {
+    color: #feaf48;
+}
+
+.login-checkbox-identity {
+    border-color: #feaf48;
+    border-width: 2px;
+}
+
+.login-checkbox-identity-all {
+    margin-top: 20px;
+}
+
+.shorter-button {
+    height: 70%;
+    margin-top: 10px;
+}
+
+.login-checkbox-identity:checked {
+    background-color: #feaf48;
+}
+
+.login-checkbox-identity:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #feaf48;
+    border-color: #feaf48;
 }

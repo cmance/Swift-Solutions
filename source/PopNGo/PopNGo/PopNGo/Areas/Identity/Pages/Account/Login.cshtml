@@ -20,7 +20,7 @@
     <div class="col-md-12 text-swipe">
         <section>
             <form id="account" method="post" class="center-form-content">
-                <div class="col-md-12">
+                <div class="col-md-12 d-flex justify-content-center">
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 </div>
 
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 d-flex justify-content-center">
+                <div class="col-md-12 d-flex justify-content-center pb-3">
                     <span asp-validation-for="Input.UserName" class="text-danger"></span>
                 </div>
 
@@ -59,42 +59,51 @@
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-8 d-flex left-align">
-                        <div class="checkbox mb-3">
-                            <label asp-for="Input.RememberMe" class="form-label">
-                                <input class="form-check-input" id="login-rememberMe" asp-for="Input.RememberMe" />
-                                @Html.DisplayNameFor(m => m.Input.RememberMe)
-                            </label>
+                <div class="container-lg">
+                    <div class="row">
+                        <div class="col-6 d-flex align-items-center justify-content-end">
+                            <div class="checkbox mb-3">
+                                <label asp-for="Input.RememberMe" class="form-label login-checkbox-identity-all">
+                                    <input class="form-check-input login-checkbox-identity" id="login-rememberMe"
+                                        asp-for="Input.RememberMe" />
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 d-flex justify-content-end">
-                        <button id="login-submit" type="submit"
-                            class="w-100 btn btn-lg btn-primary limited-width-login-submit log-in-submit-identity">Log
-                            in</button>
+                        <div class="col-6 d-flex justify-content-start" style="padding-left: 50px;">
+                            <button id="login-submit" type="submit"
+                                class="w-100 btn btn-lg btn-primary limited-width-login-submit log-in-submit-identity shorter-button">Log
+                                in</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col">
-                        <p>
-                            <a class="text-swipe" id="forgot-password" asp-page="./ForgotPassword">Forgot your
-                                password?</a>
-                        </p>
-                    </div>
-                    <div class="col">
-                        <p>
-                            <a class="text-swipe" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register
-                                as a new user</a>
-                        </p>
-                    </div>
-                    <div class="col">
-                        <p>
-                            <a class="text-swipe" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend
-                                email confirmation</a>
-                        </p>
+                <div class="container-lg pt-4">
+                    <div class="row">
+                        <div class="col-4 text-center">
+                            <p>
+                                <a class="text-swipe login-questions" id="forgot-password"
+                                    asp-page="./ForgotPassword">Forgot your
+                                    password?</a>
+                            </p>
+                        </div>
+                        <div class="col-4 text-center">
+                            <p>
+                                <a class="text-swipe login-questions" asp-page="./Register"
+                                    asp-route-returnUrl="@Model.ReturnUrl">Register
+                                    as a new user</a>
+                            </p>
+                        </div>
+                        <div class="col-4 text-center">
+                            <p>
+                                <a class="text-swipe login-questions" id="resend-confirmation"
+                                    asp-page="./ResendEmailConfirmation">Resend
+                                    email confirmation</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
+
             </form>
         </section>
 
@@ -131,15 +140,16 @@
                             <p>
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
-                                <div class="input-group">
+                                <div class="input-group pt-3">
                                     <div class="input-group-prepend">
                                         <span id="google-image-prepend-login" class="input-group-text">
                                             <img src="~/media/images/identity/google-color-svgrepo-com.svg" alt="Google Logo"
                                                 width="30" height="30">
                                         </span>
                                     </div>
-                                    <button type="submit" class="btn btn-primary" name="provider" id="external-login-@{ @provider.Name.ToLower() }" 
-                                        value="@provider.Name"
+                                    <button type="submit" class="btn btn-primary" name="provider" id="external-login-@{
+                                                                                                                                    @provider.Name.ToLower()
+                                                 }" value="@provider.Name"
                                         title="Log in using your @provider.DisplayName account">Login
                                         with @provider.DisplayName
                                     </button>
