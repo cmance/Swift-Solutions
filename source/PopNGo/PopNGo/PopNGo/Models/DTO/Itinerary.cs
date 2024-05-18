@@ -27,10 +27,11 @@ namespace PopNGo.ExtensionMethods
                 Id = dayEvent.Id,
                 UserId = dayEvent.UserId,
                 ItineraryTitle = dayEvent.ItineraryTitle,
-                EventName = dayEvent.ItineraryEvents.Select(e => e.Event.EventName).FirstOrDefault(),// Convert each ItineraryEvent to EventDTO
-                ApiEventId = dayEvent.ItineraryEvents.Select(e => e.Event.ApiEventId).FirstOrDefault(),
-                Latitude = dayEvent.ItineraryEvents.Select(e => e.Event.Latitude).FirstOrDefault(),
-                Longitude = dayEvent.ItineraryEvents.Select(e => e.Event.Longitude).FirstOrDefault()
+                Events = dayEvent.ItineraryEvents.Select(e => e.Event.ToDTO()).ToList(),
+                // EventName = dayEvent.ItineraryEvents.Select(e => e.Event.EventName).FirstOrDefault(),// Convert each ItineraryEvent to EventDTO
+                // ApiEventId = dayEvent.ItineraryEvents.Select(e => e.Event.ApiEventId).FirstOrDefault(),
+                // Latitude = dayEvent.ItineraryEvents.Select(e => e.Event.Latitude).FirstOrDefault(),
+                // Longitude = dayEvent.ItineraryEvents.Select(e => e.Event.Longitude).FirstOrDefault()
 
             };
         } 

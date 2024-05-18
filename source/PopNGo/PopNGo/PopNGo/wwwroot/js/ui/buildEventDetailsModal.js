@@ -1,6 +1,11 @@
 import { validateObject } from '../validation.js';
+import { populateItineraryDropdown } from '../util/bindItinerarySaving.js';
 
 export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
+
+    // Set the hidden event id
+    eventDetailsModalElement.querySelector('#event-id').value = props.apiEventID;
+
     // Set the image
     if (props.img === null || props.img === undefined) {
         eventDetailsModalElement.querySelector('#event-modal-img').src = '/media/images/placeholder_event_card_image.png';
@@ -57,14 +62,13 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     });
     addToCalendarButtonContainer.appendChild(addToCalendarButton);
 
-    if (!addToCalendarButtonContainer.querySelector('button')) {
-        addToCalendarButtonContainer.appendChild(addToCalendarButton);
-    }
-
     // Buy Tickets Dropdown
     const buyTicketsDropdownContainer = eventDetailsModalElement.querySelector('#buy-tickets-btn');
     // console.log(props);
     createBuyTicketsDropdown(buyTicketsDropdownContainer, props);
+
+    // Itinerary Dropdown
+    populateItineraryDropdown();
 
     // View Venue Btn
     buildVenueDetailsModal(eventDetailsModalElement, props);

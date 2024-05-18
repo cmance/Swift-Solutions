@@ -58,6 +58,24 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             public string NotificationEmail { get; set; }
 
             /// <summary>
+            ///   This property is used to specify how long before an event a user wants to be notified.
+            ///   This property is required.
+            ///   
+            ///   Options are:
+            ///   - 15 minutes
+            ///   - 30 minutes
+            ///   - 1 hour
+            ///   - 2 hours
+            ///   - 3 hours
+            ///   - 6 hours
+            ///   - 1 day
+            ///   
+            /// </summary>
+            [Required]
+            [Display(Name = "Default Itinerary time")]
+            public string ItineraryReminderTime { get; set; }
+
+            /// <summary>
             ///   This property is used to specify a user's preference for notifications week-before notifications
             /// </summary>
             [Display(Name = "A week before")]
@@ -84,6 +102,7 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 NotificationEmail = notificationEmail,
+                ItineraryReminderTime = user.ItineraryReminderTime,
                 WeekBefore = user.NotifyWeekBefore,
                 DayBefore = user.NotifyDayBefore,
                 DayOf = user.NotifyDayOf
@@ -117,6 +136,7 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             }
 
             var notificationEmail = user.NotificationEmail;
+            var itineraryTime = user.ItineraryReminderTime;
             var weekBefore = user.NotifyWeekBefore;
             var dayBefore = user.NotifyDayBefore;
             var dayOf = user.NotifyDayOf;
@@ -125,6 +145,11 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             if (Input.NotificationEmail != notificationEmail)
             {
                 user.NotificationEmail = Input.NotificationEmail;
+                changes = true;
+            }
+            if (Input.ItineraryReminderTime != itineraryTime)
+            {
+                user.ItineraryReminderTime = Input.ItineraryReminderTime;
                 changes = true;
             }
             if (Input.WeekBefore != weekBefore)
@@ -147,16 +172,6 @@ namespace PopNGo.Areas.Identity.Pages.Account.Manage
             if (changes)
             {
                 await _userManager.UpdateAsync(user);
-            // var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            // if (Input.PhoneNumber != phoneNumber)
-            // {
-            //     var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            //     if (!setPhoneResult.Succeeded)
-            //     {
-            //         StatusMessage = "Unexpected error when trying to set phone number.";
-            //         return RedirectToPage();
-            //     }
-            // }
             }
 
             await _signInManager.RefreshSignInAsync(user);

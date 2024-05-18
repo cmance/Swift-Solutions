@@ -18,6 +18,9 @@ namespace PopNGo_BDD_Tests.PageObjects
         public IWebElement ViewVenueButton => _webDriver.FindElement(By.Id("view-venue-btn"));
         public IWebElement VenueInformationModal => _webDriver.FindElement(By.Id("view-venue-modal"));
 
+        public IWebElement AddToItinerary => _webDriver.FindElement(By.Id("add-itinerary-btn"));
+        public IWebElement ItineraryList => _webDriver.FindElement(By.Id("itinerary-list"));
+
         public SelectElement SelectCountry => new SelectElement(_webDriver.FindElement(By.Id("search-event-country")));
         public SelectElement SelectState => new SelectElement(_webDriver.FindElement(By.Id("search-event-state")));
         public SelectElement SelectCity => new SelectElement(_webDriver.FindElement(By.Id("search-event-city")));

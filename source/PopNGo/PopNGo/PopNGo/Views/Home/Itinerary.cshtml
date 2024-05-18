@@ -1,27 +1,30 @@
 @{
     ViewData["Title"] = "Itinerary Page";
 }
+@section Styles {
+    <link rel="stylesheet" href="~/css/itinerary.css" />
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+}
 
 
 @* This should be shown if the users are not logged in *@
 <div id="login-prompt" style="display: none;">
     <h1>Access Restricted</h1>
     <h3>
-        You need to be logged in to access this feature. Please <a href="/Identity/Account/Login">log in</a> or <a href="/Identity/Account/Register">sign up</a>.
+        You need to be logged in to access this feature. Please <a href="/Identity/Account/Login" class="text-swipe">log in</a> or <a href="/Identity/Account/Register" class="text-swipe">sign up</a>.
     </h3>
 </div>
 
 @* This show when the itinerary sections/items are empty*@
 <div id="no-itinerary-message" style="display: none;" class="alert alert-warning">
-    You have not created any itineraries yet. Go to the <a href="/Home/Explore">Explore page</a> to find events and create your itinerary.
+    You have not created any itineraries yet. Go to the <a href="/Home/Explore" class="text-swipe">Explore page</a> to find events and create your itinerary.
 </div>
 
 
-@* This shouls show when there are itnerary items *@
+@* This should show when there are itnerary items *@
 <div class="container mt-5">
-    <div class="accordion" id="accordionExample" style="display: none;">
-        <!-- Initially hidden -->
-        <!-- Content dynamically injected here -->
+    <div id="itinerary-content" style="display: none;">
+
     </div>
 </div>
 
@@ -109,6 +112,8 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div> *@
+
+<!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -120,15 +125,15 @@
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                @* <button type="button" class="btn btn-primary">Save changes</button> *@
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<partial name="_ItineraryAccordion" />
+<partial name="_ItineraryEvent" />
+
 @section Scripts {
    <script type="module" src="~/js/itinerary.js"></script>
 }
-

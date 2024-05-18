@@ -74,6 +74,7 @@ public class Program
             return new WeatherForecastService(httpClient, services.GetRequiredService<ILogger<WeatherForecastService>>());
         });
 
+        // REST API setup for the Place Suggestions API
         string placeSuggestionsUrl = "https://serpapi.com/search.json?";
         string placeSuggestionsApiKey = builder.Configuration["SerpMapApiKey"];
 

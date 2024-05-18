@@ -40,6 +40,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         }
 
         [When(@"the visitor clicks on any event card")]
+        [When(@"I click on the first event card")]
         public void WhenTheVisitorClicksOnAnyEventCard()
         {
             _explorePage.ClickEventCard();

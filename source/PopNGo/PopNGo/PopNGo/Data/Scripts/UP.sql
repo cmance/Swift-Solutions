@@ -123,7 +123,9 @@ CREATE TABLE [Itinerary] (
 CREATE TABLE [ItineraryEvents] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
   [ItineraryID] INTEGER NOT NULL,
-  [EventID] INTEGER NOT NULL
+  [EventID] INTEGER NOT NULL,
+  [ReminderTime] NVARCHAR(255) NOT NULL,
+  [ReminderCustomTime] DATETIME
 );
 
 -- Add Foreign Key constraints

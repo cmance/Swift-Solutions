@@ -16,4 +16,5 @@ public class PopNGoUser : IdentityUser
     public string DistanceUnit { get; set; }
     public string TemperatureUnit { get; set; }
     public string MeasurementUnit { get; set; }
+    public string ItineraryReminderTime { get; set; }
 }

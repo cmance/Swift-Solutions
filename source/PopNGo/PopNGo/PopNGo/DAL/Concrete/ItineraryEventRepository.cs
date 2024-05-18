@@ -65,6 +65,9 @@ namespace PopNGo.DAL.Concrete
             {
                 itineraryEvent.ItineraryId = itinerary.Id; // Ensure it is linked to the right itinerary
                 itineraryEvent.EventId = eventEntity.Id; // Update with the correct event ID if needed
+                itineraryEvent.Event = eventEntity;
+                itineraryEvent.ReminderTime = "hour";
+                itineraryEvent.ReminderCustomTime = null;
                 AddOrUpdate(itineraryEvent);
             }
             else
@@ -73,7 +76,9 @@ namespace PopNGo.DAL.Concrete
                 var newItineraryEvent = new Models.ItineraryEvent
                 {
                     ItineraryId = itinerary.Id, // Directly use the provided itineraryId
-                    EventId = eventEntity.Id
+                    EventId = eventEntity.Id,
+                    ReminderTime = "hour",
+                    ReminderCustomTime = null
                 };
                 AddOrUpdate(newItineraryEvent);
             }

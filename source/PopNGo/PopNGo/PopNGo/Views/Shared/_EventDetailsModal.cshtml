@@ -8,6 +8,7 @@
                 <div class="event-modal-tag rounded-pill">Tag2</div>
                 <div class="event-modal-tag rounded-pill">Tag3</div>
             </div>
+            <input type="text" hidden id="event-id" value="0" />
             <div class="original-post-link-container">
                 <a aria-label="View original event post link." id="original-post-link" class="btn btn-warning original-post-link" href="">
                     View Original Event Post
@@ -33,11 +34,11 @@
             <div id="buttons-container">
                 <div aria-label="Add event to Google calendar button." id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
                 <div class="dropdown">
-                    <button aria-label="Add event to itinerary button." class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button aria-label="Add event to itinerary button." id="add-to-itinerary-btn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Add to itinerary
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button aria-label="Create new itinerary button." class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new itinerary</button></li>
+                    <ul class="dropdown-menu" aria-labelledby="add-to-itinerary-btn" id="itinerary-list">
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new-itinerary-modal" aria-label="Create new itinerary button." >Create new itinerary</button></li>
                     </ul>
                 </div>
 
@@ -53,24 +54,6 @@
                     </div>
                     <div id="view-venue-btn" title="View information about the venue"></div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Create your itinerary here</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input class="form-control" id="itinerary-title" type="text" placeholder="Enter the title">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" id="save-new-itinerary" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

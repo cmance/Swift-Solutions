@@ -18,6 +18,12 @@ public partial class ItineraryEvent
     [Column("EventID")]
     public int EventId { get; set; }
 
+    [Column("ReminderTime")]
+    public string ReminderTime { get; set; }
+
+    [Column("ReminderCustomTime", TypeName = "datetime")]
+    public DateTime? ReminderCustomTime { get; set; }
+
     [ForeignKey("EventId")]
     [InverseProperty("ItineraryEvents")]
     public virtual Event Event { get; set; }
