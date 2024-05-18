@@ -111,6 +111,16 @@ select.form-select:active {
     border-top-right-radius: 1rem !important;
 }
 
+.base-identity-form {
+    background-color: #feb85d !important;
+    color: #000 !important; 
+}
+
+.base-submit-identity {
+    background-color: #feaf48 !important;
+    color: #000 !important;
+}
+
 .password-identity-form {
     background-color: #feb85d !important;
     color: #000 !important;
