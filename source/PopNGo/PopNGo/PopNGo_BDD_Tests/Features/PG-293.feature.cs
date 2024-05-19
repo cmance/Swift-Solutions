@@ -78,20 +78,20 @@ namespace PopNGo_BDD_Tests.Features
         {
 #line 5
 #line hidden
-            Reqnroll.Table table6 = new Reqnroll.Table(new string[] {
+            Reqnroll.Table table7 = new Reqnroll.Table(new string[] {
                         "UserName",
                         "Email",
                         "FirstName",
                         "LastName",
                         "Password"});
-            table6.AddRow(new string[] {
+            table7.AddRow(new string[] {
                         "Joshua Weiss",
                         "knott@example.com",
                         "Joshua",
                         "Weiss",
                         "FAKE PW"});
 #line 6
- await testRunner.GivenAsync("the following users exist", ((string)(null)), table6, "Given ");
+ await testRunner.GivenAsync("the following users exist", ((string)(null)), table7, "Given ");
 #line hidden
         }
         

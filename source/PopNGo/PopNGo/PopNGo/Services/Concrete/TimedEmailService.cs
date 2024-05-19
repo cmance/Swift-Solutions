@@ -173,6 +173,7 @@ public class TimedEmailService : IHostedService, IDisposable
         {
             IPgUserRepository _userRepo = scope.ServiceProvider.GetRequiredService<IPgUserRepository>();
             IFavoritesRepository _favoritesRepo = scope.ServiceProvider.GetRequiredService<IFavoritesRepository>();
+            IItineraryRepository _itineraryRepo = scope.ServiceProvider.GetRequiredService<IItineraryRepository>();
             IEmailHistoryRepository _emailHistoryRepo = scope.ServiceProvider.GetRequiredService<IEmailHistoryRepository>();
             UserManager<PopNGoUser> _userManager = scope.ServiceProvider.GetRequiredService<UserManager<PopNGoUser>>();
             EmailBuilder _emailBuilder = scope.ServiceProvider.GetRequiredService<EmailBuilder>();
@@ -185,7 +186,7 @@ public class TimedEmailService : IHostedService, IDisposable
             if (popNGoUser != null && popNGoUser.UserName != "admin@popngo.com")
             {
                 string emailBody = "";
-                string emailSubject = "";
+                string emailSubject;
                 string emailType = (state as ScheduledNotification).Type;
                 Dictionary<string, string> emailData = new Dictionary<string, string>() {
                     { "template", "itineraryUpdate" },
@@ -204,6 +205,26 @@ public class TimedEmailService : IHostedService, IDisposable
                     emailData["template"] = "itineraryEvent";
                     emailData["messageContent"] = emailBody;
                     emailData["itineraryName"] = itineraryName;
+
+                    Itinerary itinerary = _itineraryRepo.FindById(int.Parse(parts[2]));
+                    List<string> notificationAddresses = _itineraryRepo.GetNotificationAddresses(itinerary.Id);
+
+                    foreach (string address in notificationAddresses)
+                    {
+                        if(itinerary.ItineraryNotifications.Where(n => n.NotificationAddress == address).Select(n => n.OptOut).FirstOrDefault() == false)
+                        {
+                            Dictionary<string, string> notificationData = new Dictionary<string, string>() {
+                                { "template", "itineraryNotification" },
+                                { "messageContent", emailBody },
+                                { "itineraryName", itineraryName }
+                            };
+                            await _emailSender.SendEmailAsync(
+                                address,
+                                emailSubject,
+                                notificationData
+                            );
+                        }
+                    }
                 }
                 else
                 {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PopNGo.Models;
 
-public partial class ItineraryEvent
+public partial class ItineraryNotification
 {
     [Key]
     [Column("ID")]
@@ -15,21 +15,15 @@ public partial class ItineraryEvent
     [Column("ItineraryID")]
     public int ItineraryId { get; set; }
 
-    [Column("EventID")]
-    public int EventId { get; set; }
-
     [Required]
     [StringLength(255)]
-    public string ReminderTime { get; set; }
+    public string NotificationAddress { get; set; }
 
-    [Column(TypeName = "datetime")]
-    public DateTime? ReminderCustomTime { get; set; }
-
-    [ForeignKey("EventId")]
-    [InverseProperty("ItineraryEvents")]
-    public virtual Event Event { get; set; }
+    public bool OptOut { get; set; }
+    [Required]
+    public string OptOutCode { get; set; }
 
     [ForeignKey("ItineraryId")]
-    [InverseProperty("ItineraryEvents")]
+    [InverseProperty("ItineraryNotifications")]
     public virtual Itinerary Itinerary { get; set; }
 }

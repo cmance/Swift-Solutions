@@ -23,6 +23,9 @@ public partial class Itinerary
     [InverseProperty("Itinerary")]
     public virtual ICollection<ItineraryEvent> ItineraryEvents { get; set; } = new List<ItineraryEvent>();
 
+    [InverseProperty("Itinerary")]
+    public virtual ICollection<ItineraryNotification> ItineraryNotifications { get; set; } = new List<ItineraryNotification>();
+
     [ForeignKey("UserId")]
     [InverseProperty("Itineraries")]
     public virtual PgUser User { get; set; }

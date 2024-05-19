@@ -90,20 +90,15 @@ namespace PopNGo.Controllers.APIs
 
             try
             {
-                Console.WriteLine("1");
-                Console.WriteLine($"ItineraryEvent-{apiEventId}-{itineraryId}");
-                Console.WriteLine(time);
                 ScheduledNotification scheduledNotification = await _scheduledNotificationRepository.GetScheduledNotificationForItinerary(pgUser.Id, $"ItineraryEvent-{apiEventId}-{itineraryId}");
-                Console.WriteLine("1.5");
                 ScheduleTasking.RemoveTask(scheduledNotification);
-                Console.WriteLine("2");
+
                 DateTime? sendTime = _eventRepository.GetEventFromApiId(apiEventId).EventDate;
                 if (sendTime == null)
                 {
                     return BadRequest("Event not found");
                 }
-                Console.WriteLine("3");
-                Console.WriteLine(user.ItineraryReminderTime);
+
                 if(time == "quarter-hour")
                 {
                     sendTime = sendTime.Value.AddMinutes(-15);
@@ -137,14 +132,10 @@ namespace PopNGo.Controllers.APIs
                     sendTime = customTime;
                 }
 
-                Console.WriteLine("4");
                 await _scheduledNotificationRepository.UpdateScheduledNotification(scheduledNotification.Id, sendTime.Value, scheduledNotification.Type);
 
-                Console.WriteLine("5");
                 _itineraryEventRepository.SaveReminderTime(pgUser.Id, apiEventId, itineraryId, time, customTime);
-                Console.WriteLine("6");
                 Timer timer = new Timer(TimedEmailService.DoWork, scheduledNotification, TimeSpan.FromSeconds((sendTime.Value - DateTime.Now).TotalSeconds), TimeSpan.FromDays(1));
-                Console.WriteLine("7");
                 ScheduleTasking.AddTask(scheduledNotification, timer);
 
                 return Ok();
@@ -174,7 +165,18 @@ namespace PopNGo.Controllers.APIs
                 return Unauthorized();
             }
 
-            DateTime? sendTime = _eventRepository.GetEventFromApiId(apiEventId).EventDate;
+            Models.Event eventFound = _eventRepository.GetEventFromApiId(apiEventId);
+            if (eventFound == null)
+            {
+                return BadRequest("Event not found");
+            }
+            DateTime? sendTime = eventFound.EventDate;
+
+            if(sendTime != null && sendTime.Value < DateTime.Now)
+            {
+                return BadRequest("Event has already passed");
+            }
+
             if (sendTime == null)
             {
                 return BadRequest("Event not found");

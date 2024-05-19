@@ -59,6 +59,12 @@ export const buildItinerary = (props) => {
     deleteButton.setAttribute("data-itinerary-id", props.index);
     deleteButton.addEventListener('click', () => props.onDelete(deleteButton));
 
+    const addNotificationButton = itineraryElement.getElementById('add-notification-button');
+    addNotificationButton.addEventListener('click', () => props.onAddNotification());
+
+    const confirmNotificationButton = itineraryElement.getElementById('confirm-notification-button');
+    confirmNotificationButton.addEventListener('click', () => props.onConfirmNotifications());
+
     // Set the title
     itineraryElement.getElementById('itinerary-title').textContent = props.title;
 
