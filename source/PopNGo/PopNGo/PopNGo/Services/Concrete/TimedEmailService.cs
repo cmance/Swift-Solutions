@@ -184,20 +184,45 @@ public class TimedEmailService : IHostedService, IDisposable
             // If the user has no linked account or is the admin, don't send the email
             if (popNGoUser != null && popNGoUser.UserName != "admin@popngo.com")
             {
-                string emailBody = await _emailBuilder.BuildEmailAsync(userId);
+                string emailBody = "";
+                string emailSubject = "";
+                string emailType = (state as ScheduledNotification).Type;
+                Dictionary<string, string> emailData = new Dictionary<string, string>() {
+                    { "template", "itineraryUpdate" },
+                    { "messageContent", emailBody },
+                    { "name", popNGoUser.FirstName }
+                };
+
+                if(emailType.Contains("ItineraryEvent"))
+                {
+                    string[] parts = emailType.Split("-"); // Itinerary Event, EventId, Itinerary Id
+                    Tuple<string, string> response = _emailBuilder.BuildItineraryEventEmail(int.Parse(parts[2]), parts[1]);
+                    emailBody = response.Item1;
+                    string itineraryName = response.Item2;
+                    emailSubject = "Your Event Itinerary";
+
+                    emailData["template"] = "itineraryEvent";
+                    emailData["messageContent"] = emailBody;
+                    emailData["itineraryName"] = itineraryName;
+                }
+                else
+                {
+                    emailBody = await _emailBuilder.BuildUpcomingEventsEmailAsync(userId);
+                    emailSubject = "Your Event Reminders";
+
+                    emailData["template"] = "upcomingEvents";
+                    emailData["messageContent"] = emailBody;
+                }
+
                 if(emailBody != "")
                 {
                     await _emailSender.SendEmailAsync(
                         popNGoUser.NotificationEmail,
-                        "Your Event Reminders",
-                        new Dictionary<string, string>
-                        {
-                            { "template", "upcomingEvents" },
-                            { "messageContent", emailBody },
-                            { "name", popNGoUser.FirstName }
-                        });
-                        // emailBody);
-                    _emailHistoryRepo.AddOrUpdate(new EmailHistory { UserId = userId, TimeSent = DateTime.Now, Type = "Upcoming Events" });
+                        emailSubject,
+                        emailData
+                    );
+
+                    _emailHistoryRepo.AddOrUpdate(new EmailHistory { UserId = userId, TimeSent = DateTime.Now, Type = emailType });
                 }
             }
 

@@ -65,26 +65,29 @@ namespace PopNGo.DAL.Concrete
         {
             return _itinerary
                 .Where(i => i.UserId == userId)
-                .Select(i => new PopNGo.Models.DTO.Itinerary
-                {
-                    Id = i.Id,
-                    UserId = i.UserId,
-                    ItineraryTitle = i.ItineraryTitle,
-                    Events = i.ItineraryEvents.Select(ie => new PopNGo.Models.DTO.Event
-                    {
-                        // Directly access ItineraryId from the ItineraryEvent join entity
-                        ItineraryId = ie.ItineraryId,
-                        EventName = ie.Event.EventName, // Map the 'EventName' from the Event entity
-                        EventDate = ie.Event.EventDate ?? DateTime.MinValue, // Handle nullable DateTime if necessary
-                        EventDescription = ie.Event.EventDescription,
-                        EventLocation = ie.Event.EventLocation,
-                        EventImage = ie.Event.EventImage,
-                        ApiEventID = ie.Event.ApiEventId,
-                        Longitude = ie.Event.Longitude,
-                        Latitude = ie.Event.Latitude
-                        // Additional fields that you require in your DTO
-                    }).ToList()
-                }).ToList();
+                .Select(i => i.ToDTO())
+                .ToList();
+                // .Select(i => new PopNGo.Models.DTO.Itinerary
+                // {
+                //     Id = i.Id,
+                //     UserId = i.UserId,
+                //     ItineraryTitle = i.ItineraryTitle,
+                //     Events = i.ItineraryEvents.Select(ie => ie.Event.ToDTO()).ToList()
+                //     // Events = i.ItineraryEvents.Select(ie => new PopNGo.Models.DTO.Event
+                //     // {
+                //     //     // Directly access ItineraryId from the ItineraryEvent join entity
+                //     //     ItineraryId = ie.ItineraryId,
+                //     //     EventName = ie.Event.EventName, // Map the 'EventName' from the Event entity
+                //     //     EventDate = ie.Event.EventDate ?? DateTime.MinValue, // Handle nullable DateTime if necessary
+                //     //     EventDescription = ie.Event.EventDescription,
+                //     //     EventLocation = ie.Event.EventLocation,
+                //     //     EventImage = ie.Event.EventImage,
+                //     //     ApiEventID = ie.Event.ApiEventId,
+                //     //     Longitude = ie.Event.Longitude,
+                //     //     Latitude = ie.Event.Latitude
+                //     //     // Additional fields that you require in your DTO
+                //     // }).ToList()
+                // }).ToList();
         }
 
         public void DeleteItinerary(int itineraryId)

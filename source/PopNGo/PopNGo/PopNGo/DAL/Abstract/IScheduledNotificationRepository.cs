@@ -17,5 +17,7 @@ namespace PopNGo.DAL.Abstract
         public Task<bool> DeleteScheduledNotificationsByUserId(int userId);
 
         public Task CleanUpScheduledNotifications(DateTime? checkTime);
+
+        public Task<ScheduledNotification> GetScheduledNotificationForItinerary(int userId, string type);
     }
 }

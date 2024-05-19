@@ -123,6 +123,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
 
         [Given(@"I am on the ""([^""]*)"" page")]
         [When(@"I am on the ""([^""]*)"" page")]
+        [When(@"I go to the ""([^""]*)"" page")]
         public void GivenIAmOnThePage(string page)
         {
             _webDriver.Current.Navigate().GoToUrl(Common.UrlFor(page));

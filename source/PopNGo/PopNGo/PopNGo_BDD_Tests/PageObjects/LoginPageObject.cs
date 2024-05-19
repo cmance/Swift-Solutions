@@ -19,7 +19,6 @@ namespace PopNGo_BDD_Tests.PageObjects
         public IWebElement PasswordInput => _webDriver.FindElement(By.Id("login-password"));
         public IWebElement RememberMeCheck => _webDriver.FindElement(By.Id("login-rememberMe"));
         public IWebElement SubmitButton => _webDriver.FindElement(By.Id("login-submit"));
-
         public void EnterUsername(string username)
         {
             UsernameInput.Clear();

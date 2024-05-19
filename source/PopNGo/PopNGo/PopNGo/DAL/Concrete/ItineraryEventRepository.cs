@@ -24,17 +24,17 @@ namespace PopNGo.DAL.Concrete
         }
 
 
-        public List<PopNGo.Models.DTO.Event> GetEventsFromItinerary(int userId, int itineraryId)
+        public List<PopNGo.Models.DTO.ItineraryEventDTO> GetEventsFromItinerary(int userId, int itineraryId)
         {
 
             return _itineraryEvents
                    .Where(eh => eh.Itinerary.UserId == userId && eh.ItineraryId == itineraryId)
                    .OrderBy(e => e.Event.EventDate)
-                   .Select(eh => eh.Event.ToDTO()) // Move Select after OrderBy
+                   .Select(eh => eh.ToDTO()) // Move Select after OrderBy
                    .ToList();
 
         }
-        public void AddOrUpdateItineraryDayEvent(int userId, string apiEventId, int itineraryId)
+        public void AddOrUpdateItineraryDayEvent(int userId, string apiEventId, int itineraryId, string reminderTime)
         {
             if (string.IsNullOrEmpty(apiEventId))
             {
@@ -65,6 +65,10 @@ namespace PopNGo.DAL.Concrete
             {
                 itineraryEvent.ItineraryId = itinerary.Id; // Ensure it is linked to the right itinerary
                 itineraryEvent.EventId = eventEntity.Id; // Update with the correct event ID if needed
+                itineraryEvent.Event = eventEntity;
+                itineraryEvent.ReminderTime = reminderTime;
+                itineraryEvent.ReminderCustomTime = null;
+                
                 AddOrUpdate(itineraryEvent);
             }
             else
@@ -73,7 +77,9 @@ namespace PopNGo.DAL.Concrete
                 var newItineraryEvent = new Models.ItineraryEvent
                 {
                     ItineraryId = itinerary.Id, // Directly use the provided itineraryId
-                    EventId = eventEntity.Id
+                    EventId = eventEntity.Id,
+                    ReminderTime = reminderTime,
+                    ReminderCustomTime = null
                 };
                 AddOrUpdate(newItineraryEvent);
             }
@@ -105,6 +111,28 @@ namespace PopNGo.DAL.Concrete
             {
                 throw new Exception("Error deleting event from itinerary", ex);
             }
+        }
+
+        public void SaveReminderTime(int userId, string apiEventId, int itineraryId, string reminderTime, DateTime customTime)
+        {
+            if (string.IsNullOrEmpty(apiEventId))
+            {
+                throw new ArgumentException("EventId cannot be null or empty", nameof(apiEventId));
+            }
+
+            var itineraryEvent = _itineraryEvents
+                .Include(ie => ie.Event)
+                .Include(ie => ie.Itinerary)
+                .FirstOrDefault(ie => ie.Event.ApiEventId == apiEventId && ie.Itinerary.UserId == userId && ie.ItineraryId == itineraryId);
+
+            if (itineraryEvent == null)
+            {
+                throw new InvalidOperationException("Event not found or does not belong to the user's itinerary.");
+            }
+
+            itineraryEvent.ReminderTime = reminderTime;
+            itineraryEvent.ReminderCustomTime = customTime;
+            AddOrUpdate(itineraryEvent);
         }
     }
 }

@@ -69,7 +69,7 @@ public class AdminNotificationsApiController : Controller
                 return NotFound();
             }
 
-            string emailBody = await _emailBuilder.BuildEmailAsync(pgUser.Id);
+            string emailBody = await _emailBuilder.BuildUpcomingEventsEmailAsync(pgUser.Id);
             if (emailBody != "")
             {
                 await _emailSender.SendEmailAsync(

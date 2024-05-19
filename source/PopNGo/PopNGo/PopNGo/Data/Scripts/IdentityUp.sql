@@ -148,3 +148,12 @@ INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20240420135600_WeatherSettingsData', N'8.0.1');
 
 COMMIT;
+
+BEGIN TRANSACTION;
+
+ALTER TABLE [AspNetUsers] ADD [ItineraryReminderTime] NVARCHAR(max);
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20240516142800_ItineraryReminderData', N'8.0.1');
+
+COMMIT;

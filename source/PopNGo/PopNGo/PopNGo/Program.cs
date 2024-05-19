@@ -74,6 +74,7 @@ public class Program
             return new WeatherForecastService(httpClient, services.GetRequiredService<ILogger<WeatherForecastService>>());
         });
 
+        // REST API setup for the Place Suggestions API
         string placeSuggestionsUrl = "https://serpapi.com/search.json?";
         string placeSuggestionsApiKey = builder.Configuration["SerpMapApiKey"];
 
@@ -182,11 +183,14 @@ public class Program
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
             });
+
+            app.Configuration["BaseUrl"] = "https://localhost:5145";
         }
         else
         {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
+            app.Configuration["BaseUrl"] = "https://popngo.azurewebsites.net";
         }
 
         app.UseForwardedHeaders();
