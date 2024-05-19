@@ -52,7 +52,7 @@ async function populateItineraryDropdown() {
             itineraries.forEach(itinerary => {
                 const item = document.createElement('li');
                 const link = document.createElement('a');
-                link.className = 'dropdown-item';
+                link.className = 'dropdown-item itinerary';
                 link.textContent = itinerary.itineraryTitle;
                 link.href = "#";
                 link.dataset.itineraryId = itinerary.id;  // Assuming each itinerary has an 'id' property

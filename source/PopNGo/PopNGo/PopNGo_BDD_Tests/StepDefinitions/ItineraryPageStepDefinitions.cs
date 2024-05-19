@@ -49,13 +49,23 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         public void WhenITryToConfigureATimePastTheEventsStart()
         {
             _itineraryPage.ReminderSelect.SelectByValue("custom");
-            _itineraryPage.ReminderTime.SendKeys("12:01 AM");
+            DateTime originalTime = DateTime.Parse(_itineraryPage.ReminderTime.GetAttribute("value"));
+            _scenarioContext["originalTime"] = originalTime;
+
+            DateTime eventTime = DateTime.Parse(originalTime.ToString());
+            _scenarioContext["eventTime"] = eventTime.AddMinutes(30);
+            string dateTimeString = eventTime.AddMinutes(30).ToString("yyyy-MM-ddTHH:mm");
+            ((IJavaScriptExecutor)_webDriver).ExecuteScript($"document.getElementById('reminder-time').value='{dateTimeString}';");
+            
+            _itineraryPage.ReminderButton.Click();
         }
 
         [Then(@"the time is not changed from what it originally was")]
         public void ThenTheTimeIsNotChangedFromWhatItOriginallyWas()
         {
-            _itineraryPage.ReminderTime.GetAttribute("value").Should().Be("12:00 AM");
+            DateTime testTime = (DateTime)_scenarioContext["originalTime"];
+            DateTime actualTime = DateTime.Parse(_itineraryPage.ReminderTime.GetAttribute("value"));
+            actualTime.Should().Be(testTime);
         }
 
         [Then(@"I can see a default itinerary reminder time setting")]
@@ -67,7 +77,11 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         [When(@"I change the default itinerary reminder time")]
         public void WhenIChangeTheDefaultItineraryReminderTime()
         {
+            _browserDriver.ScrollToElement(_profileNotificationsPage.ItineraryDefaultTime.WrappedElement);
+            Thread.Sleep(500);
             _profileNotificationsPage.ItineraryDefaultTime.SelectByValue("half-hour");
+
+            _browserDriver.ScrollToElement(_profileNotificationsPage.SaveButton);
             _profileNotificationsPage.SaveButton.Click();
 
             // Wait for the page to reload
@@ -81,6 +95,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             switch (buttonName)
             {
                 case "Add to Itinerary":
+                    _browserDriver.ScrollToElement(_explorePage.AddToItinerary);
                     _explorePage.AddToItinerary.Click();
                     break;
                 default:
@@ -91,14 +106,16 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         [When(@"I click the first itinerary")]
         public void WhenIClickTheFirstItinerary()
         {
-            _explorePage.ItineraryList.FindElement(By.ClassName("itinerary")).Click();
             _scenarioContext["itineraryEventTitle"] = _explorePage.EventCard.FindElement(By.Id("event-card-title")).Text;
+            _explorePage.ItineraryList.FindElement(By.ClassName("itinerary")).Click();
         }
 
         [Then(@"I can see the new reminder time on the itinerary for this event")]
         public void ThenICanSeeTheNewReminderTimeOnTheItineraryForThisEvent()
         {
             _itineraryPage.SetEventTitle(_scenarioContext["itineraryEventTitle"].ToString());
+            _browserDriver.ScrollToElement(_itineraryPage.ScenarioEvent);
+
             _itineraryPage.ScenarioEventReminder.SelectedOption.Text.Should().Be("30 minutes");
         }
     }

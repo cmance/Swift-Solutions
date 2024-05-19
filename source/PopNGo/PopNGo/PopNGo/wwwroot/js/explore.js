@@ -28,7 +28,7 @@ let num_searches = 0;
 let user_is_logged_in = null;
 let recaptcha_confirmed = false;
 let userLocation = {};
-let distanceUnit = "miles"
+let distanceUnit = "miles";
 let currentApiEventID = null;
 
 window.onCaptchaSuccess = function(token) {

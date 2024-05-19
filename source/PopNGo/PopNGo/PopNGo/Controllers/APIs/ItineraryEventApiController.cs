@@ -11,6 +11,7 @@ using PopNGo.DAL.Concrete;
 using Microsoft.AspNetCore.Identity;
 using PopNGo.Areas.Identity.Data;
 using PopNGo.Models.DTO;
+using PopNGo.Services;
 
 namespace PopNGo.Controllers.APIs
 {
@@ -18,23 +19,32 @@ namespace PopNGo.Controllers.APIs
     [ApiController]
     public class ItineraryEventApiController : Controller
     {
+        private readonly IEventRepository _eventRepository;
         private readonly IItineraryEventRepository _itineraryEventRepository;
+        private readonly IScheduledNotificationRepository _scheduledNotificationRepository;
         private readonly UserManager<PopNGoUser> _userManager;
         private readonly IPgUserRepository _pgUserRepository;
 
-        public ItineraryEventApiController(UserManager<PopNGoUser> userManager, IItineraryEventRepository itineraryEventRepository, IPgUserRepository pgUserRepository)
+        public ItineraryEventApiController(
+            UserManager<PopNGoUser> userManager,
+            IEventRepository eventRepository,
+            IItineraryEventRepository itineraryEventRepository,
+            IScheduledNotificationRepository scheduledNotificationRepository,
+            IPgUserRepository pgUserRepository)
         {
+            _eventRepository = eventRepository;
             _itineraryEventRepository = itineraryEventRepository;
+            _scheduledNotificationRepository = scheduledNotificationRepository;
             _userManager = userManager;
             _pgUserRepository = pgUserRepository;
         }
 
         // GET: api/ItineraryApi
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Models.DTO.Event>))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Models.DTO.ItineraryEventDTO>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<Models.DTO.Event>>> GetUserEventFromItinerary(int itineraryId)
+        public async Task<ActionResult<IEnumerable<Models.DTO.ItineraryEventDTO>>> GetUserEventFromItinerary(int itineraryId)
         {
             PopNGoUser user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -49,7 +59,7 @@ namespace PopNGo.Controllers.APIs
             }
 
             // Replace this with your logic to get events from itinerary based on pgUser.Id
-            IEnumerable<Models.DTO.Event> events = _itineraryEventRepository.GetEventsFromItinerary(pgUser.Id, itineraryId);
+            IEnumerable<Models.DTO.ItineraryEventDTO> events = _itineraryEventRepository.GetEventsFromItinerary(pgUser.Id, itineraryId);
 
             if (events == null || !events.Any())
             {
@@ -59,6 +69,91 @@ namespace PopNGo.Controllers.APIs
             return Ok(events);
         }
 
+
+        [HttpPut("SaveReminder/eventId={apiEventId}&itineraryId={itineraryId}&reminderTime={time}&customTime={customTime}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> SaveReminder(string apiEventId, int itineraryId, string time, DateTime customTime)
+        {
+            PopNGoUser user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            PgUser pgUser = _pgUserRepository.GetPgUserFromIdentityId(user.Id);
+            if (pgUser == null)
+            {
+                return Unauthorized();
+            }
+
+            try
+            {
+                Console.WriteLine("1");
+                Console.WriteLine($"ItineraryEvent-{apiEventId}-{itineraryId}");
+                Console.WriteLine(time);
+                ScheduledNotification scheduledNotification = await _scheduledNotificationRepository.GetScheduledNotificationForItinerary(pgUser.Id, $"ItineraryEvent-{apiEventId}-{itineraryId}");
+                Console.WriteLine("1.5");
+                ScheduleTasking.RemoveTask(scheduledNotification);
+                Console.WriteLine("2");
+                DateTime? sendTime = _eventRepository.GetEventFromApiId(apiEventId).EventDate;
+                if (sendTime == null)
+                {
+                    return BadRequest("Event not found");
+                }
+                Console.WriteLine("3");
+                Console.WriteLine(user.ItineraryReminderTime);
+                if(time == "quarter-hour")
+                {
+                    sendTime = sendTime.Value.AddMinutes(-15);
+                }
+                else if(time == "half-hour")
+                {
+                    sendTime = sendTime.Value.AddMinutes(-30);
+                }
+                else if(time == "hour")
+                {
+                    sendTime = sendTime.Value.AddHours(-1);
+                }
+                else if(time == "two-hours")
+                {
+                    sendTime = sendTime.Value.AddHours(-2);
+                }
+                else if(time == "three-hours")
+                {
+                    sendTime = sendTime.Value.AddHours(-3);
+                }
+                else if(time == "six-hours")
+                {
+                    sendTime = sendTime.Value.AddHours(-6);
+                }
+                else if(time == "one-day")
+                {
+                    sendTime = sendTime.Value.AddDays(-1);
+                }
+                else
+                {
+                    sendTime = customTime;
+                }
+
+                Console.WriteLine("4");
+                await _scheduledNotificationRepository.UpdateScheduledNotification(scheduledNotification.Id, sendTime.Value, scheduledNotification.Type);
+
+                Console.WriteLine("5");
+                _itineraryEventRepository.SaveReminderTime(pgUser.Id, apiEventId, itineraryId, time, customTime);
+                Console.WriteLine("6");
+                Timer timer = new Timer(TimedEmailService.DoWork, scheduledNotification, TimeSpan.FromSeconds((sendTime.Value - DateTime.Now).TotalSeconds), TimeSpan.FromDays(1));
+                Console.WriteLine("7");
+                ScheduleTasking.AddTask(scheduledNotification, timer);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error saving reminder: {ex.Message}");
+            }
+        }
 
         [HttpPost("ItineraryEvent/{apiEventId}/{itineraryId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
@@ -79,7 +174,52 @@ namespace PopNGo.Controllers.APIs
                 return Unauthorized();
             }
 
-            _itineraryEventRepository.AddOrUpdateItineraryDayEvent(pgUser.Id, apiEventId, itineraryId);
+            DateTime? sendTime = _eventRepository.GetEventFromApiId(apiEventId).EventDate;
+            if (sendTime == null)
+            {
+                return BadRequest("Event not found");
+            }
+
+            if(user.ItineraryReminderTime == "quarter-hour")
+            {
+                sendTime = sendTime.Value.AddMinutes(-15);
+            }
+            else if(user.ItineraryReminderTime == "half-hour")
+            {
+                sendTime = sendTime.Value.AddMinutes(-30);
+            }
+            else if(user.ItineraryReminderTime == "hour")
+            {
+                sendTime = sendTime.Value.AddHours(-1);
+            }
+            else if(user.ItineraryReminderTime == "two-hours")
+            {
+                sendTime = sendTime.Value.AddHours(-2);
+            }
+            else if(user.ItineraryReminderTime == "three-hours")
+            {
+                sendTime = sendTime.Value.AddHours(-3);
+            }
+            else if(user.ItineraryReminderTime == "six-hours")
+            {
+                sendTime = sendTime.Value.AddHours(-6);
+            }
+            else if(user.ItineraryReminderTime == "one-day")
+            {
+                sendTime = sendTime.Value.AddDays(-1);
+            }
+            else
+            {
+                sendTime = sendTime.Value.AddHours(-1);
+            }
+
+            _itineraryEventRepository.AddOrUpdateItineraryDayEvent(pgUser.Id, apiEventId, itineraryId, user.ItineraryReminderTime ?? "hour");
+            int newId = await _scheduledNotificationRepository.AddScheduledNotification(pgUser.Id, sendTime.Value, $"ItineraryEvent-{apiEventId}-{itineraryId}");
+            ScheduledNotification scheduledNotification = _scheduledNotificationRepository.FindById(newId);
+
+            Timer timer = new Timer(TimedEmailService.DoWork, scheduledNotification, TimeSpan.FromSeconds((sendTime.Value - DateTime.Now).TotalSeconds), TimeSpan.FromDays(1));
+            ScheduleTasking.AddTask(scheduledNotification, timer);
+
             return Ok();
         }
 
@@ -103,7 +243,12 @@ namespace PopNGo.Controllers.APIs
 
             try
             {
+                ScheduledNotification scheduledNotification = await _scheduledNotificationRepository.GetScheduledNotificationForItinerary(pgUser.Id, $"ItineraryEvent-{apiEventId}-{itineraryId}");
+                ScheduleTasking.RemoveTask(scheduledNotification);
+
                 _itineraryEventRepository.DeleteEventFromItinerary(pgUser.Id, apiEventId, itineraryId);
+                await _scheduledNotificationRepository.DeleteScheduledNotification(scheduledNotification.Id);
+
                 return Ok();
             }
             catch (Exception ex)

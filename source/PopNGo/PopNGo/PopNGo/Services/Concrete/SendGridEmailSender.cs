@@ -10,15 +10,12 @@ public class EmailSender
 {
     private readonly ILogger _logger;
     private readonly IConfiguration _configuration;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public EmailSender(IConfiguration configuration,
-                       ILogger<EmailSender> logger,
-                       IHttpContextAccessor httpContextAccessor)
+                       ILogger<EmailSender> logger)
     {
         _configuration = configuration;
         _logger = logger;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, Dictionary<string, string> args)
@@ -33,7 +30,6 @@ public class EmailSender
     public async Task Execute(string apiKey, string subject, string toEmail, Dictionary<string, string> args)
     {
         var client = new SendGridClient(apiKey);
-        string baseUrl = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}";
 
         var msg = new SendGridMessage()
         {
@@ -47,6 +43,8 @@ public class EmailSender
         {
             case "confirmation":
                 msg.TemplateId = "d-1d6c26b35471473780eb39a0a1572be0";
+                string baseUrl = _configuration["BaseUrl"];
+
                 templateData.Add("confirmURL", HtmlEncoder.Default.Encode(args["confirmationURL"]).Replace("amp;", ""));
                 templateData.Add("exploreURL", $"{baseUrl}/Explore");
                 templateData.Add("favoritesURL", $"{baseUrl}/Favorites");
@@ -60,6 +58,12 @@ public class EmailSender
                 msg.TemplateId = "d-02995c10569d4594b6e10f6e0445dd24";
                 templateData.Add("messageContent", args["messageContent"]);
                 templateData.Add("name", args["name"]);
+                break;
+            case "itineraryEvent":
+                msg.TemplateId = "d-25bf67053a0341f1b821a3c167e30a86";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("name", args["name"]);
+                templateData.Add("itineraryName", args["itineraryName"]);
                 break;
         }
 

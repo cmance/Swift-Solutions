@@ -11,7 +11,7 @@ namespace PopNGo_BDD_Tests.PageObjects
             _pageName = "Profile Notifications";
         }
 
-        public SelectElement ItineraryDefaultTime => new SelectElement(_webDriver.FindElement(By.Id("itinerary-default-time")));
+        public SelectElement ItineraryDefaultTime => new SelectElement(_webDriver.FindElement(By.Id("Input_ItineraryReminderTime")));
 
         public IWebElement SaveButton => _webDriver.FindElement(By.Id("update-notifications-button"));
     }

@@ -183,11 +183,14 @@ public class Program
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
             });
+
+            app.Configuration["BaseUrl"] = "https://localhost:5145";
         }
         else
         {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
+            app.Configuration["BaseUrl"] = "https://popngo.azurewebsites.net";
         }
 
         app.UseForwardedHeaders();

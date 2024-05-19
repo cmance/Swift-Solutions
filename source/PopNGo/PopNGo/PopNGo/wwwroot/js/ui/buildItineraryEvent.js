@@ -1,5 +1,4 @@
 import { formatTagName } from "../util/tags.js";
-import { formatStartTime } from "../util/formatStartTime.js";
 import { validateObject } from "../validation.js";
 // Props object example:
 // {
@@ -76,6 +75,26 @@ export const buildItineraryEvent = (props) => {
         tagEl.style.backgroundColor = tag.backgroundColor;
         tagsElement.appendChild(tagEl);
     });
+
+    const reminderSelect = itineraryEventElement.getElementById('reminder-time-select');
+    const reminderTimeDiv = itineraryEventElement.getElementById('reminder-time-div');
+    reminderSelect.value = props.reminderTime || 'custom';
+    reminderSelect.addEventListener('change', () => {
+        if (reminderSelect.value === 'custom') {
+            reminderTimeDiv.style.display = 'block';
+        } else {
+            reminderTimeDiv.style.display = 'none';
+        }
+    });
+
+    const customReminderTime = itineraryEventElement.getElementById('reminder-time');
+    customReminderTime.value = props.reminderCustomTime || props.date.toString();
+    const originalReminderTime = props.reminderCustomTime || props.date.toString();
+
+    const saveReminderButton = itineraryEventElement.getElementById('save-reminder-button');
+    saveReminderButton.setAttribute('data-event-id', props.apiEventID);
+    saveReminderButton.setAttribute('data-itinerary-id', props.itineraryId);
+    saveReminderButton.addEventListener('click', () => props.onSaveReminder(customReminderTime, originalReminderTime, reminderSelect.value, customReminderTime.value));
 
     // Set the delete button
     const deleteButton = itineraryEventElement.getElementById('delete-event-button');

@@ -92,7 +92,7 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             var bookmarkList = _favoritesPage.GetBookmarkListFromTitle(newBookmarkListTitle);
 
             // check that the background-image css property is set to the default image
-            bookmarkList.GetCssValue("background-image").Should().Contain("url(\"http://localhost:5145/media/images/placeholder_event_card_image.png\")");
+            bookmarkList.GetCssValue("background-image").Should().Contain("url(\"https://localhost:5145/media/images/placeholder_event_card_image.png\")");
         }
 
         [Then("I should see a delete button for the new bookmark list")]
