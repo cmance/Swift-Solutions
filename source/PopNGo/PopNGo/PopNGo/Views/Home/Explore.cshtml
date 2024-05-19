@@ -63,6 +63,9 @@
     @* Loads WeatherCard template component *@
     <partial name="_WeatherCard" />
 
+    @* Modal that appears when you've explored too much while not logged in *@
+    <partial name="_RecaptchaModal" />
+  
     @* Loads the modal for creating a new itinerary *@
     <partial name="_NewItineraryModal" />
 </div>
@@ -73,3 +76,12 @@
     <script type="module" src="~/js/util/loadMapScript.js"></script>
     <script type="module" src="~/js/util/mapLoadingSpinners.js"></script>
 }
+
+<script type="text/javascript">
+    function onSubmitGoogleCheckmarkCaptcha(token) {
+        // Call the function defined in explore.js
+        if (typeof window.onCaptchaSuccess === "function") {
+            window.onCaptchaSuccess(token);
+        }
+    }
+</script>

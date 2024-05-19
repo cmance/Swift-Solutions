@@ -25,6 +25,10 @@ namespace PopNGo_BDD_Tests.PageObjects
         public SelectElement SelectState => new SelectElement(_webDriver.FindElement(By.Id("search-event-state")));
         public SelectElement SelectCity => new SelectElement(_webDriver.FindElement(By.Id("search-event-city")));
 
+        public IWebElement SearchButton => _webDriver.FindElement(By.Id("search-event-button"));
+
+        public IWebElement RecaptchaModal => _webDriver.FindElement(By.Id("recaptcha-modal"));
+
         public IWebElement GetEventCard()
         {
             // WaitUntil<IWebElement>(() => locationCity, x => x.Text != "");
