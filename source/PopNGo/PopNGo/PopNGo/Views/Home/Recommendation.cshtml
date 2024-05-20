@@ -1,0 +1,131 @@
+<div class="location-permissions-alert alert alert-warning text-center" style="display: none;">
+    <h3>We need your location to provide personalized event recommendations.</h3>
+    <p>Please enable location permissions in your browser settings.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="text-center text-white">Recommended</h1>
+        <h1 class="text-center" style="color: #fac864;"><strong>events</strong></h1>
+    </div>
+</div>
+
+<div class="container-lg">
+    <div class="row">
+        <div class="col-md-2 arrow-left-div d-flex justify-content-center align-items-center">
+            <a class="btn btn-primary left-arrow-anchor" href="#carouselExampleIndicators" role="button"
+                data-slide="prev">
+                <img src="~/media/images/arrow-left.svg" alt="Left Arrow" class="arrow-left-image" width="50"
+                    height="50" />
+            </a>
+        </div>
+        <div class="col-md-8">
+            <div id="carouselExampleIndicators" class="carousel slide">
+                <div class="carousel-inner">
+                    @* Recommended Events Template Goes Here *@
+
+                    @* <div class="carousel-item active recommended-event-card-container">
+                    </div> *@
+
+                    <div class="carousel-item recommended-event-card-container active specific-div">
+                        <div class="center-vertically out-of-recommended-events-container">
+                            @* Event 2 *@
+                            <h1 class="text-white text-center">Out of new events! </h1>
+                            <h2 class="text-white text-center">Check in tomorrow or go to the <a href="/Home/Explore"
+                                    style="color: #feaf48;">explore</a> page!</h2>
+                            @* Copy the content of your template here *@
+                        </div>
+                    </div>
+
+                    @* Add more carousel-item divs for more events *@
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 arrow-right-div d-flex justify-content-center align-items-center">
+            <a class="btn btn-primary right-arrow-anchor" href="#carouselExampleIndicators" role="button"
+                data-slide="next">
+                <img src="~/media/images/arrow-right.svg" alt="Right Arrow" class="arrow-right-image" width="50"
+                    height="50" />
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="toastContainer"></div>
+<partial name="_ViewVenueModal" />
+
+
+
+
+<template id="recommended-events-template">
+
+    <div class="recommended-events-title-container">
+        <h3 class="text-center recommended-events-title">This is the event title</h3>
+    </div>
+
+    <div class="recommended-events-image-container position-relative"
+        style="background-image: url('~/media/images/placeholder_event_card_image.png');">
+        <div class="date-overlay position-absolute start-0">
+            <h4 class="text-white text-center date-1">FEB</h4>
+            <h5 class="text-center date-2" style="color: gray;">8</h5>
+        </div>
+        <div class="button-overlay position-absolute end-0">
+            <a aria-label="View original event post button" href="" id="original-post-link"
+                class="btn btn-primary event-recommendation-buttons recommendations-view-original-event-post">View
+                Original Event
+                Post</a>
+        </div>
+    </div>
+
+    <div class="recommended-events-description-container p-3 mt-2">
+        <text class="recommended-events-description">This is the description of an event This is the description of an
+            eventThis is the description of an eventThis is the description of an eventThis is the description of an
+            eventThis is the description of an event</text>
+    </div>
+
+    <div class="row recommended-events-date-row justify-content-center">
+        <div class="col-md-6 recommended-events-date-container">
+            <text class="recommended-events-date-1 text-white">Feburary 8, 2024</text>
+            <br>
+            <text class="recommended-events-date-2 text-white">4:00pm</text>
+        </div>
+
+        <div class="col-md-6 recommended-events-address-container">
+            <text class="recommended-events-address-1 text-white">123 Place St, City, State</text>
+            <br>
+            <text class="recommended-events-address-2 text-white">99999, United States</text>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-between">
+            <button class="btn btn-primary event-recommendation-buttons-2">Add Event to Google Calendar</button>
+
+            <div class="recommended-events-right-buttons">
+                <div class="dropdown">
+                    <button aria-label="Save event to bookmarks button." class="btn btn-secondary dropdown-toggle"
+                        type="button" id="recommended-event-card-bookmark-button" data-bs-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <svg alt="Event Image" xmlns="http://www.w3.org/2000/svg" width="20" height="24"
+                            viewBox="0 0 24 24">
+                            <path fill="white" d="M19 24l-7-6-7 6v-24h14v24z" />
+                        </svg>
+                    </button>
+                    <div class="dropdown-menu" id="recommended-event-card-bookmark-dropdown-menu"
+                        aria-labelledby="event-card-bookmark-button">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </div>
+                <button class="btn btn-primary event-recommendation-buttons-2">Buy Tickets</button>
+                <button id="view-venue-btn" class="btn btn-primary event-recommendation-buttons-2">View Venue</button>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+@section Scripts {
+    <script type="module" src="~/js/ui/buildRecommendationCard.js"></script>
+}

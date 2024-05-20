@@ -149,3 +149,146 @@ input::placeholder,
     margin-right: 5px;
     border-radius: 5px;
 }
+
+/* Recommended Events Page */
+.recommended-event-card-container {
+    background-color: #fac864;
+    border-radius: 1rem;
+    padding: 15px;
+}
+
+.date-overlay {
+    position: absolute;
+    top: 0; /* Adjust as needed */
+    padding: 1rem; /* Adjust as needed */
+    min-height: 250px;
+    min-width: 20%;
+    background-color: #000; /* Semi-transparent black */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+.date-1 {
+    font-size:50px;
+}
+
+.date-2 {
+    font-size: 40px;
+}
+
+.button-overlay {
+    bottom: 0; /* Adjust as needed */
+    padding: 1rem; /* Adjust as needed */
+}
+
+.recommended-events-title-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+}
+
+.recommended-events-title {
+    color: #FFF;
+    font-size: x-large;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.recommended-events-image-container {
+    position: relative;
+    width: 100%;
+    min-height: 250px; /* This will maintain a 2:1 aspect ratio (500x250) */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+    border-radius: 1rem;
+}
+
+.recommended-events-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recommended-events-description-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+}
+
+.recommended-events-description {
+    color: #FFF;
+}
+
+.recommended-events-date-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+    margin-right: 16px; /* Add right margin to the date container */
+    width: 48%;
+    padding: 10px 10px 10px 14px;
+}
+
+.recommended-events-address-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+    margin-left: 16px; /* Add left margin to the address container */
+    width: 48%;
+    padding: 10px 10px 10px 14px;
+}
+
+@media (max-width: 1400px) {
+    .recommended-events-date-container,
+    .recommended-events-address-container {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .recommended-events-address-container {
+        margin-top: 15px;
+    }
+}
+
+.recommended-events-date-row {
+    padding: 10px;
+}
+
+.event-recommendation-buttons {
+    color: black;
+    background-color: #FFF;
+}
+
+.event-recommendation-buttons-2 {
+    color: black;
+    background-color: #FFF;
+    margin: 5px 10px;
+}
+
+.carousel-item.recommended-event-card-container.specific-div {
+    height: 56vh;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px;
+}
+
+.center-vertically {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.out-of-recommended-events-container {
+    background-color: #383838;
+    border: 2px solid #FFF;
+}
+
+@media (max-width: 768px) {
+    .right-arrow-anchor,
+    .left-arrow-anchor {
+        display: none;
+    }
+}
+
