@@ -226,9 +226,11 @@ function configureCarousel() {
         touch: true, // Enable swiping
         ride: false // Disable auto-start
     });
-    bsCarousel.pause(); // Pause the carousel
-}
 
+    carousel.addEventListener('slid.bs.carousel', function () {
+        bsCarousel.pause(); // Pause the carousel after a slide transition
+    });
+}
 function splitAddress(address) {
     const commaIndices = [];
     for (let i = 0; i < address.length; i++) {
