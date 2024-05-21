@@ -224,8 +224,9 @@ function configureCarousel() {
     var bsCarousel = new bootstrap.Carousel(carousel, {
         interval: false, // Disable auto sliding
         touch: true, // Enable swiping
-        ride: null // Disable auto-start
+        ride: false // Disable auto-start
     });
+    bsCarousel.pause(); // Pause the carousel
 }
 
 function splitAddress(address) {
