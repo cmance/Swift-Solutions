@@ -28,7 +28,8 @@ let recommendedEvents = [
         eventImage: 'https://via.placeholder.com/500',
         eventOriginalLink: 'https://www.google.com',
         venueName: 'Coding School',
-        venuePhoneNumber: '123-456-7890'
+        venuePhoneNumber: '123-456-7890',
+        ticketLinks: [{ source: 'Ticketmaster', link: 'https://www.ticketmaster.com' }, { source: 'Eventbrite', link: 'https://www.eventbrite.com' }]
     },
     {
         apiEventID: 2,
@@ -37,7 +38,8 @@ let recommendedEvents = [
         eventDate: '2023-11-15T10:00:00Z',
         eventLocation: '1955 Salem Dallas Highway Northwest, Salem, OR 97304, United States',
         eventImage: 'https://via.placeholder.com/1000',
-        eventOriginalLink: 'https://www.google.com'
+        eventOriginalLink: 'https://www.google.com',
+        ticketLinks: [{ source: 'Woopoas', link: 'https://www.ticketmaster.com' }]
     },
     {
         apiEventID: 3,
@@ -96,7 +98,7 @@ async function buildRecommendationCard(recommendedEvents) {
         // Populate the clone with the event data
         clone.querySelector('.recommended-events-title').textContent = event.eventName;
         clone.querySelector('.recommended-events-description').textContent = event.eventDescription;
-        clone.querySelector('.recommended-events-date-1').textContent = formatDate(event.eventDate); 
+        clone.querySelector('.recommended-events-date-1').textContent = formatDate(event.eventDate);
         clone.querySelector('.recommended-events-date-2').textContent = formatHourMinute(event.eventDate);
         clone.querySelector('.recommended-events-address-1').textContent = splitAddress(event.eventLocation)[0];
         clone.querySelector('.recommended-events-address-2').textContent = splitAddress(event.eventLocation)[1];
@@ -151,7 +153,57 @@ async function buildRecommendationCard(recommendedEvents) {
         clone.getElementById("view-venue-btn").addEventListener('click', async () => {
             buildVenueDetailsModal(document, event);
         });
+        // const viewVenueButtons = clone.querySelectorAll('.view-venue-btn');
+        // Array.from(viewVenueButtons).forEach(button => {
+        //     button.addEventListener('click', async () => {
+        //         buildVenueDetailsModal(document, event);
+        //     });
+        // });
 
+        // Buy Tickets
+        const buyTicketsButton = clone.getElementById('buyTicketsBtn');
+        buyTicketsButton.innerHTML = 'Buy Tickets'; // Set the button title
+        
+        // Select the existing dropdown menu
+        const dropdownMenu = clone.getElementById('buyTicketsDropdownMenu');
+        
+        if (!event.ticketLinks || event.ticketLinks.length === 0) {
+            buyTicketsButton.classList.add('disabled'); // Disable the button
+            buyTicketsButton.title = "No ticket links available for this event.";
+        } else {
+            buyTicketsButton.classList.remove('disabled'); // Enable the button
+            buyTicketsButton.title = "Click to view ticket options for this event.";
+            dropdownMenu.innerHTML = ''; // Clear the default dropdown options
+            event.ticketLinks.forEach(ticketLink => {
+                const ticketLinkElement = document.createElement('a');
+                ticketLinkElement.classList.add('dropdown-item');
+                ticketLinkElement.textContent = ticketLink.source;
+                ticketLinkElement.href = ticketLink.link;
+                ticketLinkElement.target = '_blank';
+        
+                // Append the dropdown item to the dropdown menu, not the button
+                dropdownMenu.appendChild(ticketLinkElement);
+            });
+        }
+        
+        // Add to Google Calendar
+        const addToCalendarButton = clone.getElementById('recommended-event-google-cal');
+
+        addToCalendarButton.addEventListener('click', () => {
+            const eventTitle = event.eventName;
+            const eventDate = new Date(event.eventDate); // Convert string to Date
+            const eventDescription = event.eventDescription;
+            console.log(eventDate)
+        
+            const startDateTime = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
+            const endDateTime = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
+        
+            const calendarUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(eventTitle) +
+                '&dates=' + encodeURIComponent(startDateTime) + '/' + encodeURIComponent(endDateTime) +
+                '&details=' + encodeURIComponent(eventDescription) +
+                '&location=&sf=true&output=xml';
+            window.open(calendarUrl, '_blank');
+        });
 
         // Add the clone to the carousel item
         carouselItem.appendChild(clone);
@@ -178,7 +230,7 @@ function configureCarousel() {
 
 function splitAddress(address) {
     const commaIndices = [];
-    for(let i=0; i<address.length; i++) {
+    for (let i = 0; i < address.length; i++) {
         if (address[i] === ',') commaIndices.push(i);
     }
     const secondLastCommaIndex = commaIndices[commaIndices.length - 2];  // Find the index of the second last comma

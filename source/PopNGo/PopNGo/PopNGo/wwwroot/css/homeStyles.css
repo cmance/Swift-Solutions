@@ -287,8 +287,11 @@ input::placeholder,
 
 @media (max-width: 768px) {
     .right-arrow-anchor,
-    .left-arrow-anchor {
+    .left-arrow-anchor,
+    .arrow-left-div,
+    .arrow-right-div {
         display: none;
+        margin-top: 0 !important;
     }
 }
 
