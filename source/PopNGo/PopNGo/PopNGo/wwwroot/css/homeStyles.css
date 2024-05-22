@@ -204,6 +204,7 @@ input::placeholder,
     background-repeat: no-repeat; /* Do not repeat the image */
     background-size: cover; /* Resize the background image to cover the entire container */
     border-radius: 1rem;
+    background-color: #BBBBBB; /* Semi-transparent black */
 }
 
 .recommended-events-image img {
@@ -264,6 +265,13 @@ input::placeholder,
     color: black;
     background-color: #FFF;
     margin: 5px 10px;
+    height: 40px;
+}
+
+.btn.disabled, 
+.btn:disabled {
+    background-color: #bbbbbb;
+    border-color: #bbbbbb;
 }
 
 .carousel-item.recommended-event-card-container.specific-div {

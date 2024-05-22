@@ -3,7 +3,7 @@ import { formatDate, formatHourMinute } from '../util/formatStartTime.js';
 import { getBookmarkLists } from '../api/bookmarkLists/getBookmarkLists.js';
 import { UnauthorizedError } from '../util/errors.js';
 import { onPressSaveToBookmarkList } from '../util/onPressSaveToBookmarkList.js';
-import { buildVenueDetailsModal } from './buildEventDetailsModal.js';
+// import { buildVenueDetailsModal } from './buildEventDetailsModal.js';
 // import { getRecommendedEvents } from '../recommendations/getRecommendedEvents.js';
 
 /**
@@ -149,16 +149,6 @@ async function buildRecommendationCard(recommendedEvents) {
             viewOriginalPostLink.href = event.eventOriginalLink;
             viewOriginalPostLink.target = '_blank';
         }
-        // View Venue
-        clone.getElementById("view-venue-btn").addEventListener('click', async () => {
-            buildVenueDetailsModal(document, event);
-        });
-        // const viewVenueButtons = clone.querySelectorAll('.view-venue-btn');
-        // Array.from(viewVenueButtons).forEach(button => {
-        //     button.addEventListener('click', async () => {
-        //         buildVenueDetailsModal(document, event);
-        //     });
-        // });
 
         // Buy Tickets
         const buyTicketsButton = clone.getElementById('buyTicketsBtn');
