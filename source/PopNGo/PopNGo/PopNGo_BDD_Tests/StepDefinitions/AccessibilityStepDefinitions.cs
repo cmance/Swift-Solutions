@@ -89,5 +89,11 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         {
             _webDriver.Navigate().GoToUrl(Common.UrlFor("Profile"));
         }
+
+        [Given("the user is on the recommendation page 2")]
+        public void GivenTheUserIsOnTheRecommendationPage()
+        {
+            _webDriver.Navigate().GoToUrl(Common.UrlFor("Recommendation"));
+        }
     }
 }

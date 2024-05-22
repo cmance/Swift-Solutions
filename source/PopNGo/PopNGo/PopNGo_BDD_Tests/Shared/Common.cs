@@ -26,6 +26,7 @@ namespace PopNGo_BDD_Tests.Shared
             { "Itinerary", "/Home/Itinerary"},
             { "Login", "/Identity/Account/Login" },
             { "Profile", "/Identity/Account/Manage"},
+            { "Recommendation", "/Home/Recommendation"},
             { "Admin", "/Admin" },
             { "Notifications", "/Admin/ScheduledNotifications" },
             { "Metrics", "/Admin/Metrics" },

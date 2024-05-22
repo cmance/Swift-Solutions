@@ -28,5 +28,9 @@ Scenario: See the profile page
     Given the user is on the profile page 2
     Then all images should have an alt attribute and all buttons should have an aria label
 
+Scenario: See the recommendation page
+    Given the user is on the recommendation page 2
+    Then all images should have an alt attribute and all buttons should have an aria label
+
 
     
