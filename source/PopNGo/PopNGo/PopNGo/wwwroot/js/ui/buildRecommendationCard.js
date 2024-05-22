@@ -183,7 +183,7 @@ async function buildRecommendationCard(recommendedEvents) {
             const eventTitle = event.eventName;
             const eventDate = new Date(event.eventDate); // Convert string to Date
             const eventDescription = event.eventDescription;
-            console.log(eventDate)
+
         
             const startDateTime = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
             const endDateTime = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
