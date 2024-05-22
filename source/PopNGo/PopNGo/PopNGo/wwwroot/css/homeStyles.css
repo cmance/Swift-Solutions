@@ -83,7 +83,7 @@
 }
 
 .event-button:hover::after {
-    transform: translateX(0); 
+    transform: translateX(0);
 }
 
 .event {
