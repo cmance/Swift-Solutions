@@ -65,9 +65,24 @@ public class EmailSender
                 templateData.Add("name", args["name"]);
                 templateData.Add("itineraryName", args["itineraryName"]);
                 break;
+            case "itineraryNotificationRemoval":
+                msg.TemplateId = "d-5891c15024a641af8153be44c326ffe0";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("itineraryTitle", args["itineraryTitle"]);
+                break;
+            case "itineraryNotificationAddition":
+                msg.TemplateId = "d-ad5de83dc91b443987fb78215fe595cc";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("itineraryTitle", args["itineraryTitle"]);
+                templateData.Add("optOutURL", args["optOutURL"]);
+                break;
+            case "itineraryNotification":
+                msg.TemplateId = "d-81f71e08eacf47aa90d847e5055a78f3";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("itineraryName", args["itineraryName"]);
+                break;
         }
 
-        
         msg.SetTemplateData(templateData);
         msg.AddTo(new EmailAddress(toEmail));
 

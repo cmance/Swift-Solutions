@@ -128,12 +128,21 @@ CREATE TABLE [ItineraryEvents] (
   [ReminderCustomTime] DATETIME
 );
 
+CREATE TABLE [ItineraryNotifications] (
+  [ID] INTEGER PRIMARY Key IDENTITY (1, 1),
+  [ItineraryID] INTEGER NOT NULL,
+  [NotificationAddress] NVARCHAR(255) NOT NULL,
+  [OptOut] BIT NOT NULL,
+  [OptOutCode] NVARCHAR(MAX) NOT NULL
+);
+
 -- Add Foreign Key constraints
 ALTER TABLE [Itinerary] ADD CONSTRAINT FK_Itinerary_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User]([ID]);
 
 ALTER TABLE [ItineraryEvents] ADD CONSTRAINT FK_ItineraryEvents_ItineraryID FOREIGN KEY ([ItineraryID]) REFERENCES [Itinerary] ([ID]);
-
 ALTER TABLE [ItineraryEvents] ADD CONSTRAINT FK_ItineraryEvents_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
+
+ALTER TABLE [ItineraryNotifications] ADD CONSTRAINT FK_ItineraryNotifications_ItineraryID FOREIGN KEY ([ItineraryID]) REFERENCES [Itinerary] ([ID]);
 
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
 ALTER TABLE [EventHistory] ADD CONSTRAINT FK_EventHistory_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);

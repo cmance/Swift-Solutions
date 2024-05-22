@@ -5,21 +5,22 @@ import { buildItinerary } from './ui/buildItineraryAccordion.js';
 import { buildItineraryEvent } from './ui/buildItineraryEvent.js';
 import { showToast } from './util/toast.js';
 
+let notificationIndex = -1;
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         const itineraries = await getAllUserEventsFromItinerary();
-
+        console.log('Itineraries:', itineraries);
         if (itineraries && itineraries.length > 0) {
             const accordionExample = document.getElementById('itinerary-content');
-            // let accordionHtml = '';
-            itineraries.forEach((itinerary, index) => {
-                // accordionHtml += createAccordionHtml(itinerary, index);
-                createAccordionHtml(itinerary, index);
-            });
-            // accordionExample.innerHTML = accordionHtml;
+
             document.getElementById("login-prompt").style.display = "none";
             document.getElementById("no-itinerary-message").style.display = "none";
             accordionExample.style.display = "block"; // Ensure it's visible if there are items
+
+            itineraries.forEach((itinerary, index) => {
+                createAccordionHtml(itinerary, index);
+            });
         } else {
             displayNoItineraryMessage();
         }
@@ -34,8 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     attachEventListeners(); // Make sure this is called after updating the DOM
-
-    // attachDeleteEventListeners();
 });
 
 async function displayLoginPrompt() {
@@ -54,12 +53,18 @@ async function displayNoItineraryMessage() {
 function createAccordionHtml(itinerary, index) {
     const itineraryContainer = document.getElementById('itinerary-content');
 
-    const itineraryElement = buildItinerary({
+    try {
+    let itineraryElement = buildItinerary({
         index: index,
         title: itinerary.itineraryTitle,
         onDelete: (button) => deleteItinerary(button, itinerary.id),
+        onAddNotification: () => createNotificationEntry(index, null),
+        onConfirmNotifications: async () => await confirmNotifications(index, itinerary.id),
     });
 
+    itineraryContainer.appendChild(itineraryElement);
+    itineraryElement = document.getElementById(`collapse${index}`);
+    
     itinerary.events.forEach(event => {
         const eventElement = buildItineraryEvent({
             itineraryId: itinerary.id,
@@ -72,16 +77,75 @@ function createAccordionHtml(itinerary, index) {
             latitude: event.eventDetails.latitude,
             longitude: event.eventDetails.longitude,
             reminderTime: event.reminderTime,
-            // reminderCustomTime: new Date(event.reminderCustomTime),
             reminderCustomTime: event.reminderCustomTime,
             onDelete: () => deleteEvent(event.eventDetails.apiEventID, itinerary.id),
             onSaveReminder: (element, originalTime, time, customTime) => saveReminder(event.eventDetails.apiEventID, itinerary.id, originalTime, time, customTime, element),
         });
 
-        itineraryElement.getElementById('events-container').appendChild(eventElement);
+        itineraryElement.querySelector('#events-container').appendChild(eventElement);
+    });
+} catch (error) {
+    console.error('Failed to create accordion HTML:', error);
+}
+
+    itinerary.notifications.forEach(notification => {
+        createNotificationEntry(index, notification);
+    });
+}
+
+function createNotificationEntry(itineraryId, notification) {
+    // notificationIndex++;
+    const itineraryElement = document.getElementById(`heading${itineraryId}`).nextElementSibling;
+
+    const notificationElement = document.createElement('div');
+    notificationElement.className = 'notification';
+    // notificationElement.dataset.notificationIndex = notificationIndex;
+
+    const notificationAddressElement = document.createElement('input');
+    notificationAddressElement.className = 'col-8';
+    notificationAddressElement.id = 'notification-address';
+    notificationAddressElement.type = 'text';
+    notificationAddressElement.value = notification?.address || "";
+    notificationAddressElement.placeholder = 'Email Address';
+
+    const notificationDeleteButton = document.createElement('button');
+    notificationDeleteButton.className = 'btn btn-danger col-2 offset-2';
+    notificationDeleteButton.textContent = 'Delete';
+    notificationDeleteButton.addEventListener('click', () => {
+        // notificationIndex--;
+        notificationElement.remove();
     });
 
-    itineraryContainer.appendChild(itineraryElement);
+    notificationElement.appendChild(notificationAddressElement);
+    notificationElement.appendChild(notificationDeleteButton);
+
+    const notificationsContainer = itineraryElement.querySelector('#notification-container');
+    notificationsContainer.appendChild(notificationElement);
+}
+
+async function confirmNotifications(index, itineraryId) {
+    const notifications = document.getElementById(`heading${index}`)
+                            .nextElementSibling
+                            .querySelector('#notification-container')
+                            .querySelectorAll('.notification');
+    const emailAddresses = Array.from(notifications).map(notification => notification.querySelector('input').value);
+
+    console.log('Email addresses:', emailAddresses);
+    
+    try {
+        let response = await fetch(`/api/ItineraryApi/ConfirmNotifications/${itineraryId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(emailAddresses),
+        });
+
+        if (!response.ok) throw new Error(`Error ${response.status}: ${await response.text()}`);
+
+        showToast('Notifications confirmed successfully');
+    } catch (error) {
+        console.error('Failed to confirm notifications:', error);
+        showToast('Failed to confirm notifications');
+    }
 }
 
 async function saveReminder(apiEventID, itineraryId, originalTime, time, customTime, element) {
