@@ -4,7 +4,8 @@ USE [PopNGoDB];
 
 CREATE TABLE [PG_User] (
   [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
-  [ASPNETUserID] NVARCHAR(255) NOT NULL
+  [ASPNETUserID] NVARCHAR(255) NOT NULL,
+  [RecommendedPreviouslyAt] DATETIME,
 );
 
 CREATE TABLE [FavoriteEvents] (
@@ -128,6 +129,12 @@ CREATE TABLE [ItineraryEvents] (
   [ReminderCustomTime] DATETIME
 );
 
+CREATE TABLE [RecommendedEvent] (
+  [ID] INTEGER PRIMARY KEY IDENTITY(1, 1),
+  [EventID] INTEGER NOT NULL,
+  [UserID] INTEGER NOT NULL,
+)
+
 CREATE TABLE [ItineraryNotifications] (
   [ID] INTEGER PRIMARY Key IDENTITY (1, 1),
   [ItineraryID] INTEGER NOT NULL,
@@ -160,3 +167,7 @@ ALTER TABLE [EmailHistory] ADD CONSTRAINT FK_EmailHistory_UserID FOREIGN KEY ([U
 
 ALTER TABLE [EventTag] ADD CONSTRAINT FK_EventTag_TagId FOREIGN KEY ([TagId]) REFERENCES [Tag] ([ID]);
 ALTER TABLE [EventTag] ADD CONSTRAINT FK_EventTag_EventId FOREIGN KEY ([EventId]) REFERENCES [Event] ([ID]);
+
+ALTER TABLE [RecommendedEvent] ADD CONSTRAINT FK_RecommendedEvent_EventID FOREIGN KEY ([EventID]) REFERENCES [Event] ([ID]);
+ALTER TABLE [RecommendedEvent] ADD CONSTRAINT FK_RecommendedEvent_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User] ([ID]);
+

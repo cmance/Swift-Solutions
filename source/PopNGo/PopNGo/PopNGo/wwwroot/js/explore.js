@@ -19,6 +19,7 @@ import { getForecastForLocation } from './api/weather/getForecast.js';
 import { buildWeatherCard, validateBuildWeatherCardProps } from './ui/buildWeatherCard.js';
 import { addMapLoadingSpinner, removeMapLoadingSpinner } from './util/mapLoadingSpinners.js';
 import { bindItinerarySaving } from './util/bindItinerarySaving.js';
+import { getRecommendedEvents } from './api/recommendations/getRecommendedEvents.js';
 
 let map = null;
 let mapMarkers = [];

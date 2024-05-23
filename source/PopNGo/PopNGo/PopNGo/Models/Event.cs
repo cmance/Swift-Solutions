@@ -64,5 +64,8 @@ public partial class Event
     public virtual ICollection<ItineraryEvent> ItineraryEvents { get; set; } = new List<ItineraryEvent>();
 
     [InverseProperty("Event")]
+    public virtual ICollection<RecommendedEvent> RecommendedEvents { get; set; } = new List<RecommendedEvent>();
+
+    [InverseProperty("Event")]
     public virtual ICollection<TicketLink> TicketLinks { get; set; } = new List<TicketLink>();
 }
