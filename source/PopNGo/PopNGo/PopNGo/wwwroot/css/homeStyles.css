@@ -165,7 +165,7 @@ input::placeholder,
     padding: 1rem; /* Adjust as needed */
     min-height: 250px;
     min-width: 20%;
-    background-color: #000; /* Semi-transparent black */
+    background-color: #1e1e1e; /* Semi-transparent black */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -332,6 +332,26 @@ input::placeholder,
     .arrow-right-div {
         display: none;
         margin-top: 0 !important;
+    }
+}
+
+
+
+.loader {
+    background: linear-gradient(110deg, #1e1e1e 8%, #2e2e2e 18%, #1e1e1e 33%);
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+
+    height: 56vh;
+    z-index: 99;
+    border-radius: 1rem;
+    padding: 15px;
+    border: 2px solid #FFF;
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% 0;
     }
 }
 

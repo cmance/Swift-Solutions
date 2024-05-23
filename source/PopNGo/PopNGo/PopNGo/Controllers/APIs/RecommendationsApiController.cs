@@ -76,7 +76,7 @@ public class RecommendationsApiController : Controller
 
         var isYesterday = DateTime.Today - pgUser.RecommendedPreviouslyAt?.Date >= TimeSpan.FromDays(1);
         // Check user's last recommendation date and only recommend if recommendation was yesterday or earlier
-        if (!isYesterday)
+        if (pgUser.RecommendedPreviouslyAt != null && !isYesterday)
         {
             return Ok(_recommendedEventRepository.GetRecommendedEvents(pgUser.Id));
         }

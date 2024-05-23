@@ -3,54 +3,9 @@ import { formatDate, formatHourMinute } from '../util/formatStartTime.js';
 import { getBookmarkLists } from '../api/bookmarkLists/getBookmarkLists.js';
 import { UnauthorizedError } from '../util/errors.js';
 import { onPressSaveToBookmarkList } from '../util/onPressSaveToBookmarkList.js';
-// import { buildVenueDetailsModal } from './buildEventDetailsModal.js';
-// import { getRecommendedEvents } from '../recommendations/getRecommendedEvents.js';
-
-/**
- * Returns list of recommended events
- * @async
- * @function getRecommendedEvents
- * @returns {Promise<Array<object>>}
- */
-export async function getRecommendedEvents(queryString) {
-    let res = await fetch(`/api/RecommendationsApi/RecommendedEvents`)
-    return await res.json();
-}
+import { getRecommendedEvents } from "../api/recommendations/getRecommendedEvents.js";
 
 let userLocation = {}
-let recommendedEvents = [
-    {
-        apiEventID: 1,
-        eventName: 'Coding Workshop',
-        eventDescription: 'Join us for a fun and interactive coding workshop!Join us for a fun and interactive coding workshop!Join us for a fun and interactive coding workshop!Join us for a fun and interactive coding workshop!Join us for a fun and interactive coding workshop!',
-        eventDate: '2024-05-24T16:00:00Z',
-        eventLocation: '4225 North Pacific Highway West, Rickreall, OR 97371, United States',
-        eventImage: 'https://via.placeholder.com/500',
-        eventOriginalLink: 'https://www.google.com',
-        venueName: 'Coding School',
-        venuePhoneNumber: '123-456-7890',
-        ticketLinks: [{ source: 'Ticketmaster', link: 'https://www.ticketmaster.com' }, { source: 'Eventbrite', link: 'https://www.eventbrite.com' }]
-    },
-    {
-        apiEventID: 2,
-        eventName: 'Yoga in the Park',
-        eventDescription: 'Relax and unwind with a yoga session in the park!',
-        eventDate: '2023-11-15T10:00:00Z',
-        eventLocation: '1955 Salem Dallas Highway Northwest, Salem, OR 97304, United States',
-        eventImage: 'https://via.placeholder.com/1000',
-        eventOriginalLink: 'https://www.google.com',
-        ticketLinks: [{ source: 'Woopoas', link: 'https://www.ticketmaster.com' }]
-    },
-    {
-        apiEventID: 3,
-        eventName: 'Art Class',
-        eventDescription: 'Express your creativity with our art class!',
-        eventDate: '2023-12-01T18:00:00Z',
-        eventLocation: '4225 North Pacific Highway West, Rickreall, OR 97371, United States',
-        eventImage: 'https://via.placeholder.com/100',
-
-    }
-];
 
 document.addEventListener("DOMContentLoaded", async function () {
     configureCarousel();
@@ -63,13 +18,22 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             const { city, state, country } = await getNearestCityAndStateAndCountry(position.coords.latitude, position.coords.longitude);
             let queryString = `${city}, ${state}, ${country}`;
-            // let recommendedEvents = await getRecommendedEvents(queryString);
+            let recommendedEvents = await getRecommendedEvents(queryString);
+            console.log(recommendedEvents);
             buildRecommendationCard(recommendedEvents);
+
+            // Remove the loading screen from the carousel
+            const loadingScreen = document.getElementById('loadingScreen');
+            loadingScreen.parentNode.removeChild(loadingScreen);
+
+            // Start the carousel from the first event
+            $('.carousel').carousel(0);
 
         }, async function (error) {
             if (error.code === error.PERMISSION_DENIED) {
                 document.getElementsByClassName("location-permissions-alert")[0].style.display = "block";
             }
+            
         });
     }
 }, { once: true });
@@ -97,7 +61,13 @@ async function buildRecommendationCard(recommendedEvents) {
 
         // Populate the clone with the event data
         clone.querySelector('.recommended-events-title').textContent = event.eventName;
-        clone.querySelector('.recommended-events-description').textContent = event.eventDescription;
+        if (event.eventDescription === null) {
+            clone.querySelector('.recommended-events-description').textContent = "No description available";
+        }
+        else {
+            clone.querySelector('.recommended-events-description').textContent = event.eventDescription;
+        }
+
         clone.querySelector('.recommended-events-date-1').textContent = formatDate(event.eventDate);
         clone.querySelector('.recommended-events-date-2').textContent = formatHourMinute(event.eventDate);
         clone.querySelector('.recommended-events-address-1').textContent = splitAddress(event.eventLocation)[0];
@@ -153,10 +123,10 @@ async function buildRecommendationCard(recommendedEvents) {
         // Buy Tickets
         const buyTicketsButton = clone.getElementById('buyTicketsBtn');
         buyTicketsButton.innerHTML = 'Buy Tickets'; // Set the button title
-        
+
         // Select the existing dropdown menu
         const dropdownMenu = clone.getElementById('buyTicketsDropdownMenu');
-        
+
         if (!event.ticketLinks || event.ticketLinks.length === 0) {
             buyTicketsButton.classList.add('disabled'); // Disable the button
             buyTicketsButton.title = "No ticket links available for this event.";
@@ -170,12 +140,12 @@ async function buildRecommendationCard(recommendedEvents) {
                 ticketLinkElement.textContent = ticketLink.source;
                 ticketLinkElement.href = ticketLink.link;
                 ticketLinkElement.target = '_blank';
-        
+
                 // Append the dropdown item to the dropdown menu, not the button
                 dropdownMenu.appendChild(ticketLinkElement);
             });
         }
-        
+
         // Add to Google Calendar
         const addToCalendarButton = clone.getElementById('recommended-event-google-cal');
 
@@ -184,10 +154,10 @@ async function buildRecommendationCard(recommendedEvents) {
             const eventDate = new Date(event.eventDate); // Convert string to Date
             const eventDescription = event.eventDescription;
 
-        
+
             const startDateTime = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
             const endDateTime = eventDate.toISOString().replace(/-|:|\.\d+/g, '');
-        
+
             const calendarUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(eventTitle) +
                 '&dates=' + encodeURIComponent(startDateTime) + '/' + encodeURIComponent(endDateTime) +
                 '&details=' + encodeURIComponent(eventDescription) +

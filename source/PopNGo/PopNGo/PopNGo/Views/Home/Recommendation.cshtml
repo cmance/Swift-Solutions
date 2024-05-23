@@ -25,10 +25,12 @@
                 <div class="carousel-inner">
                     @* Recommended Events Template Goes Here *@
 
-                    @* <div class="carousel-item active recommended-event-card-container">
-                    </div> *@
+                    <div class="carousel-item active loader" id="loadingScreen">
+                        <!-- Your loading screen content goes here -->
+                    </div>
 
-                    <div class="carousel-item recommended-event-card-container active specific-div">
+                    <div id="recommended-out-of-events-container"
+                        class="carousel-item recommended-event-card-container active specific-div">
                         <div class="center-vertically out-of-recommended-events-container">
                             @* Event 2 *@
                             <h1 class="text-white text-center">Out of new events! </h1>
@@ -55,8 +57,6 @@
 
 <div id="toastContainer"></div>
 <partial name="_ViewVenueModal" />
-
-
 
 
 <template id="recommended-events-template">
@@ -102,7 +102,8 @@
     <div class="row">
         <div class="col-md-12 d-flex justify-content-between">
             <button id="recommended-event-google-cal"
-                class="btn btn-secondary event-recommendation-buttons-2 text-truncate" style="max-width: 100%;">Add Event
+                class="btn btn-secondary event-recommendation-buttons-2 text-truncate" style="max-width: 100%;">Add
+                Event
                 to Google Calendar</button>
 
             <div class="recommended-events-right-buttons d-flex justify-content-between">
