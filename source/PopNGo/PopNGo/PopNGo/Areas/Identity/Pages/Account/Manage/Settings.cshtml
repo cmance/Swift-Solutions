@@ -1,18 +1,17 @@
 ﻿@page
 @model SettingsModel
 @{
-    ViewData["Title"] = "Settngs";
+    ViewData["Title"] = "Settings";
     ViewData["ActivePage"] = ManageNavPages.Settings;
 }
 
-<h3 class="text-light text-muted">@ViewData["Title"]</h3>
 <partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-6">
         <form id="settings-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <select asp-for="Input.DistanceUnit" class="form-select">
+                <select asp-for="Input.DistanceUnit" class="form-select base-identity-form">
                     <option value="miles">Miles</option>
                     <option value="kilometers">Kilometers</option>
                 </select>
@@ -20,7 +19,7 @@
                 <span asp-validation-for="Input.DistanceUnit" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <select asp-for="Input.TemperatureUnit" class="form-select">
+                <select asp-for="Input.TemperatureUnit" class="form-select base-identity-form">
                     <option value="f">Fahrenheit</option>
                     <option value="c">Celsius</option>
                 </select>
@@ -28,14 +27,14 @@
                 <span asp-validation-for="Input.TemperatureUnit" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <select asp-for="Input.MeasurementUnit" class="form-select">
+                <select asp-for="Input.MeasurementUnit" class="form-select base-identity-form">
                     <option value="inches">Inches</option>
                     <option value="mm">Millimeters</option>
                 </select>
                 <label asp-for="Input.DistanceUnit" class="form-label"></label>
                 <span asp-validation-for="Input.DistanceUnit" class="text-danger"></span>
             </div>
-            <button id="update-settings-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button id="update-settings-button" type="submit" class="w-100 btn btn-lg btn-primary base-submit-identity">Save</button>
         </form>
     </div>
 </div>

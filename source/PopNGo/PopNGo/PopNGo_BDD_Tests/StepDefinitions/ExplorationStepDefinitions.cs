@@ -31,7 +31,6 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             Thread.Sleep(1000);
         }
 
-        // This step definition uses Cucumber Expressions. See https://github.com/gasparnagy/CucumberExpressions.SpecFlow
         [When("the events have loaded")]
         public void WhenTheEventsHaveLoaded()
         {
@@ -39,11 +38,34 @@ namespace PopNGo_BDD_Tests.StepDefinitions
             _explorePage.GetEventCard();
         }
 
-        // This step definition uses Cucumber Expressions. See https://github.com/gasparnagy/CucumberExpressions.SpecFlow
         [Then(@"I should see section on the event cards with the id '([^\']*)'")]
         public void ThenIShouldSeeSectionOnTheEventCardsWithTheId(string id)
         {
             _explorePage.EventCard.FindElement(By.Id(id)).Displayed.Should().BeTrue();
+        }
+
+        [Then("I should see the recaptcha modal appear")]
+        public void ThenIShouldSeeTheRecaptchaModalAppear()
+        {
+            _explorePage.RecaptchaModal.Displayed.Should().BeTrue();
+        }
+
+        [When("I make over ten searches on the explore page")]
+        public void WhenIMakeOverTenSearchesOnTheExplorePage()
+        {
+            // Press search button 10 times to trigger recaptcha
+            // Wait a second between each search
+            for (int i = 0; i < 10; i++)
+            {
+                _explorePage.SearchButton.Click();
+                Thread.Sleep(5000);
+            }
+        }
+
+        [Then("I should not see the recaptcha modal appear")]
+        public void ThenIShouldNotSeeTheRecaptchaModalAppear()
+        {
+            _explorePage.RecaptchaModal.Displayed.Should().BeFalse();
         }
     }
 }

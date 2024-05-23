@@ -130,7 +130,7 @@ DECLARE @itinerary1ID int = (SELECT TOP 1 [ID] FROM [Itinerary] WHERE [UserID] =
 DECLARE @itinerary2ID int = (SELECT TOP 1 [ID] FROM [Itinerary] WHERE [UserID] = @user2ID);
 
 -- Insert into ItineraryEvents - associating events to itineraries
-INSERT INTO [ItineraryEvents] ([ItineraryID], [EventID])
+INSERT INTO [ItineraryEvents] ([ItineraryID], [EventID], [ReminderTime], [ReminderCustomTime])
 VALUES
-  (@itinerary1ID, @event1ID), -- Itinerary 1 with Event 1
-  (@itinerary2ID, @event2ID) -- Itinerary 1 with Event 1
+  (@itinerary1ID, @event1ID, 'hour', NULL), -- Itinerary 1 with Event 1
+  (@itinerary2ID, @event2ID, 'hour', NULL) -- Itinerary 1 with Event 1

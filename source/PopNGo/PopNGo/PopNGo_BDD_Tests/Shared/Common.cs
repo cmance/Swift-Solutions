@@ -9,7 +9,7 @@ namespace PopNGo_BDD_Tests.Shared
     // Sitewide definitions and useful methods
     public class Common
     {
-        public const string BaseUrl = "http://localhost:5145";     // copied from launchSettings.json
+        public const string BaseUrl = "https://localhost:5145";     // copied from launchSettings.json
         
 
         // File to store browser cookies in
@@ -22,8 +22,13 @@ namespace PopNGo_BDD_Tests.Shared
             { "Home" , "/" },
             { "Explore", "/Home/Explore"},
             { "Favorites", "/Favorites" },
+            { "Itinerary", "/Home/Itinerary" },
             { "History", "/Home/History" },
+
             { "Login", "/Identity/Account/Login" },
+            { "Profile Notifications", "/Identity/Account/Manage/Notifications" },
+            { "Profile Settings", "/Identity/Account/Manage/Settings" },
+
             { "Admin", "/Admin" },
             { "Notifications", "/Admin/ScheduledNotifications" },
             { "Metrics", "/Admin/Metrics" },
@@ -31,5 +36,7 @@ namespace PopNGo_BDD_Tests.Shared
 
         public static string PathFor(string pathName) => Paths[pathName];
         public static string UrlFor(string pathName) => BaseUrl + Paths[pathName];
+
+        
     }
 }

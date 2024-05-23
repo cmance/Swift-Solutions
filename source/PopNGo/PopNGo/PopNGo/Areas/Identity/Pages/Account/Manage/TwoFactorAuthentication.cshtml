@@ -7,7 +7,7 @@
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
-<h3 class="text-light text-muted">@ViewData["Title"]</h3>
+<h3 class="text-light text-muted" style="text-align: center;">@ViewData["Title"]</h3>
 @{
     var consentFeature = HttpContext.Features.Get<ITrackingConsentFeature>();
     @if (consentFeature?.CanTrack ?? true)
@@ -18,7 +18,8 @@
             {
                 <div class="alert alert-danger text-light text-muted">
                     <strong>You have no recovery codes left.</strong>
-                    <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</p>
+                    <p>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in
+                        with a recovery code.</p>
                 </div>
             }
             else if (Model.RecoveryCodesLeft == 1)
@@ -46,15 +47,20 @@
             <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
         }
 
-        <h4 class="text-light text-muted mt-4">Authenticator app</h4>
+        <h4 class="text-light text-muted mt-4" style="text-align: center;">Authenticator app</h4>
         @if (!Model.HasAuthenticator)
         {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
+            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary" style="margin-bottom: 10px;">Add
+                authenticator app</a>
         }
         else
         {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
-            <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator app</a>
+            <div class="d-flex flex-column align-items-center">
+                <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary"
+                    style="margin-bottom: 10px; max-width: 250px;">Set up authenticator app</a>
+                <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary"
+                    style="margin-bottom: 10px; max-width: 250px;">Reset authenticator app</a>
+            </div>
         }
     }
     else

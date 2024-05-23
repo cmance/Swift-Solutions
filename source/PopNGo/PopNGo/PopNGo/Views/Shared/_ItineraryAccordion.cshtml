@@ -1,0 +1,24 @@
+<template id="itinerary-accordion-template">
+    <div class="accordion-item pb-3" style="background-color: transparent; border: none;">
+        <h2 class="accordion-header" id="heading${index}">
+            <button aria-label="View itinerary dropdown button" class="accordion-button collapsed" id="accordion-header-bg" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${index}" aria-expanded="false" aria-controls="#collapse${index}">
+                <span class="text-light" contenteditable="true" id="itinerary-title"></span>
+                <button aria-label="Delete itinerary button." class="btn btn-danger float-end delete-itinerary-btn mx-4" data-itinerary-id="" id="itinerary-delete-button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            </button>
+        </h2>
+        <div id="collapse${index}" class="accordion-collapse collapse" aria-labelledby="heading${index}" data-bs-parent="#heading${index}">
+            <div class="accordion-body">
+                <h3 class="text-light">Notifications for others</h3>
+                <p class="text-swipe text-muted text-center">Inform others as the itinerary progresses</p>
+                <div id="notification-container" class="col-8 offset-2 justify-content-center">
+                    <button aria-label="Add notification group button" class="btn btn-primary offset-3 col-6" id="add-notification-button">Add Notification Email</button>
+                    @* Populate this with the notification group *@
+                </div>
+                <button aria-label="Confirm notification addresses" class="btn btn-success offset-3 col-6" id="confirm-notification-button">Confirm Notification Addresses</button>
+            </div>
+            <div class="accordion-body" id="events-container">
+                @* Populate this with the events *@
+            </div>
+        </div>
+    </div>
+</template>

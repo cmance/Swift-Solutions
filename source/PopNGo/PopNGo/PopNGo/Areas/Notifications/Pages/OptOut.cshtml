@@ -1,0 +1,15 @@
+﻿@page
+@using PopNGo.Areas.Notifications.Pages
+@model OptOutModel
+@{
+    ViewData["Title"] = "Notification Group - Opt Out Confirmation";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/identity.css" />
+}
+
+<h1 class="text-light">@ViewData["Title"]</h1>
+<partial name="../../Identity/Pages/Account/_StatusMessage" model="Model.StatusMessage" />
+@if(Model.StatusMessage == "Error opting out of itinerary notifications.") {
+    <p class="text-light">It seems you were already opted out, or were never on the list.</p>
+}

@@ -84,10 +84,10 @@ namespace PopNGo_BDD_Tests.Features
                         "LastName",
                         "Password"});
             table5.AddRow(new string[] {
-                        "Joshua Weiss",
+                        "Tristan Goucher",
                         "knott@example.com",
-                        "Joshua",
-                        "Weiss",
+                        "Tristan",
+                        "Goucher",
                         "FAKE PW"});
 #line 4
  await testRunner.GivenAsync("the following users exist", ((string)(null)), table5, "Given ");
@@ -115,7 +115,7 @@ this.ScenarioInitialize(scenarioInfo);
 await this.FeatureBackgroundAsync();
 #line hidden
 #line 9
-  await testRunner.GivenAsync("I am a user with first name \'Joshua\'", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
+  await testRunner.GivenAsync("I am a user with first name \'Tristan\'", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 10
    await testRunner.AndAsync("I login", ((string)(null)), ((Reqnroll.Table)(null)), "And ");
@@ -157,7 +157,7 @@ this.ScenarioInitialize(scenarioInfo);
 await this.FeatureBackgroundAsync();
 #line hidden
 #line 17
-  await testRunner.GivenAsync("I am a user with first name \'Joshua\'", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
+  await testRunner.GivenAsync("I am a user with first name \'Tristan\'", ((string)(null)), ((Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 18
    await testRunner.AndAsync("I login", ((string)(null)), ((Reqnroll.Table)(null)), "And ");

@@ -5,14 +5,8 @@
         public int Id { get; set; }
         public int UserId { get; set; }
         public string ItineraryTitle { get; set; }
-        public List<Event> Events { get; set; } // Ensure this refers to Event DTO
-
-        public string EventName { get; set; }
-
-        public string ApiEventId { get; set; }
-
-        public decimal? Latitude { get; set; }
-        public decimal? Longitude { get; set; }
+        public List<ItineraryEventDTO> Events { get; set; } // Ensure this refers to Event DTO
+        public List<ItineraryNotificationDTO> Notifications { get; set; }
     }
 }
 
@@ -27,11 +21,8 @@ namespace PopNGo.ExtensionMethods
                 Id = dayEvent.Id,
                 UserId = dayEvent.UserId,
                 ItineraryTitle = dayEvent.ItineraryTitle,
-                EventName = dayEvent.ItineraryEvents.Select(e => e.Event.EventName).FirstOrDefault(),// Convert each ItineraryEvent to EventDTO
-                ApiEventId = dayEvent.ItineraryEvents.Select(e => e.Event.ApiEventId).FirstOrDefault(),
-                Latitude = dayEvent.ItineraryEvents.Select(e => e.Event.Latitude).FirstOrDefault(),
-                Longitude = dayEvent.ItineraryEvents.Select(e => e.Event.Longitude).FirstOrDefault()
-
+                Events = dayEvent.ItineraryEvents.Select(e => e.ToDTO()).ToList(),
+                Notifications = dayEvent.ItineraryNotifications.Select(n => n.ToDTO()).ToList()
             };
         } 
     }

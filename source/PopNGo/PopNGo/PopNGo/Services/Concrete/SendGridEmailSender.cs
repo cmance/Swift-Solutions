@@ -10,15 +10,12 @@ public class EmailSender
 {
     private readonly ILogger _logger;
     private readonly IConfiguration _configuration;
-    private readonly IHttpContextAccessor _httpContextAccessor;
 
     public EmailSender(IConfiguration configuration,
-                       ILogger<EmailSender> logger,
-                       IHttpContextAccessor httpContextAccessor)
+                       ILogger<EmailSender> logger)
     {
         _configuration = configuration;
         _logger = logger;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task SendEmailAsync(string toEmail, string subject, Dictionary<string, string> args)
@@ -33,7 +30,6 @@ public class EmailSender
     public async Task Execute(string apiKey, string subject, string toEmail, Dictionary<string, string> args)
     {
         var client = new SendGridClient(apiKey);
-        string baseUrl = $"{_httpContextAccessor.HttpContext.Request.Scheme}://{_httpContextAccessor.HttpContext.Request.Host}{_httpContextAccessor.HttpContext.Request.PathBase}";
 
         var msg = new SendGridMessage()
         {
@@ -47,6 +43,8 @@ public class EmailSender
         {
             case "confirmation":
                 msg.TemplateId = "d-1d6c26b35471473780eb39a0a1572be0";
+                string baseUrl = _configuration["BaseUrl"];
+
                 templateData.Add("confirmURL", HtmlEncoder.Default.Encode(args["confirmationURL"]).Replace("amp;", ""));
                 templateData.Add("exploreURL", $"{baseUrl}/Explore");
                 templateData.Add("favoritesURL", $"{baseUrl}/Favorites");
@@ -61,9 +59,30 @@ public class EmailSender
                 templateData.Add("messageContent", args["messageContent"]);
                 templateData.Add("name", args["name"]);
                 break;
+            case "itineraryEvent":
+                msg.TemplateId = "d-25bf67053a0341f1b821a3c167e30a86";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("name", args["name"]);
+                templateData.Add("itineraryName", args["itineraryName"]);
+                break;
+            case "itineraryNotificationRemoval":
+                msg.TemplateId = "d-5891c15024a641af8153be44c326ffe0";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("itineraryTitle", args["itineraryTitle"]);
+                break;
+            case "itineraryNotificationAddition":
+                msg.TemplateId = "d-ad5de83dc91b443987fb78215fe595cc";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("itineraryTitle", args["itineraryTitle"]);
+                templateData.Add("optOutURL", args["optOutURL"]);
+                break;
+            case "itineraryNotification":
+                msg.TemplateId = "d-81f71e08eacf47aa90d847e5055a78f3";
+                templateData.Add("messageContent", args["messageContent"]);
+                templateData.Add("itineraryName", args["itineraryName"]);
+                break;
         }
 
-        
         msg.SetTemplateData(templateData);
         msg.AddTo(new EmailAddress(toEmail));
 
