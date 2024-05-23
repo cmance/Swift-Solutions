@@ -13,10 +13,9 @@ import { buildAndShowEditBookmarkListModal } from './ui/buildAndShowEditBookmark
 import { updateBookmarkListName } from './api/bookmarkLists/updateBookmarkListName.js';
 import { showDeleteFavoriteEventConfirmationModal } from './ui/showDeleteFavoriteEventConfirmationModal.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
-import { getAllUserEventsFromItinerary } from './api/itinerary/itineraryApi.js'; // Adjust the import path as necessary
+import { bindItinerarySaving } from './util/bindItinerarySaving.js';
 
 let currentBookmarkList = null;
-let currentApiEventID = null;
 let favoritedEvents = null;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -26,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function initPage() {
     getBookmarkLists().then(bookmarkLists => {
         displayBookmarkLists(bookmarkLists);
+        bindItinerarySaving();
     }).catch((error) => {
         // If the user is not logged in, display a login prompt
         displayLoginPrompt();
@@ -204,6 +204,7 @@ async function displayEventsFromBookmarkList(favoriteEvents, bookmarkList) {
     console.log(filteredFavoriteEvents);
     filteredFavoriteEvents.forEach(async eventInfo => {
         let eventProps = {
+            apiEventID: eventInfo.apiEventID,
             img: eventInfo.eventImage,
             title: eventInfo.eventName,
             date: new Date(eventInfo.eventDate),
@@ -266,8 +267,6 @@ async function onClickDetailsAsync(eventInfo) {
     }
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
-        currentApiEventID = eventInfo.apiEventID;
-        populateItineraryDropdown(currentApiEventID);
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
     };
@@ -279,112 +278,28 @@ document.getElementById('filter-button').addEventListener('click', function () {
 });
 
 
-async function createNewItinerary(itineraryTitle) {
-    console.log('Creating new itinerary with title:', itineraryTitle);
-    let url = `/api/ItineraryApi/Itinerary?itineraryTitle=${itineraryTitle}`;
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
+// document.addEventListener('DOMContentLoaded', async function () {
+//     const saveButton = document.getElementById('save-new-itinerary');
+//     if (saveButton) {
+//         saveButton.addEventListener('click', async function () { // Make this function async
+//             const titleInput = document.getElementById('itinerary-title');
+//             const itineraryTitle = titleInput.value.trim();
+//             console.log("Captured itinerary title: ", itineraryTitle);
+//             if (itineraryTitle) {
+//                 // Assume createNewItinerary is an async function and waits for API call to complete
+//                 await createNewItinerary(itineraryTitle);
+//                 // Close the modal
+//                 const modalElement = document.getElementById('exampleModal');
+//                 const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+//                 bootstrapModal.hide();
 
-    if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`Error ${response.status}: ${errorText}`);
-        alert(`Failed to create new itinerary: ${errorText}`);
-        throw new Error(`Error ${response.status}: ${errorText}`);
-    }
-
-    // Check if the response body is not empty before attempting to parse it as JSON
-    const text = await response.text();
-    let result;
-    try {
-        result = text ? JSON.parse(text) : {}; // Default to an empty object if there is no response text
-    } catch (error) {
-        console.error('Failed to parse response as JSON:', error);
-        alert('Failed to process the response from the server.');
-        throw new Error('Failed to process the response from the server.');
-    }
-
-    console.log('Itinerary created:', result);
-    alert('New itinerary successfully created!');
-    return result;
-}
-async function populateItineraryDropdown(apiEventID) {
-    try {
-        const itineraries = await getAllUserEventsFromItinerary();
-        const dropdownMenu = document.getElementById('dropdownMenuButton1').nextElementSibling;
-      
-        while (dropdownMenu.children.length > 1) {
-            dropdownMenu.removeChild(dropdownMenu.lastChild);
-        }
-      
-        itineraries.forEach(itinerary => {
-            const item = document.createElement('li');
-            const link = document.createElement('a');
-            link.className = 'dropdown-item';
-            link.textContent = itinerary.itineraryTitle;
-            link.href = "#";
-
-            // Use IIFE to capture current apiEventID correctly for each link
-            (function (apiEventID, itineraryId) {
-                link.addEventListener('click', function () {
-                    console.log("Itinerary ID:", itineraryId, "API Event ID:", apiEventID);
-                    addEventToItinerary(itineraryId, apiEventID);
-                });
-            })(apiEventID, itinerary.id);  // Pass the current apiEventID and itinerary ID
-
-            item.appendChild(link);
-            dropdownMenu.appendChild(item);
-        });
-    } catch (error) {
-        console.error('Failed to fetch itineraries:', error);
-    }
-}
-
-async function addEventToItinerary(itineraryId, apiEventId) {
-    const url = `/api/ItineraryEventApi/ItineraryEvent/${apiEventId}/${itineraryId}`;
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Error ${response.status}: ${errorText}`);
-            return;
-        }
-        alert('Event successfully added to the itinerary!');
-    } catch (error) {
-        console.error('Error adding event to itinerary:', error);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async function () {
-    const saveButton = document.getElementById('save-new-itinerary');
-    if (saveButton) {
-        saveButton.addEventListener('click', async function () { // Make this function async
-            const titleInput = document.getElementById('itinerary-title');
-            const itineraryTitle = titleInput.value.trim();
-            console.log("Captured itinerary title: ", itineraryTitle);
-            if (itineraryTitle) {
-                // Assume createNewItinerary is an async function and waits for API call to complete
-                await createNewItinerary(itineraryTitle);
-                // Close the modal
-                const modalElement = document.getElementById('exampleModal');
-                const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
-                bootstrapModal.hide();
-
-                // Refresh the dropdown to include the new itinerary
-                await populateItineraryDropdown(currentApiEventID);
-            } else {
-                alert('Please enter a title for the itinerary.');
-            }
-        });
-    } else {
-        console.error('Save button not found!');
-    }
-});
+//                 // Refresh the dropdown to include the new itinerary
+//                 await populateItineraryDropdown(currentApiEventID);
+//             } else {
+//                 alert('Please enter a title for the itinerary.');
+//             }
+//         });
+//     } else {
+//         console.error('Save button not found!');
+//     }
+// });

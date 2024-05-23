@@ -66,7 +66,8 @@ namespace PopNGo.DAL.Concrete
                 throw new ArgumentNullException(nameof(eventApiIds));
             }
 
-            return _event.Where(e => eventApiIds.Contains(e.ApiEventId)).Select(e => e.ToDTO()).ToList();
+            var events = _event.Where(e => eventApiIds.Contains(e.ApiEventId)).Select(e => e.ToDTO()).ToList();
+            return events;
         }
 
         public bool IsEvent(string apiEventId)

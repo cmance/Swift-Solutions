@@ -63,6 +63,19 @@ public class Program
             return new DistanceCalculatorService(httpClient, services.GetRequiredService<ILogger<DistanceCalculatorService>>());
         });
 
+        // REST API setup for the OpenAI API
+        string openAiUrl = "https://api.openai.com/";
+        string openAiApiKey = builder.Configuration["OpenAiApiKey"];
+
+        builder.Services.AddHttpClient<IOpenAiService, OpenAiService>((httpClient, services) =>
+        {
+            httpClient.BaseAddress = new Uri(openAiUrl);
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAiApiKey}"); // Set API key
+            return new OpenAiService(httpClient, services.GetRequiredService<ILogger<OpenAiService>>());
+        });
+
+
         // REST API setup for the Weather Forecast API
         string weatherForecasterUrl = "https://visual-crossing-weather.p.rapidapi.com/forecast";
 
@@ -74,6 +87,7 @@ public class Program
             return new WeatherForecastService(httpClient, services.GetRequiredService<ILogger<WeatherForecastService>>());
         });
 
+        // REST API setup for the Place Suggestions API
         string placeSuggestionsUrl = "https://serpapi.com/search.json?";
         string placeSuggestionsApiKey = builder.Configuration["SerpMapApiKey"];
 
@@ -102,6 +116,7 @@ public class Program
         builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
         builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
         builder.Services.AddScoped<IEventTagRepository, EventTagRepository>();
+        builder.Services.AddScoped<IRecommendedEventRepository, RecommendedEventRepository>();
 
         // Add Google Authentication
         builder.Services.AddAuthentication().AddGoogle(googleOptions =>
@@ -182,11 +197,14 @@ public class Program
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
             });
+
+            app.Configuration["BaseUrl"] = "https://localhost:5145";
         }
         else
         {
             app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
+            app.Configuration["BaseUrl"] = "https://popngo.azurewebsites.net";
         }
 
         app.UseForwardedHeaders();

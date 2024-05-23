@@ -1,3 +1,4 @@
+using System.Drawing.Drawing2D;
 using System.Reflection.PortableExecutable;
 using Humanizer;
 using Microsoft.AspNetCore.Identity;
@@ -15,21 +16,24 @@ public class EmailBuilder
     private readonly IPgUserRepository _userRepo;
     private readonly IFavoritesRepository _favoritesRepo;
     private readonly IBookmarkListRepository _bookmarkListRepo;
+    private readonly IItineraryRepository _itineraryRepository;
     private readonly UserManager<PopNGoUser> _userManager;
 
     public EmailBuilder(
         IPgUserRepository userRepo,
         IFavoritesRepository favoritesRepo,
-        UserManager<PopNGoUser> userManager,
-        IBookmarkListRepository bookmarkListRepo)
+        IBookmarkListRepository bookmarkListRepo,
+        IItineraryRepository itineraryRepository,
+        UserManager<PopNGoUser> userManager)
     {
         _userRepo = userRepo;
         _favoritesRepo = favoritesRepo;
-        _userManager = userManager;
         _bookmarkListRepo = bookmarkListRepo;
+        _itineraryRepository = itineraryRepository;
+        _userManager = userManager;
     }
 
-    public async Task<string> BuildEmailAsync(int userId)
+    public async Task<string> BuildUpcomingEventsEmailAsync(int userId)
     {
         PgUser user = _userRepo.FindById(userId);
         PopNGoUser popNGoUser = await _userManager.FindByIdAsync(user.AspnetuserId);
@@ -68,30 +72,21 @@ public class EmailBuilder
                 }
             }
 
-            // Don't send the email if it's empty
-            // if (!(weekBeforeFaves.Count == 0 && dayBeforeFaves.Count == 0 && dayOfFaves.Count == 0))
-            // {
-                // Build the email body
-                emailBody = $"<div style=\"margin: 0px; padding: 0px;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">";
-                // emailBody += $"<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" bgcolor=\"#d35400\"><tr><td width=\"100%\" align=\"center\"><img src=\"https://popngostorage.blob.core.windows.net/images/logo.svg\" alt=\"PopNGo Logo\" width=\"100\" height=\"100\" style=\"display: block;\" /></td></tr>";
-                // emailBody += $"<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" bgcolor=\"#d35400\"><tr><td width=\"100%\" align=\"center\"><img src=\"data:image/svg+xml;base64,{_logoBase64}\" alt=\"PopNGo Logo\" width=\"100\" height=\"100\" style=\"display: block;\" /></td></tr>";
-                // emailBody += "<tr><td width=\"100%\" align=\"center\"><h1 style=\"color: #ffffff; font-family: Arial, sans-serif; margin-bottom:0px;\">Pop-n-Go</h1></td></tr>";
-                // emailBody += $"<tr><td width=\"90%\" style=\"padding: 15px; padding-left: 5%; padding-right: 5%;\"><p style=\"color: #ffffff; font-family: Arial, sans-serif;\">Hello, {popNGoUser.FirstName},</p><p style=\"color: #ffffff; font-family: Arial, sans-serif;\">Thank you for using Pop-n-Go's services. We've collected a list of events you showed interest in and wanted to let you know what's ahead in case you want to alter your plans for them.</p></td></tr>";
-                // emailBody += "<tr><td width=\"100%\" align=\"center\"><h2 style=\"color: #ffffff; font-family: Arial, sans-serif;\">Your Event Reminders</h2></td></tr>";
+            // Build the email body
+            emailBody = $"<div style=\"margin: 0px; padding: 0px;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">";
 
-                // Today's events
-                emailBody += BuildEventsSection(dayOfFaves, "Today");
+            // Today's events
+            emailBody += BuildEventsSection(dayOfFaves, "Today");
 
-                // Tomorrow's events
-                emailBody += BuildEventsSection(dayBeforeFaves, "Tomorrow");
+            // Tomorrow's events
+            emailBody += BuildEventsSection(dayBeforeFaves, "Tomorrow");
 
-                // Events from a week from now
-                emailBody += BuildEventsSection(weekBeforeFaves, "A week from now");
+            // Events from a week from now
+            emailBody += BuildEventsSection(weekBeforeFaves, "A week from now");
 
-                // Close the email
-                emailBody += "<hr style=\"border-top: 1px solid #d6d6d6; line-height: 1px;\" width=\"90%\" align=\"center\" />";
-                emailBody += "</table></div>";
-            // }
+            // Close the email
+            emailBody += "<hr style=\"border-top: 1px solid #d6d6d6; line-height: 1px;\" width=\"90%\" align=\"center\" />";
+            emailBody += "</table></div>";
         }
 
         return emailBody;
@@ -134,6 +129,64 @@ public class EmailBuilder
         }
         emailBody += "</table>";
         return emailBody;
+    }
+
+    public Tuple<string, string> BuildItineraryEventEmail(int itineraryId, string eventId)
+    {
+        Itinerary itinerary = _itineraryRepository.FindById(itineraryId);
+        List<Event> events = itinerary.ItineraryEvents.Select(e => e.Event).ToList();
+        Event eventToHighlight = events.FirstOrDefault(e => e.ApiEventId == eventId);
+        int eventIndex = events.IndexOf(eventToHighlight);
+
+        string emailBody = "";
+        string time = "";
+
+        emailBody += $"<tr><td width=\"100%\" align=\"center\"><h2 style=\"color: #ffffff; font-family: Arial, sans-serif;\">{itinerary.ItineraryTitle}:</h3></td></tr>";
+
+        // Build the email body
+        emailBody = $"<div style=\"margin: 0px; padding: 0px;\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">";
+
+        for(int i = 0; i < events.Count; i++)
+        {
+            Event e = events[i];
+            time = e.EventDate.Value.TimeOfDay.Hours > 12 ? $"{e.EventDate.Value.TimeOfDay.Hours - 12}:{e.EventDate.Value.TimeOfDay.Minutes.ToString("D2")} PM" : $"{e.EventDate.Value.TimeOfDay.Hours}:{e.EventDate.Value.TimeOfDay.Minutes.ToString("D2")} AM";
+
+            if(i < eventIndex)
+            {
+                emailBody += $"<tr><td width=\"100%\" align=\"center\" style=\"border-width: 0px; padding-left: 10px;\"><h3 style=\"color: #a73f00; text-decoration: line-through; font-family: Arial, sans-serif;\">{e.EventName} - {time}</h4></td></tr>";
+            }
+            else if(i == eventIndex)
+            {
+                emailBody += $"<tr><td width=\"100%\" align=\"center\" style=\"border-width: 0px; padding-left: 10px;\"><h3 style=\"color: #a73f00; font-weight: bold; font-family: Arial, sans-serif;\">{e.EventName} - {time}</h4></td></tr>";
+            }
+            else
+            {
+                emailBody += $"<tr><td width=\"100%\" align=\"center\" style=\"border-width: 0px; padding-left: 10px;\"><h3 style=\"color: #a73f00; font-family: Arial, sans-serif;\">{e.EventName} - {time}</h4></td></tr>";
+            }
+        }
+
+        emailBody += "<hr style=\"border-top: 1px solid #d6d6d6; line-height: 1px;\" width=\"90%\" align=\"center\" />";
+
+        emailBody += "<table cellpadding=\"0\" cellspacing=\"0\" border=\"1\" width=\"90%\" align=\"center\" bgcolor=\"#ff8f45\" style=\"border-color: rgba(163, 65, 0, 0.5); border-radius: 5px; margin-bottom:10px;\">";
+
+        if (events[eventIndex].EventDate.Value.Hour == 0)
+        {
+            events[eventIndex].EventDate = events[eventIndex].EventDate.Value.AddHours(12);
+        }
+
+        time = events[eventIndex].EventDate.Value.TimeOfDay.Hours > 12 ? $"{events[eventIndex].EventDate.Value.TimeOfDay.Hours - 12}:{events[eventIndex].EventDate.Value.TimeOfDay.Minutes.ToString("D2")} PM" : $"{events[eventIndex].EventDate.Value.TimeOfDay.Hours}:{events[eventIndex].EventDate.Value.TimeOfDay.Minutes.ToString("D2")} AM";
+        string locationURL = $"https://www.google.com/maps/place/{events[eventIndex].EventLocation.Replace(" ", "+")}";
+        emailBody += $"<tr><td width=\"100%\" style=\"border-width: 0px; padding-left: 10px;\"><h3 style=\"color: #a73f00; font-family: Arial, sans-serif;\">{events[eventIndex].EventName} - {time}</h4></td></tr>";
+        emailBody += $"<tr><td width=\"100%\" style=\"border-width: 0px; padding-left: 10px; padding-bottom: 5px;\"><a href=\"{locationURL}\">{events[eventIndex].EventLocation}</a></td></tr>";
+        emailBody += $"<tr><td width=\"100%\" style=\"border-width: 0px; padding-left: 10px; padding-bottom: 10px;\"><p style=\"color: #a73f00; font-family: Arial, sans-serif; margin: 0px\">{events[eventIndex].EventDescription}</p></td></tr>";
+        emailBody += "</table>";
+
+        // Close the email
+        emailBody += "<hr style=\"border-top: 1px solid #d6d6d6; line-height: 1px;\" width=\"90%\" align=\"center\" />";
+        emailBody += "</table></div>";
+
+        Console.WriteLine(emailBody);
+        return new Tuple<string, string>(emailBody, itinerary.ItineraryTitle);
     }
 
 }

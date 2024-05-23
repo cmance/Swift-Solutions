@@ -37,7 +37,6 @@ public class EventApiController : Controller
         _pgUserRepository = pgUserRepository;
         _userManager = userManager;
         _tagRepository = tagRepository;
-        _tagRepository = tagRepository;
 
     }
 

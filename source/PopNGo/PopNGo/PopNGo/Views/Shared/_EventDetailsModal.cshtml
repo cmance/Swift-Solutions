@@ -8,8 +8,10 @@
                 <div class="event-modal-tag rounded-pill">Tag2</div>
                 <div class="event-modal-tag rounded-pill">Tag3</div>
             </div>
+            <input type="text" hidden id="event-id" value="0" />
             <div class="original-post-link-container">
-                <a aria-label="View original event post link." id="original-post-link" class="btn btn-warning original-post-link" href="">
+                <a aria-label="View original event post link." id="original-post-link"
+                    class="btn btn-warning original-post-link" href="">
                     View Original Event Post
                 </a>
             </div>
@@ -31,20 +33,23 @@
             </div>
 
             <div id="buttons-container">
-                <div aria-label="Add event to Google calendar button." id="add-to-calendar-btn" title="Add this event to a Google Calendar"></div>
+                <div aria-label="Add event to Google calendar button." id="add-to-calendar-btn"
+                    title="Add this event to a Google Calendar"></div>
                 <div class="dropdown">
-                    <button aria-label="Add event to itinerary button." class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button aria-label="Add event to itinerary button." id="add-to-itinerary-btn"
+                        class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Add to itinerary
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><button aria-label="Create new itinerary button." class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new itinerary</button></li>
+                    <ul class="dropdown-menu" aria-labelledby="add-to-itinerary-btn" id="itinerary-list">
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#new-itinerary-modal"
+                                aria-label="Create new itinerary button.">Create new itinerary</button></li>
                     </ul>
                 </div>
 
                 <div id="right-buttons">
                     <div id="buy-tickets-btn" title="Buy tickets for this event">
-                        <button aria-label="Buy tickets link." id="buyTicketsBtn" class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                        <button aria-label="Buy tickets link." id="buyTicketsBtn"
+                            class="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             Buy Tickets
                         </button>
                         <div class="dropdown-menu" aria-labelledby="buyTicketsBtn">
@@ -66,12 +71,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <input aria-label="Enter itinerary title." class="form-control" id="itinerary-title" type="text" placeholder="Enter the title">
+                <input aria-label="Enter itinerary title." class="form-control" id="itinerary-title" type="text"
+                    placeholder="Enter the title">
             </div>
             <div class="modal-footer">
-                <button aria-label="Close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button aria-label="Save changes" type="button" id="save-new-itinerary" class="btn btn-primary">Save changes</button>
+                <button aria-label="Close" type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Close</button>
+                <button aria-label="Save changes" type="button" id="save-new-itinerary" class="btn btn-primary">Save
+                    changes</button>
             </div>
         </div>
     </div>
 </div>
+

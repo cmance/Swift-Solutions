@@ -113,5 +113,10 @@ namespace PopNGo.DAL.Concrete
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<ScheduledNotification> GetScheduledNotificationForItinerary(int userId, string type)
+        {
+            return await _scheduledNotifications.FirstOrDefaultAsync(u => u.UserId == userId && u.Type == type);
+        }
     }
 }

@@ -14,24 +14,35 @@ import { getBookmarkLists } from './api/bookmarkLists/getBookmarkLists.js';
 import { onPressSaveToBookmarkList } from './util/onPressSaveToBookmarkList.js';
 import { UnauthorizedError } from './util/errors.js';
 import { getDistancesForEvents, getDistanceUnit, convertDistance } from './api/distance/getDistances.js';
-import { capitalizeFirstLetter } from './util/capitalizeFirstLetter.js';
+import { getIsUserLoggedIn } from './api/user/getIsUserLoggedIn.js';
 import { getForecastForLocation } from './api/weather/getForecast.js';
 import { buildWeatherCard, validateBuildWeatherCardProps } from './ui/buildWeatherCard.js';
 import { addMapLoadingSpinner, removeMapLoadingSpinner } from './util/mapLoadingSpinners.js';
-import { getAllUserEventsFromItinerary, addEventToItinerary, createNewItinerary } from './api/itinerary/itineraryApi.js'; // Adjust the import path as necessary
-
+import { bindItinerarySaving } from './util/bindItinerarySaving.js';
+import { getRecommendedEvents } from './api/recommendations/getRecommendedEvents.js';
 
 let map = null;
 let mapMarkers = [];
 let page = 0;
 const pageSize = 10;
+let num_searches = 0;
+let user_is_logged_in = null;
+let recaptcha_confirmed = false;
 let userLocation = {};
-let distanceUnit = "miles"
+let distanceUnit = "miles";
 let currentApiEventID = null;
 
-
+window.onCaptchaSuccess = function(token) {
+    // Captcha is success, remove modal and allow to continue using page
+    // Hide recaptcha modal
+    document.getElementById('recaptcha-modal').style.display = 'none';
+    recaptcha_confirmed = true;
+}
 
 document.addEventListener("DOMContentLoaded", async function () {
+    // Check if user is logged in
+    user_is_logged_in = await getIsUserLoggedIn();
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async function (position) {
             distanceUnit = await getDistanceUnit();
@@ -56,6 +67,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
         });
     }
+
+    await bindItinerarySaving();
 }, { once: true });
 
 
@@ -127,8 +140,6 @@ async function onClickDetailsAsync(eventInfo) {
         return; // Early return if the apiEventID is undefined
     }
 
-    console.log("Current ApiEventId ", currentApiEventID);
-
     const eventDetailsModalProps = {
         apiEventID: eventInfo.apiEventID,
         img: eventInfo.eventImage,
@@ -144,15 +155,12 @@ async function onClickDetailsAsync(eventInfo) {
         venueRating: eventInfo.venueRating,
         venueWebsite: eventInfo.venueWebsite
     };
-    console.log("Current ApiEventId ", currentApiEventID);
 
     if (validateBuildEventDetailsModalProps(eventDetailsModalProps)) {
         buildEventDetailsModal(document.getElementById('event-details-modal'), eventDetailsModalProps);
         const modal = new bootstrap.Modal(document.getElementById('event-details-modal'));
         modal.show();
-        currentApiEventID = eventInfo.apiEventID;
-        console.log("Current ApiEventId ", currentApiEventID);
-        populateItineraryDropdown(currentApiEventID);
+
         addEventToHistory(eventInfo.apiEventID);
     } else {
         console.error("Validation failed for event details modal properties", eventDetailsModalProps);
@@ -245,6 +253,7 @@ async function displayEvents(events) {
         let newEventCard = eventCardTemplate.content.cloneNode(true);
 
         let eventCardProps = {
+            apiEventID: eventInfo.apiEventID,
             img: eventInfo.eventImage,
             title: eventInfo.eventName,
             date: new Date(eventInfo.eventDate),
@@ -316,11 +325,14 @@ function displayWeatherForecast(weatherData) {
  * @returns {Promise<void>}
  */
 async function searchForEvents() {
+    num_searches++;
+    if (num_searches % 10 === 0 && !recaptcha_confirmed && !user_is_logged_in) {
+        // Show recaptcha modal
+        document.getElementById('recaptcha-modal').style.display = 'block';
+    }
     let paginationDiv = document.getElementById('pagination');
     paginationDiv.style.display = 'none'; //Hide pagination while searching
     createPlaceholderCards();
-    // addMapLoadingSpinner();
-    // console.log("search")
     toggleNoEventsSection(false);
     toggleSearchingEventsSection(true);
     toggleSearching();
@@ -459,16 +471,6 @@ function deleteMarkers() {
     mapMarkers = [];
 }
 
-// export function addMapLoadingSpinner() {
-//     let loadingOverlay = document.getElementById('loading-overlay');
-//     if (!loadingOverlay) return; // If the element doesn't exist, exit the function
-//     loadingOverlay.style.display = 'flex';
-// }
-
-// export function removeMapLoadingSpinner() {
-//     document.getElementById('loading-overlay').style.display = 'none';
-// }
-
 function revealHelperText() {
     document.querySelector('#map-helper-text-container .helper-text p').style.display = 'block';
 }
@@ -482,135 +484,3 @@ window.onload = async function () {
         loadMapScript();
     }
 }
-
-// Save Location, Remove Location, Use Location
-// let savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
-// function displaySavedLocations() {
-//     const savedLocationsContainer = document.getElementById('saved-locations-container');
-//     savedLocationsContainer.innerHTML = '';
-
-//     savedLocations.forEach((location, index) => {
-//         const locationElement = document.createElement('div');
-//         locationElement.textContent = `${location.city}, ${location.state}, ${location.country}`;
-
-//         const removeButton = document.createElement('button');
-//         removeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-//                                       <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-//                                       <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-//                                   </svg>`;
-//         removeButton.classList.add('btn', 'btn-outline-warning', 'remove-button');
-//         removeButton.addEventListener('click', function () {
-//             removeLocation(index);
-//             displaySavedLocations();
-//         });
-
-//         const useLocationButton = document.createElement('button');
-//         useLocationButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
-//                                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
-//                                        </svg>`;
-//         useLocationButton.classList.add('btn', 'btn-outline-primary', 'use-button');
-//         useLocationButton.addEventListener('click', async function () {
-//             document.getElementById('search-event-country').value = location.country;
-//             document.getElementById('search-event-state').value = location.state;
-//             document.getElementById('search-event-city').value = location.city;
-
-//             await loadSearchBar();
-//             await setCountry("United States");
-//             await setState(location.state);
-//             setCity(location.city);
-
-//             searchForEvents();
-//         });
-
-//         locationElement.appendChild(removeButton);
-//         locationElement.appendChild(useLocationButton);
-//         savedLocationsContainer.appendChild(locationElement);
-//     });
-// }
-
-// displaySavedLocations();
-// document.getElementById('save-location-button').addEventListener('click', function () {
-//     saveLocation();
-// });
-// function saveLocation() {
-//     const country = document.getElementById('search-event-country').value;
-//     const state = document.getElementById('search-event-state').value;
-//     const city = document.getElementById('search-event-city').value;
-
-//     savedLocations.push({ city, state, country });
-//     localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-//     displaySavedLocations();
-// }
-// function removeLocation(index) {
-//     savedLocations.splice(index, 1);
-//     localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
-//     displaySavedLocations();
-// }
-
-async function populateItineraryDropdown(apiEventID) {
-    try {
-        const itineraries = await getAllUserEventsFromItinerary();
-        const dropdownMenu = document.getElementById('dropdownMenuButton1').nextElementSibling;
-
-        // Remove previous items except for the first item, which might be a default or title
-        while (dropdownMenu.children.length > 1) {
-            dropdownMenu.removeChild(dropdownMenu.lastChild);
-        }
-
-        // Check if there are itineraries before attempting to populate the dropdown
-        if (itineraries.length === 0) {
-            console.log('No itineraries available.');
-            const item = document.createElement('li');
-            const link = document.createElement('a');
-            link.className = 'dropdown-item';
-            link.textContent = 'No itineraries available';
-            link.href = "#";
-            item.appendChild(link);
-            dropdownMenu.appendChild(item);
-        } else {
-            // Populate the dropdown with itineraries
-            itineraries.forEach(itinerary => {
-                const item = document.createElement('li');
-                const link = document.createElement('a');
-                link.className = 'dropdown-item';
-                link.textContent = itinerary.itineraryTitle;
-                link.href = "#";
-                link.dataset.itineraryId = itinerary.id;  // Assuming each itinerary has an 'id' property
-                link.addEventListener('click', function () {
-                    addEventToItinerary(this.dataset.itineraryId, apiEventID);
-                });
-                item.appendChild(link);
-                dropdownMenu.appendChild(item);
-            });
-        }
-
-    } catch (error) {
-        console.error('Failed to fetch itineraries:', error);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', async function () {
-    const saveButton = document.getElementById('save-new-itinerary');
-    if (saveButton) {
-        saveButton.addEventListener('click', async function () { // Make this function async
-            const titleInput = document.getElementById('itinerary-title');
-            const itineraryTitle = titleInput.value.trim();
-            console.log("Captured itinerary title: ", itineraryTitle);
-            if (itineraryTitle) {
-                // Assume createNewItinerary is an async function and waits for API call to complete
-                await createNewItinerary(itineraryTitle);
-                // Close the modal
-                const modalElement = document.getElementById('exampleModal');
-                const bootstrapModal = bootstrap.Modal.getInstance(modalElement);
-                bootstrapModal.hide();
-
-                // Refresh the dropdown to include the new itinerary
-                await populateItineraryDropdown(currentApiEventID);
-            } else {
-                alert('Please enter a title for the itinerary.');
-            }
-        });
-    } else {
-        console.error('Save button not found!');
-    }
-});
