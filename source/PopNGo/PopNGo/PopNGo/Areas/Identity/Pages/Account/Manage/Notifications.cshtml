@@ -20,6 +20,23 @@
                 <label asp-for="Input.NotificationEmail" class="form-label"></label>
                 <span asp-validation-for="Input.NotificationEmail" class="text-danger"></span>
             </div>
+            <h3 class="text-light text-muted" style="text-align: center;">Notifications</h3>
+            <div class="row mx-1 justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-check mb-3 text-center">
+                        <input asp-for="Input.WeekBefore" class="form-check-input login-checkbox-identity" />
+                        <label class="form-check text-swipe" asp-for="Input.WeekBefore"></label>
+                    </div>
+                    <div class="form-check mb-3 text-center">
+                        <input asp-for="Input.DayBefore" class="form-check-input login-checkbox-identity" />
+                        <label class="form-check text-swipe" asp-for="Input.DayBefore"></label>
+                    </div>
+                    <div class="form-check mb-3 text-center">
+                        <input asp-for="Input.DayOf" class="form-check-input login-checkbox-identity" />
+                        <label class="form-check text-swipe" asp-for="Input.DayOf"></label>
+                    </div>
+                </div>
+            </div>
             <div class="row mx-1 justify-content-center">
                 <div class="col-md-6">
                     <div class="form-floating text-center">
