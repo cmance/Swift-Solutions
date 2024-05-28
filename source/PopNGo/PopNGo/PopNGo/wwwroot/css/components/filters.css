@@ -1,3 +1,59 @@
+#date-range-container {
+    width: 300px;
+}
+
+/* Styles for min-width: 375px  - Mobile M */
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+    #filters-container {
+        height: 164px;
+        transform: translateY(-10px);
+        margin-top: 10px;
+    }
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+    #filters-container {
+        margin-top: 0px;
+    }
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+    .event-card-delete-icon-container {
+        scale: 1.15;
+    }
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+    .event-card-delete-icon-container {
+        scale: 1.25;
+    }
+}
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+}
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+/* Styles for min-width: 1440px - Laptop L */
+
+/* Styles for min-width: 1600px */
+@media (min-width: 1600px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
+    .event-card-delete-icon-container {
+        scale: 2;
+    }
+}
+
 /* Date Range Component */
 #filter-dropdown-container {
     display: flex;
@@ -8,6 +64,8 @@
     flex: 1;
     background-color: #1e1e1e;
     border-radius: 10px;
+    margin: 0px 10px;
+    padding: 0;
 }
 
 #date-range-container > div {
@@ -15,6 +73,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    position: relative;
 }
 
 #date-range-text {
@@ -46,21 +105,18 @@
     filter: invert(1);
 }
 
-#filters-container {
-    flex: 1;
-    padding: 10px;
-}
-
 /* End of Date Range Component */
 
 
 /* Filters Components */
 #filters-container {
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: stretch;
-    height: 164px;
-    transform: translateY(-10px);
+    /* height: 164px; */
+    padding: 10px;
+    /* transform: translateY(-10px); */
 
 }
 
@@ -81,7 +137,7 @@
 
 #sort-alphabetical, #filter-button, #sort-rating, #sort-date {
     flex: 1;
-    height: 100%; /* Ensures that they take up the full height of their parent container */
+    max-height: 48px;
 }
 
 #filter-tag-dropdown {
@@ -118,9 +174,6 @@
     color: white;
     text-align: center;
     margin-top: 20px;
-}
-#date-range-container {
-    position: relative;
 }
 
 #invalid-feedback {
