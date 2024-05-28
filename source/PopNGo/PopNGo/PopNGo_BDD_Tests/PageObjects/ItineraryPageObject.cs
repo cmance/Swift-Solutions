@@ -15,7 +15,7 @@ namespace PopNGo_BDD_Tests.PageObjects
 
         public IWebElement FirstItineraryToggle => _webDriver.FindElement(By.Id("accordion-header-bg"));
         public IWebElement FirstItinerary => _webDriver.FindElement(By.Id("heading0"));
-        public IWebElement FirstEvent => _webDriver.FindElement(By.ClassName("event"));
+        public IWebElement FirstEvent => _webDriver.FindElement(By.ClassName("single-timeline-area"));
         public SelectElement ReminderSelect => new SelectElement(FirstEvent.FindElement(By.Id("reminder-time-select")));
         public IWebElement ReminderButton => FirstEvent.FindElement(By.Id("save-reminder-button"));
         public IWebElement ReminderTime => FirstEvent.FindElement(By.Id("reminder-time"));

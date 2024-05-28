@@ -42,12 +42,14 @@ namespace PopNGo_BDD_Tests.StepDefinitions
         [Then(@"I can configure the time to send a reminder notification")]
         public void ThenICanConfigureTheTimeToSendAReminderNotification()
         {
+            _browserDriver.ScrollToElement(_itineraryPage.ReminderSelect.WrappedElement);
             _itineraryPage.ReminderSelect.WrappedElement.Displayed.Should().BeTrue();
         }
 
         [When(@"I try to configure a time past the event's start")]
         public void WhenITryToConfigureATimePastTheEventsStart()
         {
+            _browserDriver.ScrollToElement(_itineraryPage.ReminderSelect.WrappedElement);
             _itineraryPage.ReminderSelect.SelectByValue("custom");
             DateTime originalTime = DateTime.Parse(_itineraryPage.ReminderTime.GetAttribute("value"));
             _scenarioContext["originalTime"] = originalTime;
