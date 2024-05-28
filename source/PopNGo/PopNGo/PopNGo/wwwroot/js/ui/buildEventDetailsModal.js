@@ -94,6 +94,7 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 export function buildVenueDetailsModal(venueDetailsModalElement, props) {
     console.log(props);
     const viewVenueButtonContainer = venueDetailsModalElement.querySelector('#view-venue-btn');
+
     viewVenueButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
 
     const viewVenueButton = document.createElement('button');
