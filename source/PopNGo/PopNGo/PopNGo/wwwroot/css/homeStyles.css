@@ -194,12 +194,6 @@ input::placeholder,
     }
 };
 /* Recommended Events Page */
-.recommended-event-card-container {
-    background-color: #fac864;
-    border-radius: 1rem;
-    padding: 15px;
-}
-
 .date-overlay {
     position: absolute;
     top: 0; /* Adjust as needed */
@@ -345,6 +339,12 @@ input::placeholder,
 .btn:disabled {
     background-color: #bbbbbb;
     border-color: #bbbbbb;
+}
+
+.carousel-item.recommended-event-card-container {
+    background-color: #fac864;
+    border-radius: 1rem;
+    padding: 15px;
 }
 
 .carousel-item.recommended-event-card-container.specific-div {

@@ -83,7 +83,8 @@ namespace PopNGo.Controllers.APIs
             // Replace this with your logic to get events from itinerary based on pgUser.Id
             IEnumerable<Models.DTO.Itinerary> events = _itineraryRepository.GetAllItinerary(pgUser.Id);
 
-            if (events == null || !events.Any())
+            // if (events == null || !events.Any())
+            if (events == null)
             {
                 return NotFound();
             }
