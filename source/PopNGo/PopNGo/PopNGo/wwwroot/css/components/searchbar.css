@@ -165,6 +165,15 @@
     height: 58px;
     min-height: 58px;
     margin: 5px;
+    font-size: 1rem;
+}
+
+#filter-dropdown option {
+    color: #d38100; /* Replace with the color you want */
+}
+
+#filter-dropdown:hover {
+    color: #d38100;
 }
 
 #save-location-button {
