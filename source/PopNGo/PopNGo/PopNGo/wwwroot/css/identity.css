@@ -74,6 +74,7 @@ select.form-select:active {
 #google-image-prepend-login {
     background-color: #e32c2c;
     border-width: 0px;
+    height: 100%;
 }
 
 #external-login-google, #external-register-google {
