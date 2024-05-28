@@ -123,7 +123,7 @@ namespace PopNGo.Services
         public async Task<IEnumerable<PlaceSuggestion>> SearchPlaceSuggestion(string query, string coordinates)
         {
             var encodedQuery = Uri.EscapeDataString(query);
-            var url = $"{_httpClient.BaseAddress}engine=google_maps&q={encodedQuery}&ll={coordinates}&type=search&api_key={_httpClient.DefaultRequestHeaders.GetValues("X-RapidAPI-Key").FirstOrDefault()}";
+            var url = $"{_httpClient.BaseAddress}engine=google_maps&q={encodedQuery}&ll={coordinates}&type=search&api_key=a1bb7048235f3cbe3b6a28f598608d327812a86e2efffcb70bac91aefadd6e2f";
 
             _logger.LogInformation("Request URL: {0}", url);  // Log the URL to verify it
 

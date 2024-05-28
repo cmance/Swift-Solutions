@@ -20,8 +20,8 @@ public class Program
 
         // Setup the connection string to our Identity database
         // Swap the commented out lines to switch between Local and Azure databases
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
         builder.Services.AddDbContext<ApplicationDbContext>(options => options
             .UseSqlServer(identityConnectionString)
             .UseLazyLoadingProxies()
@@ -29,8 +29,8 @@ public class Program
         
         // Setup the connection string to our Application database
         // Swap the commented out lines to switch between Local and Azure databases
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
-        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
         builder.Services.AddDbContext<PopNGoDB>(options => options
             .UseSqlServer(serverConnectionString)
             .UseLazyLoadingProxies()
@@ -99,6 +99,18 @@ public class Program
             return new PlaceSuggestionsService(httpClient, services.GetRequiredService<ILogger<PlaceSuggestionsService>>());
         });
 
+        string mapDirectionsUrl = "https://serpapi.com/search.json?";
+        string mapDirectionsApiKey = builder.Configuration["SerpMapApiKey"];
+
+        builder.Services.AddHttpClient<IMapDirectionsService, MapDirectionsService>((httpClient, services) =>
+        {
+            httpClient.BaseAddress = new Uri(mapDirectionsUrl);
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json"); // Accept JSON responses
+            httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", mapDirectionsApiKey); // Set API key in Authorization header if needed
+            return new MapDirectionsService(httpClient, services.GetRequiredService<ILogger<MapDirectionsService>>());
+        });
+
+
         // Add services to the container.
         builder.Services.AddScoped<DbContext,PopNGoDB>();
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -116,6 +128,7 @@ public class Program
         builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
         builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
         builder.Services.AddScoped<IEventTagRepository, EventTagRepository>();
+        builder.Services.AddScoped<IMapDirectionsService, MapDirectionsService>();
         builder.Services.AddScoped<IRecommendedEventRepository, RecommendedEventRepository>();
 
         // Add Google Authentication
