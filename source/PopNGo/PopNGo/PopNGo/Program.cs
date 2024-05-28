@@ -20,8 +20,8 @@ public class Program
 
         // Setup the connection string to our Identity database
         // Swap the commented out lines to switch between Local and Azure databases
-        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
         builder.Services.AddDbContext<ApplicationDbContext>(options => options
             .UseSqlServer(identityConnectionString)
             .UseLazyLoadingProxies()
@@ -29,8 +29,8 @@ public class Program
         
         // Setup the connection string to our Application database
         // Swap the commented out lines to switch between Local and Azure databases
-        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
         builder.Services.AddDbContext<PopNGoDB>(options => options
             .UseSqlServer(serverConnectionString)
             .UseLazyLoadingProxies()
