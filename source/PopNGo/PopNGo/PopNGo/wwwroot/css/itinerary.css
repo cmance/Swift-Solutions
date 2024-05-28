@@ -291,42 +291,40 @@
     padding-right: 0; /* Adjust padding to ensure alignment */
 }
 
-/* Styles for min-width: 375px  - Mobile M */
-@media (min-width: 375px) {
+/* General styling for the modal content */
+.direction-detail {
+    border-bottom: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
 }
 
-/* Styles for min-width: 425px  - Mobile L */
-@media (min-width: 425px) {
+    .direction-detail:last-child {
+        border-bottom: none;
+    }
+
+.travel-mode, .via, .distance, .duration {
+    font-size: 16px;
+    margin: 5px 0;
 }
 
-/* Styles for min-width: <576 - xs Bootstrap breakpoint */
-@media (min-width: 576px) {
-
-}
-/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
-@media (min-width: 768px) {
+.trip {
+    margin: 10px 0;
+    padding-left: 15px;
+    border-left: 2px solid #007bff;
 }
 
-/* Styles for min-width: 992px - Bootstrap lg breakpoint */
-@media (min-width: 992px) {
+.trip-mode, .trip-title, .trip-distance, .trip-duration {
+    font-size: 14px;
+    margin: 5px 0;
 }
 
-/* Styles for min-width: 1024px - Laptop */
-@media (min-width: 1024px){
+.detail {
+    margin: 10px 0;
+    padding-left: 20px;
+    border-left: 2px solid #28a745;
 }
 
-/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
-@media (min-width: 1200px) {
-}
-
-/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
-@media (min-width: 1400px) {
-}
-
-/* Styles for min-width: 1440px - Laptop L */
-@media (min-width: 1440px) {
-}
-
-/* Styles for min-width: 2560px - 4K */
-@media (min-width: 2560px) {
+.detail-title, .detail-action, .detail-distance, .detail-duration, .detail-extensions {
+    font-size: 13px;
+    margin: 4px 0;
 }

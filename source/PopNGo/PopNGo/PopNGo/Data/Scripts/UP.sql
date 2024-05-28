@@ -143,6 +143,14 @@ CREATE TABLE [ItineraryNotifications] (
   [OptOutCode] NVARCHAR(MAX) NOT NULL
 );
 
+CREATE TABLE [PlaceSuggestion] (
+  [ID] INTEGER PRIMARY Key IDENTITY (1, 1),
+  [ItineraryID] INTEGER NOT NULL,
+  [NotificationAddress] NVARCHAR(255) NOT NULL,
+  [OptOut] BIT NOT NULL,
+  [OptOutCode] NVARCHAR(MAX) NOT NULL
+);
+
 -- Add Foreign Key constraints
 ALTER TABLE [Itinerary] ADD CONSTRAINT FK_Itinerary_UserID FOREIGN KEY ([UserID]) REFERENCES [PG_User]([ID]);
 
