@@ -6,6 +6,8 @@ import { buildItineraryEvent } from './ui/buildItineraryEvent.js';
 import { showToast } from './util/toast.js';
 
 let notificationIndex = -1;
+let currentEvent = null; // To store the current event details
+let selectedPlace = null; // To store the selected place suggestion
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -54,39 +56,47 @@ function createAccordionHtml(itinerary, index) {
     const itineraryContainer = document.getElementById('itinerary-content');
 
     try {
-    let itineraryElement = buildItinerary({
-        index: index,
-        title: itinerary.itineraryTitle,
-        onDelete: (button) => deleteItinerary(button, itinerary.id),
-        onAddNotification: () => createNotificationEntry(index, null),
-        onConfirmNotifications: async () => await confirmNotifications(index, itinerary.id),
-    });
-
-    itineraryContainer.appendChild(itineraryElement);
-    itineraryElement = document.getElementById(`collapse${index}`);
-    
-    itinerary.events.forEach(event => {
-        const eventElement = buildItineraryEvent({
-            itineraryId: itinerary.id,
-            apiEventID: event.eventDetails.apiEventID,
-            img: event.eventDetails.eventImage,
-            title: event.eventDetails.eventName,
-            date: new Date(event.eventDetails.eventDate),
-            tags: event.eventDetails.tags,
-            address: event.eventDetails.eventLocation,
-            latitude: event.eventDetails.latitude,
-            longitude: event.eventDetails.longitude,
-            reminderTime: event.reminderTime,
-            reminderCustomTime: event.reminderCustomTime,
-            onDelete: () => deleteEvent(event.eventDetails.apiEventID, itinerary.id),
-            onSaveReminder: (element, originalTime, time, customTime) => saveReminder(event.eventDetails.apiEventID, itinerary.id, originalTime, time, customTime, element),
+        let itineraryElement = buildItinerary({
+            index: index,
+            title: itinerary.itineraryTitle,
+            onDelete: (button) => deleteItinerary(button, itinerary.id),
+            onAddNotification: () => createNotificationEntry(index, null),
+            onConfirmNotifications: async () => await confirmNotifications(index, itinerary.id),
         });
 
-        itineraryElement.querySelector('#events-container').appendChild(eventElement);
-    });
-} catch (error) {
-    console.error('Failed to create accordion HTML:', error);
-}
+        itineraryContainer.appendChild(itineraryElement);
+        itineraryElement = document.getElementById(`collapse${index}`);
+    
+        itinerary.events.forEach(event => {
+            const eventElement = buildItineraryEvent({
+                itineraryId: itinerary.id,
+                apiEventID: event.eventDetails.apiEventID,
+                img: event.eventDetails.eventImage,
+                title: event.eventDetails.eventName,
+                date: new Date(event.eventDetails.eventDate),
+                tags: event.eventDetails.tags,
+                address: event.eventDetails.eventLocation,
+                latitude: event.eventDetails.latitude,
+                longitude: event.eventDetails.longitude,
+                reminderTime: event.reminderTime,
+                reminderCustomTime: event.reminderCustomTime,
+                onDelete: () => deleteEvent(event.eventDetails.apiEventID, itinerary.id),
+                onSaveReminder: (element, originalTime, time, customTime) => saveReminder(event.eventDetails.apiEventID, itinerary.id, originalTime, time, customTime, element),
+            });
+
+            itineraryElement.querySelector('#events-container').appendChild(eventElement);
+
+            // Set the current event to the last one (or change this logic as needed)
+            currentEvent = {
+                address: event.eventDetails.eventLocation,
+                latitude: event.eventDetails.latitude,
+                longitude: event.eventDetails.longitude
+            };
+        });
+
+    } catch (error) {
+        console.error('Failed to create accordion HTML:', error);
+    }
 
     itinerary.notifications.forEach(notification => {
         createNotificationEntry(index, notification);
@@ -94,12 +104,10 @@ function createAccordionHtml(itinerary, index) {
 }
 
 function createNotificationEntry(itineraryId, notification) {
-    // notificationIndex++;
     const itineraryElement = document.getElementById(`heading${itineraryId}`).nextElementSibling;
 
     const notificationElement = document.createElement('div');
     notificationElement.className = 'notification';
-    // notificationElement.dataset.notificationIndex = notificationIndex;
 
     const notificationAddressElement = document.createElement('input');
     notificationAddressElement.className = 'col-sm-8';
@@ -112,7 +120,6 @@ function createNotificationEntry(itineraryId, notification) {
     notificationDeleteButton.className = 'btn btn-danger col-sm-2 offset-4 offset-sm-2';
     notificationDeleteButton.textContent = 'Delete';
     notificationDeleteButton.addEventListener('click', () => {
-        // notificationIndex--;
         notificationElement.remove();
     });
 
@@ -181,8 +188,8 @@ async function deleteEvent(apiEventID, itineraryId) {
         console.error('Failed to delete the event:', error);
         alert('Failed to delete the event');
     }
-
 }
+
 async function deleteItinerary(button, itineraryId) {
     if (!confirm('Are you sure you want to delete this itinerary?')) return;
 
@@ -196,7 +203,6 @@ async function deleteItinerary(button, itineraryId) {
 
         // Remove the itinerary element from DOM after successful deletion
         const itemToRemove = button.closest('.accordion-item');
-        // const itemToRemove = document.querySelector(`button[data-itinerary-id="${itineraryId}"]`).closest('.accordion-item');
         itemToRemove.remove();
 
         // Check if there are any itineraries left
@@ -245,6 +251,14 @@ function attachEventListeners() {
         }, 300); // Adjust debounce delay as needed
 
         button.addEventListener('click', debouncedClick);
+    });
+
+    document.getElementById('getDirectionsBtn').addEventListener('click', async () => {
+        if (selectedPlace && currentEvent) {
+            await displayDirectionsInModal(currentEvent.address, selectedPlace.address);
+        } else {
+            alert('Please select a place and ensure the current event is loaded.');
+        }
     });
 }
 
@@ -312,6 +326,7 @@ function displaySuggestions(suggestions, index) {
             const modalBody = document.querySelector('.modal-body');
             modalTitle.textContent = suggestion.title;
             modalBody.innerHTML = formatModalBodyContent(suggestion);
+            selectedPlace = suggestion; // Store selected place
         });
     });
 
@@ -330,4 +345,85 @@ function formatModalBodyContent(suggestion) {
         <p>Phone: ${suggestion.phone || 'no phone available'}</p>
         <p>Website: <a href="${suggestion.website}" target="_blank">${suggestion.website || 'no website available'}</a></p>
     `;
+}
+
+async function displayDirectionsInModal(startAddress, endAddress) {
+    try {
+        const response = await fetch(`/api/directions?startAddress=${encodeURIComponent(startAddress)}&endAddress=${encodeURIComponent(endAddress)}`);
+        if (!response.ok) throw new Error(`Error ${response.status}: ${await response.text()}`);
+
+        const directions = await response.json();
+        console.log('Directions:', directions);
+        showDirectionsInModal(directions);
+    } catch (error) {
+        console.error('Failed to fetch directions:', error);
+        alert('Failed to fetch directions.');
+    }
+}
+
+function showDirectionsInModal(directions) {
+    const modalBody = document.getElementById('directionsModalBody');
+    let directionsHTML = '';
+
+    directions.forEach(direction => {
+        directionsHTML += `
+            <div class="direction-detail">
+                ${direction.travel_Mode ? `<p class="travel-mode"><strong>Travel Mode:</strong> ${direction.travel_Mode}</p>` : ''}
+                ${direction.via ? `<p class="via"><strong>Via:</strong> ${direction.via}</p>` : '<p class="via"><strong>Via:</strong> N/A</p>'}
+                ${direction.formatted_Distance ? `<p class="distance"><strong>Distance:</strong> ${direction.formatted_Distance}</p>` : ''}
+                ${direction.formatted_Duration ? `<p class="duration"><strong>Duration:</strong> ${direction.formatted_Duration}</p>` : ''}
+                ${direction.trips ? direction.trips.map(trip => `
+                    <div class="trip">
+                        ${trip.travel_mode ? `<p class="trip-mode"><strong>Travel Mode:</strong> ${trip.travel_mode}</p>` : ''}
+                        ${trip.title ? `<p class="trip-title"><strong>Title:</strong> ${trip.title}</p>` : '<p class="trip-title"><strong>Title:</strong> N/A</p>'}
+                        ${trip.formatted_distance ? `<p class="trip-distance"><strong>Distance:</strong> ${trip.formatted_distance}</p>` : ''}
+                        ${trip.formatted_duration ? `<p class="trip-duration"><strong>Duration:</strong> ${trip.formatted_duration}</p>` : ''}
+                        ${trip.details ? trip.details.map(detail => `
+                            <div class="detail">
+                                ${detail.title ? `<p class="detail-title"><strong>Detail Title:</strong> ${detail.title}</p>` : ''}
+                                ${detail.action ? `<p class="detail-action"><strong>Action:</strong> ${detail.action}</p>` : ''}
+                                ${detail.extensions ? `<p class="detail-extensions"><strong>Extensions:</strong> ${detail.extensions.join(', ')}</p>` : ''}
+                            </div>
+                        `).join('') : ''}
+                    </div>
+                `).join('') : ''}
+            </div>
+        `;
+    });
+
+    modalBody.innerHTML = directionsHTML;
+}
+
+
+// Utility functions to get current event and selected place, replace with actual logic
+function getCurrentEvent() {
+    const currentEventElement = document.querySelector('.current-event'); // Example class to identify the current event
+    if (currentEventElement) {
+        return {
+            address: currentEventElement.getAttribute('data-address')
+        };
+    }
+    return null;
+}
+// Get the modal
+const modal = document.getElementById('directionsModal');
+
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName('close')[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = 'none';
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Function to open the modal
+function openModal() {
+    modal.style.display = 'block';
 }

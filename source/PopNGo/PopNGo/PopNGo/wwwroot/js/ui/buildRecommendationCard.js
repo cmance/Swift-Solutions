@@ -105,9 +105,9 @@ async function buildRecommendationCard(recommendedEvents) {
                 const bookmarkItem = document.createElement('a');
                 bookmarkItem.classList.add('dropdown-item');
                 bookmarkItem.textContent = bookmarkList.title;
-                bookmarkItem.addEventListener('click', (event) => {
+                bookmarkItem.addEventListener('click', (mouseEvent) => {
                     // Prevent the event from bubbling up (stop the event from triggering the card click event)
-                    if (event && event.stopPropagation) event.stopPropagation();
+                    if (mouseEvent && mouseEvent.stopPropagation) mouseEvent.stopPropagation();
                     onPressSaveToBookmarkList(event.apiEventID, bookmarkList.title)
                 });
                 bookmarkDropdownMenu.appendChild(bookmarkItem);

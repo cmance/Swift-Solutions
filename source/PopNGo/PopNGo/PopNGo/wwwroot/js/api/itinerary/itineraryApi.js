@@ -1,6 +1,6 @@
 export async function getAllUserEventsFromItinerary() {
     try {
-        let url = `/api/ItineraryApi`;
+        let url = `/api/ItineraryApi/`;
         const res = await fetch(url, {
             method: 'GET',
             headers: {
@@ -11,7 +11,7 @@ export async function getAllUserEventsFromItinerary() {
         if (!res.ok) {
             // If the response is unauthorized or not OK, throw an error.
             const errorText = await res.text();
-            throw new Error(`Error ${res.status}: ${errorText}`);
+            throw new Error(`Error ${res.status}: ${errorText}`, res);
         }
 
         // Parse the JSON response and return.
