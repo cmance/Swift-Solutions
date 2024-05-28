@@ -1,6 +1,7 @@
 .navigation {
-    height: 25vh;
+    height: 35vh;
     min-height: 25vh;
+    margin-bottom: 20px;
 }
 
 .spacer {
@@ -39,7 +40,7 @@ table tr:nth-child(even) {
 
 #admin-user-details-modal,
 #admin-schedule-details-modal {
-    div.modal-content {
+    /* div.modal-content {
         background-color: #313030;
         color: #d9d9d9;
 
@@ -50,7 +51,7 @@ table tr:nth-child(even) {
         @media (min-width: 992px) {
             width: 800px;
         }
-    }
+    } */
 
     hr {
         background-color: #d38100;
@@ -66,7 +67,6 @@ table tr:nth-child(even) {
     input:not([type="checkbox"]),
     input:not([type="checkbox"]):focus,
     select,
-    button,
     > div > label {
         background-color: #313030;
         color: #d38100;
@@ -88,4 +88,15 @@ table tr:nth-child(even) {
     color: #d9d9d9;
     max-height: 500px;
     width: 50%;
+}
+
+@media (min-width: 2560px) {
+    table[name="admin-schedules-table"],
+    table[name="admin-schedules-table"] td,
+    table[name="admin-schedules-table"] button,
+    table[name="admin-users-table"],
+    table[name="admin-users-table"] td,
+    table[name="admin-users-table"] button {
+        font-size: 1.25rem;
+    }
 }

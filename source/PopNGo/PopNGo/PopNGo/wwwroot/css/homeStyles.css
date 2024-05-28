@@ -1,4 +1,45 @@
 /*Styles for the welcome page*/
+/* Styles for min-width: 320px  - Mobile S */
+
+/* Styles for min-width: 375px  - Mobile M */
+@media (min-width: 375px) {
+}
+
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+}
+
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+}
+
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+
+/* Styles for min-width: 1440px - Laptop L */
+@media (min-width: 1440px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
+}
 
 /* Styles for the position */
 .vertical-center {
@@ -11,7 +52,7 @@
 /*Styles for the button*/ 
 .button-container {
     display: flex;
-    justify-content: start; 
+    justify-content: start;
 }
 
 .image-container img {
@@ -25,12 +66,6 @@
         text-align: start;
     }
 }
-
-.push-left {
-    margin-left: -200px; 
-    margin-top: -110px;
-}
-
 
 .text-light {
     color: #ffffff;
@@ -152,6 +187,12 @@ input::placeholder,
     border-radius: 5px;
 }
 
+/* Styles for the large breakpoint */
+@media (min-width: 992px) {
+    a, .btn {
+        font-size: 1.4em;
+    }
+};
 /* Recommended Events Page */
 .recommended-event-card-container {
     background-color: #fac864;

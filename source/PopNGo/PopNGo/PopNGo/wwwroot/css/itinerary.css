@@ -1,4 +1,5 @@
-﻿.day-indicator {
+﻿/* Styles for min-width: 320px  - Mobile S */
+.day-indicator {
     display: flex;
     background-color: #333; /* Dark background */
     color: white; /* White text */
@@ -9,22 +10,22 @@
     padding: 0px;
 }
 
-    .day-indicator .date {
-        background-color: #FFA500; /* Orange background */
-        padding: 20px 40px; /* Increased padding for a larger box */
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Center text */
-        justify-content: center; /* Center text */
-        font-weight: bold; /* Bold font */
-        font-size: 32px; /* Even larger font size for the date */
-    }
+.day-indicator .date {
+    background-color: #FFA500; /* Orange background */
+    padding: 20px 40px; /* Increased padding for a larger box */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center text */
+    justify-content: center; /* Center text */
+    font-weight: bold; /* Bold font */
+    font-size: 32px; /* Even larger font size for the date */
+}
 
-    .day-indicator .title {
-        padding: 20px 40px; /* Increased padding */
-        font-weight: bold; /* Bold font */
-        font-size: 28px; /* Larger font size for the title */
-    }
+.day-indicator .title {
+    padding: 20px 40px; /* Increased padding */
+    font-weight: bold; /* Bold font */
+    font-size: 28px; /* Larger font size for the title */
+}
 
 
 .accordion-button.day-indicator {
@@ -41,10 +42,10 @@
     padding-right: 0; /* Align with accordion style */
 }
 
-    .accordion-button.day-indicator .title {
-        font-weight: bold; /* Bold font */
-        font-size: 30px; /* Larger font size for the title */
-    }
+.accordion-button.day-indicator .title {
+    font-weight: bold; /* Bold font */
+    font-size: 30px; /* Larger font size for the title */
+}
 
 .accordion-button {
     height: 10vh;
@@ -58,14 +59,14 @@
 .single-timeline-area {
     position: relative;
     z-index: 1;
-    padding-left: 180px;
+    /* padding-left: 180px; */
 }
-
+/* 
 @media only screen and (max-width: 575px) {
     .single-timeline-area {
         padding-left: 100px;
     }
-}
+} */
 
 .single-timeline-area .timeline-date {
     position: absolute;
@@ -158,10 +159,10 @@
     margin-right: 15px;
 }
 
-    .single-timeline-area .single-timeline-content .timeline-icon i {
-        color: #ffffff;
-        line-height: 30px;
-    }
+.single-timeline-area .single-timeline-content .timeline-icon i {
+    color: #ffffff;
+    line-height: 30px;
+}
 
 .single-timeline-area .single-timeline-content .timeline-text h6 {
     -webkit-transition-duration: 500ms;
@@ -190,9 +191,9 @@
     cursor: pointer;
 }
 
-    .delete-event-btn i {
-        font-size: 1.5rem; /* Adjust size as needed */
-    }
+.delete-event-btn i {
+    font-size: 1.5rem; /* Adjust size as needed */
+}
 
 /*END OF STyling*/
 .card {
@@ -245,11 +246,37 @@
 }
 
 .img-event {
-    width: 100%; /* Ensure the image takes up the full width of its container */
-    height: 200px; /* Fixed height for all images */
+    max-width: 222px;
+    width: 100%;
+    margin: 5px;
+    height: auto; /* Fixed height for all images */
     object-fit: cover; /* Cover the container without distorting the image */
     object-position: center; /* Center the image within the container */
     border-radius: 0.25rem; /* Optional: Adds rounded corners to the image */
+}
+
+@media (min-width: 375px) {
+    .img-event {
+        max-width: 280px;
+    }
+}
+
+@media (min-width: 425px) {
+    .img-event {
+        max-width: 330px;
+    }
+}
+
+@media (min-width: 768px) {
+    .img-event {
+        padding-left: 10px;
+        border-radius: 1.25rem;
+    }
+}
+
+.delete-event-container {
+    display: flex;
+    justify-content: end;
 }
 
 .delete-event-btn {
@@ -262,4 +289,44 @@
 
 .card-body {
     padding-right: 0; /* Adjust padding to ensure alignment */
+}
+
+/* Styles for min-width: 375px  - Mobile M */
+@media (min-width: 375px) {
+}
+
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+}
+
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+}
+
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+
+/* Styles for min-width: 1440px - Laptop L */
+@media (min-width: 1440px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
 }

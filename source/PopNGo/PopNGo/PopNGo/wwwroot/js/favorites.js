@@ -14,6 +14,7 @@ import { updateBookmarkListName } from './api/bookmarkLists/updateBookmarkListNa
 import { showDeleteFavoriteEventConfirmationModal } from './ui/showDeleteFavoriteEventConfirmationModal.js';
 import { removeEventFromFavorites } from './api/favorites/removeEventFromFavorites.js';
 import { bindItinerarySaving } from './util/bindItinerarySaving.js';
+import { formatTagName } from './util/tags.js';
 
 let currentBookmarkList = null;
 let favoritedEvents = null;
@@ -162,7 +163,7 @@ async function initDisplayEventsFromBookmarkList(bookmarkList) {
         tags = tags.concat(event.tags);
     });
     // Replace tag objects with tag names
-    tags = tags.map(tag => tag.name);
+    tags = tags.map(tag => formatTagName(tag.name));
     tags = [...new Set(tags)]; // Remove duplicates
     // Populate the filter dropdown with the tags
     document.getElementById('filter-tag-dropdown').style.display = 'flex';

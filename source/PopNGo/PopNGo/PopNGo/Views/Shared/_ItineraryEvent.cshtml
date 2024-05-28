@@ -1,5 +1,5 @@
 <template id="itinerary-event-template">
-    <div class="single-timeline-area event" data-event-id="${eventData.apiEventID}" data-itinerary-id="${itineraryId}">
+    <div class="single-timeline-area" data-event-id="${eventData.apiEventID}" data-itinerary-id="${itineraryId}">
         <div class="row">
             <div class="col">
                 <div class="card mb-3 bg-dark text-white">
@@ -8,7 +8,7 @@
                             <img id="event-image" src="${eventImage}" class="img-fluid rounded-start img-event" alt="${eventData.eventName} Image">
                         </div>
                         <div class="col-md-7">
-                            <div class="card-body px-4 mx-4">
+                            <div class="card-body px-md-4 mx-md-4">
                                 <h5 class="card-title pt-4" id="event-title"></h5>
                                 <p class="text-muted" id="event-date"></p>
                                 <div id="event-tags-container"></div>
@@ -33,7 +33,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-1 delete-event-container">
                             <button aria-label="Delete event in itinerary button" class="btn btn-danger delete-event-btn" id="delete-event-button" data-event-id="${eventData.apiEventID}" data-itinerary-id="${itineraryId}">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>

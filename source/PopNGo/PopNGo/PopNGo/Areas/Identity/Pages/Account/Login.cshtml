@@ -144,12 +144,11 @@
                                     <div class="input-group-prepend">
                                         <span id="google-image-prepend-login" class="input-group-text">
                                             <img src="~/media/images/identity/google-color-svgrepo-com.svg" alt="Google Logo"
-                                                width="30" height="30">
+                                                width="30" height="35">
                                         </span>
                                     </div>
-                                    <button aria-label="Login using @provider.Name" type="submit" class="btn btn-primary" name="provider" id="external-login-@{
-                                                                                                                                            @provider.Name.ToLower()
-                                                     }" value="@provider.Name"
+                                    <button type="submit" class="btn btn-primary" name="provider"
+                                        id="external-login-@{@provider.Name.ToLower()}" value="@provider.Name"
                                         title="Log in using your @provider.DisplayName account">Login
                                         with @provider.DisplayName
                                     </button>

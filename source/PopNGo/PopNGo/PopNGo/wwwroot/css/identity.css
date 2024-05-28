@@ -13,8 +13,8 @@
 #link-login-button-Google,
 a.btn.btn-primary,
 button.btn.btn-primary {
-    color: var(--btn-font-color);
-    background-color: var(--swipe-font-color);
+    color: black;
+    background-color: #feb85d;
     border-color: #ffab74;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -235,7 +235,7 @@ select.form-select:active {
 
 
 .registration-form-identity {
-    max-width: 300px;
+    /* max-width: 300px; */
     display: flex;
     justify-content: center;
     background-color: #feb85d !important;

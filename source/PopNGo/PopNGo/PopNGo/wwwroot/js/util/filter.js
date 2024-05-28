@@ -1,4 +1,4 @@
-
+import { formatTagName } from "./tags.js";
 
 /**
  * Helper export function
@@ -208,7 +208,7 @@ export function returnSortedEvents(events, filterValues) {
     // }]
     if (filterValues['event-tag']) {
         sortedEvents = sortedEvents.filter(event => {
-            return event.tags.some(tag => tag.name === filterValues['event-tag']);
+            return event.tags.some(tag => formatTagName(tag.name) === filterValues['event-tag']);
         });
     }
 
