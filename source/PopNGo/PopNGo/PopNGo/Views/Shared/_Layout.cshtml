@@ -1,3 +1,7 @@
+@{
+    var userAuthorized = User.Identity.IsAuthenticated;
+}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +9,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PopNGo</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.png" type="image/png" />
+    <link rel="shortcut icon" href="favicon.png" type="image/png" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/explore.css" asp-append-version="true" />
@@ -72,7 +77,8 @@
     </header>
 
     @* Bottom navbar *@
-    <div id="custom-bottom-navbar-id" class="navbar fixed-bottom rounded-pill custom-bottom-navbar" style="display: none;">
+    <div id="custom-bottom-navbar-id" class="navbar fixed-bottom rounded-pill custom-bottom-navbar"
+        style="display: none;">
         <button aria-label="Close navigation bar button" id="close-navbar"
             class="close-navbar text-light onhover mr-auto">
             <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white'
@@ -116,6 +122,19 @@
                 </svg>
             </a>
         </li>
+        @if (userAuthorized)
+        {
+            <li class="nav-item custom-nav-item">
+                <a aria-label="Recommendation Page Link" id="recommendation-logo" class="text-light onhover" asp-area=""
+                    asp-controller="Home" asp-action="Recommendation">
+                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                        width="30" height="30" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+                    </svg>
+                </a>
+            </li>
+        }
     </div>
 
     @*Hidden navbar*@
@@ -133,7 +152,9 @@
             @RenderBody()
         </main>
     </div>
-   
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/7ef5bbff13.js" crossorigin="anonymous"></script>

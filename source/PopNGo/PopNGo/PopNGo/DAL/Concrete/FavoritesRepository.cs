@@ -106,5 +106,16 @@ namespace PopNGo.DAL.Concrete
             // Check if the event exists in the specified bookmark list
             return _favoriteEvents.Any(fe => fe.BookmarkList.Title == bookmarkListName && fe.Event.ApiEventId == apiEventId);
         }
+
+        public List<Models.DTO.Event> GetAllFavorites(int userId)
+        {
+            // Get each favorited event from a user across all bookmark lists, removing duplicate events
+            return _favoriteEvents
+                .Where(fe => fe.BookmarkList.UserId == userId)
+                .Select(fe => fe.Event)
+                .Select(e => e.ToDTO())
+                .Distinct()
+                .ToList();
+        }
     }
 }

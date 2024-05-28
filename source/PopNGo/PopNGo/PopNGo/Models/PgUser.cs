@@ -18,6 +18,9 @@ public partial class PgUser
     [StringLength(255)]
     public string AspnetuserId { get; set; }
 
+    [Column(TypeName = "datetime")]
+    public DateTime? RecommendedPreviouslyAt { get; set; }
+
     [InverseProperty("User")]
     public virtual ICollection<EmailHistory> EmailHistories { get; set; } = new List<EmailHistory>();
 
@@ -26,6 +29,9 @@ public partial class PgUser
 
     [InverseProperty("User")]
     public virtual ICollection<Itinerary> Itineraries { get; set; } = new List<Itinerary>();
+
+    [InverseProperty("User")]
+    public virtual ICollection<RecommendedEvent> RecommendedEvents { get; set; } = new List<RecommendedEvent>();
 
     [InverseProperty("User")]
     public virtual ICollection<ScheduledNotification> ScheduledNotifications { get; set; } = new List<ScheduledNotification>();

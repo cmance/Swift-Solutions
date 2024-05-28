@@ -1,5 +1,6 @@
 import { validateObject } from '../validation.js';
 import { populateItineraryDropdown } from '../util/bindItinerarySaving.js';
+import { formatTagName } from "../util/tags.js";
 
 export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 
@@ -30,7 +31,7 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
     for (let tag of props.tags) {
         const tagElement = document.createElement('span');
         tagElement.classList.add('tag');
-        tagElement.textContent = tag.name;
+        tagElement.textContent = formatTagName(tag.name);
         tagElement.style.color = tag.textColor;
         tagElement.style.backgroundColor = tag.backgroundColor;
         tagsContainer.appendChild(tagElement);
@@ -94,6 +95,7 @@ export const buildEventDetailsModal = (eventDetailsModalElement, props) => {
 export function buildVenueDetailsModal(venueDetailsModalElement, props) {
     console.log(props);
     const viewVenueButtonContainer = venueDetailsModalElement.querySelector('#view-venue-btn');
+
     viewVenueButtonContainer.innerHTML = ''; // Remove existing button to prevent duplicates
 
     const viewVenueButton = document.createElement('button');

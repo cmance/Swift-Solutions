@@ -5,6 +5,7 @@ import { onPressSaveToBookmarkList } from "./util/onPressSaveToBookmarkList.js";
 import { applyFiltersAndSortEvents } from './util/filter.js';
 import { getAllUserEventsFromItinerary} from './api/itinerary/itineraryApi.js'; // Adjust the import path as necessary
 import { bindItinerarySaving } from "./util/bindItinerarySaving.js";
+import { formatTagName } from "./util/tags.js";
 
 
 let currentApiEventID = null;
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 tags = tags.concat(event.tags);
             });
             // Replace tag objects with tag names
-            tags = tags.map(tag => tag.name);
+            tags = tags.map(tag => formatTagName(tag.name));
             tags = [...new Set(tags)]; // Remove duplicates
             // Populate the filter dropdown with the tags
             document.getElementById('filter-tag-dropdown').style.display = 'flex';
@@ -206,8 +207,3 @@ async function onClickDetailsAsync(eventInfo) {
         modal.show();
     };
 }
-
-// Listener for filter button
-document.getElementById('filter-button').addEventListener('click', function () {
-    displayEventsFromBookmarkList(currentBookmarkList);
-});

@@ -1,4 +1,45 @@
 /*Styles for the welcome page*/
+/* Styles for min-width: 320px  - Mobile S */
+
+/* Styles for min-width: 375px  - Mobile M */
+@media (min-width: 375px) {
+}
+
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+}
+
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+}
+
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+
+/* Styles for min-width: 1440px - Laptop L */
+@media (min-width: 1440px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
+}
 
 /* Styles for the position */
 .vertical-center {
@@ -11,7 +52,7 @@
 /*Styles for the button*/ 
 .button-container {
     display: flex;
-    justify-content: start; 
+    justify-content: start;
 }
 
 .image-container img {
@@ -25,12 +66,6 @@
         text-align: start;
     }
 }
-
-.push-left {
-    margin-left: -200px; 
-    margin-top: -110px;
-}
-
 
 .text-light {
     color: #ffffff;
@@ -78,12 +113,12 @@
     height: 100%;
     background-color: white; 
     z-index: -1;
-    transform: translateX(-100%); 
+    transform: translateX(-102%); 
     transition: transform 0.3s ease; 
 }
 
 .event-button:hover::after {
-    transform: translateX(0); 
+    transform: translateX(0);
 }
 
 .event {
@@ -151,3 +186,213 @@ input::placeholder,
     margin-right: 5px;
     border-radius: 5px;
 }
+
+/* Styles for the large breakpoint */
+@media (min-width: 992px) {
+    a, .btn {
+        font-size: 1.4em;
+    }
+};
+/* Recommended Events Page */
+.recommended-event-card-container {
+    background-color: #fac864;
+    border-radius: 1rem;
+    padding: 15px;
+}
+
+.date-overlay {
+    position: absolute;
+    top: 0; /* Adjust as needed */
+    padding: 1rem; /* Adjust as needed */
+    min-height: 250px;
+    min-width: 20%;
+    background-color: #1e1e1e; /* Semi-transparent black */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+.date-1 {
+    font-size:50px;
+}
+
+.date-2 {
+    font-size: 40px;
+}
+
+.button-overlay {
+    bottom: 0; /* Adjust as needed */
+    padding: 1rem; /* Adjust as needed */
+}
+
+.recommended-events-title-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+}
+
+.recommended-events-title {
+    color: #FFF;
+    font-size: x-large;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.recommended-events-image-container {
+    position: relative;
+    width: 100%;
+    min-height: 250px; /* This will maintain a 2:1 aspect ratio (500x250) */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+    border-radius: 1rem;
+    background-color: #BBBBBB; /* Semi-transparent black */
+}
+
+.recommended-events-image img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recommended-events-description-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+}
+
+.recommended-events-description {
+    color: #FFF;
+}
+
+.recommended-events-date-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+    margin-right: 16px; /* Add right margin to the date container */
+    width: 48%;
+    padding: 10px 10px 10px 14px;
+}
+
+.recommended-events-address-container {
+    background-color: #1e1e1e;
+    border-radius: 1rem;
+    margin-left: 16px; /* Add left margin to the address container */
+    width: 48%;
+    padding: 10px 10px 10px 14px;
+}
+
+@media (max-width: 1400px) {
+    .recommended-events-date-container,
+    .recommended-events-address-container {
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .recommended-events-address-container {
+        margin-top: 15px;
+    }
+}
+
+.recommended-events-date-row {
+    padding: 10px;
+}
+
+.event-recommendation-buttons {
+    color: black;
+    background-color: #FFF;
+}
+
+.event-recommendation-buttons-2 {
+    color: black;
+    background-color: #FFF;
+    margin: 5px 10px;
+    height: 40px;
+}
+
+#original-post-link:hover {
+    color: black !important;
+    background-color: #FEB85D !important;
+    border: 2px solid #000 !important;
+}
+
+#original-post-link:focus {
+    color: black !important;
+    background-color: #FEB85D !important;
+    border: 2px solid #000 !important;
+}
+
+.event-recommendation-buttons-2:hover {
+    color: black !important;
+    background-color: #FEB85D !important;
+    border: 2px solid #000 !important;
+}
+
+.event-recommendation-buttons-2:focus {
+    color: black !important;
+    background-color: #FEB85D !important;
+    border: 2px solid #000 !important;
+}
+
+.right-arrow-anchor:hover, .left-arrow-anchor:hover, .right-arrow-anchor:focus, .left-arrow-anchor:focus {
+    color: black !important;
+    background-color: #ff9800 !important;
+    border: 2px solid #000 !important;
+}
+
+.btn.disabled, 
+.btn:disabled {
+    background-color: #bbbbbb;
+    border-color: #bbbbbb;
+}
+
+.carousel-item.recommended-event-card-container.specific-div {
+    height: 56vh;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 50px;
+}
+
+.center-vertically {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.out-of-recommended-events-container {
+    background-color: #383838;
+    border: 2px solid #FFF;
+}
+
+@media (max-width: 768px) {
+    .right-arrow-anchor,
+    .left-arrow-anchor,
+    .arrow-left-div,
+    .arrow-right-div {
+        display: none;
+        margin-top: 0 !important;
+    }
+}
+
+
+
+.loader {
+    background: linear-gradient(110deg, #1e1e1e 8%, #2e2e2e 18%, #1e1e1e 33%);
+    background-size: 200% 100%;
+    animation: 1.5s shine linear infinite;
+
+    height: 56vh;
+    z-index: 99;
+    border-radius: 1rem;
+    padding: 15px;
+    border: 2px solid #FFF;
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% 0;
+    }
+}
+

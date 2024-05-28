@@ -40,11 +40,13 @@
             if (Model.IsMachineRemembered)
             {
                 <form method="post" style="display: inline-block">
-                    <button type="submit" class="btn btn-primary">Forget this browser</button>
+                    <button type="submit" class="btn btn-primary" >Forget this browser</button>
                 </form>
             }
-            <a asp-page="./Disable2fa" class="btn btn-primary">Disable 2FA</a>
-            <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+            <div class="d-flex flex-column align-items-center">
+                <a asp-page="./Disable2fa" class="btn btn-primary" style="margin-bottom: 10px; max-width: 250px; width: 100%">Disable 2FA</a>
+                <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary" style="margin-bottom: 10px; max-width: 250px; width: 100%">Reset recovery codes</a>
+            </div>
         }
 
         <h4 class="text-light text-muted mt-4" style="text-align: center;">Authenticator app</h4>
@@ -57,9 +59,9 @@
         {
             <div class="d-flex flex-column align-items-center">
                 <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary"
-                    style="margin-bottom: 10px; max-width: 250px;">Set up authenticator app</a>
+                    style="margin-bottom: 10px; max-width: 250px; width: 100%">Set up authenticator app</a>
                 <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary"
-                    style="margin-bottom: 10px; max-width: 250px;">Reset authenticator app</a>
+                    style="margin-bottom: 10px; max-width: 250px; width: 100%">Reset authenticator app</a>
             </div>
         }
     }

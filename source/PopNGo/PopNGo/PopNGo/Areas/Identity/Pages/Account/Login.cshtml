@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <div class="col-6 d-flex justify-content-start" style="padding-left: 50px;">
-                            <button id="login-submit" type="submit"
+                            <button aria-label="Login to website button." id="login-submit" type="submit"
                                 class="w-100 btn btn-lg btn-primary limited-width-login-submit log-in-submit-identity shorter-button">Log
                                 in</button>
                         </div>
@@ -144,12 +144,11 @@
                                     <div class="input-group-prepend">
                                         <span id="google-image-prepend-login" class="input-group-text">
                                             <img src="~/media/images/identity/google-color-svgrepo-com.svg" alt="Google Logo"
-                                                width="30" height="30">
+                                                width="30" height="35">
                                         </span>
                                     </div>
-                                    <button type="submit" class="btn btn-primary" name="provider" id="external-login-@{
-                                                                                                                                            @provider.Name.ToLower()
-                                                     }" value="@provider.Name"
+                                    <button type="submit" class="btn btn-primary" name="provider" aria-label="Log in using your Google account"
+                                        id="external-login-@{@provider.Name.ToLower()}" value="@provider.Name"
                                         title="Log in using your @provider.DisplayName account">Login
                                         with @provider.DisplayName
                                     </button>

@@ -91,6 +91,7 @@
     width: 100%;
     margin: 0 auto;
     padding-bottom: 30px;
+    justify-content: space-between;
 }
 
 #search-bar-container {
@@ -109,18 +110,14 @@
 
 #search-event-button {
     background-color: #ff9800;
-    margin-left: 5px;
     border-radius: 5px;
     border-width: 0;
     border-color: none;
-    width: 50px;
-    /* max-width: 50px; */
-    /* height: 58px; */
-    /* max-height: 58px; */
+    width: 50%;
     margin-top: 10px;
-    /* margin-right: 8px; */
+    margin-left: auto;
+    margin-right: auto;
     font-size: 20px;
-    /* Add these lines */
     border: none;
     padding: 0;
     overflow: hidden;
@@ -207,26 +204,25 @@
 #city-select,
 #filter-select,
 #distance-container {
-    width: 280px;
-    max-width: 280px;
+    width: 100%;
     margin-top: 10px;
     height: 58px;
 }
 
 #country-select {
-    padding-right: 5px;
+    /* padding-right: 5px; */
 }
 
 #state-select,
 #city-select,
 #filter-select,
 #distance-container {
-    padding-left: 5px;
-    padding-right: 5px;
+    /* padding-left: 5px;
+    padding-right: 5px; */
 }
 
 #distance-container {
-    width: 115px;
+    /* width: 115px; */
 }
 
 #filter-dropdown {
@@ -253,4 +249,64 @@
     position: absolute;
     top: 0;
     left: 0;
+}
+
+/* Styles for min-width: 375px  - Mobile M */
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+    #country-select,
+    #state-select,
+    #city-select,
+    #filter-select,
+    #distance-container {
+        max-width: 280px;
+    }
+
+    #search-event-button {
+        margin-right: unset;
+    }
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+    #country-select,
+    #state-select,
+    #city-select,
+    #filter-select,
+    #distance-container {
+        width: 18%;
+        max-width: unset;
+    }
+
+    #search-event-button {
+        width: 60px;
+        margin-left: unset;
+    }
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+}
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+}
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+/* Styles for min-width: 1440px - Laptop L */
+
+/* Styles for min-width: 1600px */
+@media (min-width: 1600px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
 }

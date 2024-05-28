@@ -20,23 +20,6 @@
                 <label asp-for="Input.NotificationEmail" class="form-label"></label>
                 <span asp-validation-for="Input.NotificationEmail" class="text-danger"></span>
             </div>
-            <div class="row mx-1 justify-content-center">
-                <div class="col-md-6">
-                    <div class="form-floating text-center">
-                        <select asp-for="Input.ItineraryReminderTime" class="form-select base-identity-form">
-                            <option value="quarter-hour">15 minutes</option>
-                            <option value="half-hour">30 minutes</option>
-                            <option value="hour">1 hour</option>
-                            <option value="two-hours">2 hours</option>
-                            <option value="three-hours">3 hours</option>
-                            <option value="six-hours">6 hours</option>
-                            <option value="one-day">1 day</option>
-                        </select>
-                        <label asp-for="Input.ItineraryReminderTime" class="form-label"></label>
-                        <span asp-validation-for="Input.ItineraryReminderTime" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
             <h3 class="text-light text-muted" style="text-align: center;">Notifications</h3>
             <div class="row mx-1 justify-content-center">
                 <div class="col-md-6">
@@ -54,8 +37,23 @@
                     </div>
                 </div>
             </div>
-            <button id="update-notifications-button" type="submit"
-                class="w-100 btn btn-lg btn-primary base-submit-identity">Save</button>
+            <div class="row mx-1 justify-content-center">
+                <div class="col-md-6">
+                    <div class="form-floating text-center">
+                        <select asp-for="Input.ItineraryReminderTime" class="form-select base-identity-form">
+                            <option value="quarter-hour">15 minutes</option>
+                            <option value="half-hour">30 minutes</option>
+                            <option value="hour">1 hour</option>
+                            <option value="two-hours">2 hours</option>
+                            <option value="three-hours">3 hours</option>
+                            <option value="six-hours">6 hours</option>
+                            <option value="one-day">1 day</option>
+                        </select>
+                        <label asp-for="Input.ItineraryReminderTime" class="form-label"></label>
+                        <span asp-validation-for="Input.ItineraryReminderTime" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>

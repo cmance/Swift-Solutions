@@ -19,7 +19,7 @@
 
 #events-container {
     position: relative;
-    left: -24px;
+    /* left: -24px; */
     max-height: 65vh; /* Adjust as needed */
     overflow-y: auto; /* Enable vertical scrolling */
     /* border-top: 10px solid black;
@@ -160,5 +160,64 @@
     hr {
         color: #ff9800;
         margin-top: 0;
+    }
+
+    br {
+        display: none;
+    }
+}
+
+#weather-preview-container {
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+/* Styles for min-width: 375px  - Mobile M */
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+    #weather-preview br {
+        display: block;
+    }
+
+    #weather-preview-container {
+        flex-direction: row;
+    }
+}
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+}
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+/* Styles for min-width: 1440px - Laptop L */
+
+/* Styles for min-width: 1600px */
+@media (min-width: 1600px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
+    .form-select {
+        font-size: 1.5rem;
+    }
+
+    .input-group-text {
+        font-size: 1.5rem;
     }
 }

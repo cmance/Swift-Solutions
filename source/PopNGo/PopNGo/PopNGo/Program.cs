@@ -20,8 +20,8 @@ public class Program
 
         // Setup the connection string to our Identity database
         // Swap the commented out lines to switch between Local and Azure databases
-        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
-        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
+        // var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnection");
+        var identityConnectionString = builder.Configuration.GetConnectionString("IdentityConnectionAzure");
         builder.Services.AddDbContext<ApplicationDbContext>(options => options
             .UseSqlServer(identityConnectionString)
             .UseLazyLoadingProxies()
@@ -29,8 +29,8 @@ public class Program
         
         // Setup the connection string to our Application database
         // Swap the commented out lines to switch between Local and Azure databases
-        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
-        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
+        // var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnection");
+        var serverConnectionString = builder.Configuration.GetConnectionString("ServerConnectionAzure");
         builder.Services.AddDbContext<PopNGoDB>(options => options
             .UseSqlServer(serverConnectionString)
             .UseLazyLoadingProxies()
@@ -62,6 +62,19 @@ public class Program
             httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Host", "distance-calculator.p.rapidapi.com");
             return new DistanceCalculatorService(httpClient, services.GetRequiredService<ILogger<DistanceCalculatorService>>());
         });
+
+        // REST API setup for the OpenAI API
+        string openAiUrl = "https://api.openai.com/";
+        string openAiApiKey = builder.Configuration["OpenAiApiKey"];
+
+        builder.Services.AddHttpClient<IOpenAiService, OpenAiService>((httpClient, services) =>
+        {
+            httpClient.BaseAddress = new Uri(openAiUrl);
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAiApiKey}"); // Set API key
+            return new OpenAiService(httpClient, services.GetRequiredService<ILogger<OpenAiService>>());
+        });
+
 
         // REST API setup for the Weather Forecast API
         string weatherForecasterUrl = "https://visual-crossing-weather.p.rapidapi.com/forecast";
@@ -103,6 +116,7 @@ public class Program
         builder.Services.AddScoped<IItineraryEventRepository, ItineraryEventRepository>();
         builder.Services.AddScoped<IItineraryRepository, ItineraryRepository>();
         builder.Services.AddScoped<IEventTagRepository, EventTagRepository>();
+        builder.Services.AddScoped<IRecommendedEventRepository, RecommendedEventRepository>();
 
         // Add Google Authentication
         builder.Services.AddAuthentication().AddGoogle(googleOptions =>

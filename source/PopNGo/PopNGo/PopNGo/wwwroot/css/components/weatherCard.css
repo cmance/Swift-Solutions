@@ -1,11 +1,11 @@
 ﻿#weather-card-container {
     width: 100%;
-    height: 250px;
     border-radius: 20px;
     background-color: #1e1e1e;
     padding: 5px 10px 5px 10px;
     margin: 2px;
     font-size: 80%;
+    padding-bottom: 20px;
 }
 
 #weather-date {
@@ -24,4 +24,56 @@
 
 .weather-card-label {
     color: #d38100;
+}
+
+.weather-card-value {
+    right: 70px;
+    position: absolute;
+}
+
+/* Styles for min-width: 375px  - Mobile M */
+/* Styles for min-width: 425px  - Mobile L */
+@media (min-width: 425px) {
+}
+
+/* Styles for min-width: <576 - xs Bootstrap breakpoint */
+@media (min-width: 576px) {
+    .weather-card-value {
+        right: 90px;
+    }
+}
+/* Styles for min-width: 768px  - Tablet and Bootstrap md breakpoint*/
+@media (min-width: 768px) {
+    .weather-card-value {
+        right: 105px;
+    }
+}
+
+/* Styles for min-width: 992px - Bootstrap lg breakpoint */
+@media (min-width: 992px) {
+}
+
+/* Styles for min-width: 1024px - Laptop */
+@media (min-width: 1024px){
+    .weather-card-value {
+        position: unset;
+    }
+}
+/* Styles for min-width: 1200px - Bootstrap xl breakpoint */
+@media (min-width: 1200px) {
+    #weather-card-container {
+        width: 14.28%;
+    }
+}
+/* Styles for min-width: 1400px - Bootstrap xxl breakpoint */
+@media (min-width: 1400px) {
+}
+/* Styles for min-width: 1440px - Laptop L */
+
+/* Styles for min-width: 1600px */
+@media (min-width: 1600px) {
+}
+
+/* Styles for min-width: 2560px - 4K */
+@media (min-width: 2560px) {
 }

@@ -16,5 +16,12 @@ namespace PopNGo.DAL.Concrete
         {
             return _pgUsers.FirstOrDefault(u => u.AspnetuserId == identityId);
         }
+
+        public void SetRecommendationsPreviouslyAtDate(int userId, DateTime date)
+        {
+            var pgUser = _pgUsers.Find(userId);
+            pgUser.RecommendedPreviouslyAt = date;
+            AddOrUpdate(pgUser);
+        }
     }
 }

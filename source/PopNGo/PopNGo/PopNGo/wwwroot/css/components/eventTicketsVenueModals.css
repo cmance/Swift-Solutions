@@ -38,7 +38,6 @@
 /* /////////////////////////////// */
 
 .modal-content-2 {
-    background-color: #fefefe;
     padding-top: 15px;
     padding-left: 15px;
     padding-right: 15px;
@@ -53,7 +52,7 @@
     border-bottom: 1px solid #888;
 
     max-height: 50vh;
-    max-width: 50vw;
+    /* max-width: 50vw; */
     /* Set a maximum height */
     overflow-y: auto;
     /* Enable vertical scrolling */
@@ -91,12 +90,12 @@
         /* Changed from relative to absolute */
         top: 50%;
         /* Position at 50% from the top */
-        left: 50%;
+        left: 30%;
         /* Position at 50% from the left */
-        transform: translate(-50%, -50%);
+        transform: translate(-20%, -50%);
         /* Centers the element */
-        max-width: 50vw;
-        width: auto;
+        max-width: 66vw;
+        /* width: auto; */
     }
 
     #venue-modal-rating {
@@ -179,5 +178,45 @@
 
     .dropdown-item:hover {
         background-color: #ff9800;
+    }
+}
+
+@media (min-width: 768px) {
+    #view-venue-modal,
+    #ticket-links-container {
+        .venue-modal-body {
+            left: 40%;
+            transform: translate(-30%, -50%);
+        }
+    }
+}
+
+@media (min-width: 992px) {
+    #view-venue-modal,
+    #ticket-links-container {
+        .venue-modal-body {
+            left: 45%;
+            transform: translate(-35%, -50%);
+        }
+    }
+}
+
+@media (min-width: 1440px) {
+    #view-venue-modal,
+    #ticket-links-container {
+        .venue-modal-body {
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
+@media (min-width: 1920px) {
+    #view-venue-modal,
+    #ticket-links-container {
+        .venue-modal-body {
+            transform: translate(-40%, -50%);
+            scale: 1.5;
+        }
     }
 }
