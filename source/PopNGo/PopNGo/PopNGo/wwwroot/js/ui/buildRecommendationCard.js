@@ -68,6 +68,7 @@ async function buildRecommendationCard(recommendedEvents) {
             clone.querySelector('.recommended-events-description').textContent = event.eventDescription;
         }
 
+
         clone.querySelector('.date-1').textContent = new Date(event.eventDate).toLocaleString('en-US', { month: 'short' }).toUpperCase();
         clone.querySelector('.date-2').textContent = new Date(event.eventDate).getDate();
         clone.querySelector('.recommended-events-date-1').textContent = formatDate(event.eventDate);
