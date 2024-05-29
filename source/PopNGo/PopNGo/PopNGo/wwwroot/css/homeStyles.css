@@ -194,19 +194,6 @@ input::placeholder,
     }
 };
 /* Recommended Events Page */
-.date-overlay {
-    position: absolute;
-    top: 0; /* Adjust as needed */
-    padding: 1rem; /* Adjust as needed */
-    min-height: 250px;
-    min-width: 20%;
-    background-color: #1e1e1e; /* Semi-transparent black */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
-}
 
 .date-1 {
     font-size:50px;
