@@ -195,6 +195,10 @@ input::placeholder,
 };
 /* Recommended Events Page */
 
+.helper-text-recommendation {
+    color: #d35400 !important;
+}
+
 .date-1 {
     font-size:50px;
 }
